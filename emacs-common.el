@@ -4,21 +4,16 @@
 
 ;;  Path Variables
 (defvar emacs-savefile-dir "~/.local-emacs/auto-save-list/")
-(defvar shared-emacs-dir "~/.emacs.d/")
 (defvar shared-externals "~/.local-emacs/externals/")
 
- ;; clean up dirnames
-(setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
-(setq shared-emacs-dir (expand-file-name shared-emacs-dir))
-(setq shared-externals (expand-file-name shared-externals))
-
-
-(add-to-list 'load-path (concat shared-emacs-dir "misc-packages/"))
-;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Projects not in elpa
-(defvar git-projects '(
+(defvar git-projects '())
+(defvar hg-projects '())
+(defvar make-projects '())
+
+(setq git-projects (append git-projects '(
     ("python" "https://github.com/fgallina/python.el.git")  ;;this should be part of emacs24 but I don't see it in my distro                       
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
     ("ensime" "https://github.com/aemoncannon/ensime.git")
@@ -26,18 +21,18 @@
     ("emacs-flymake-cursor" "https://github.com/illusori/emacs-flymake-cursor.git")
     ("iflipb" "https://github.com/emacsmirror/iflipb.git")
     ("transpose-frame" "https://github.com/emacsmirror/transpose-frame.git")
-))
+)))
 
-(defvar hg-projects '(
+(setq hg-projects (append hg-projects '(
     ("ropemacs" "https://bitbucket.org/agr/ropemacs")
     ("rope" "https://bitbucket.org/agr/rope")
     ("ropemode" "https://bitbucket.org/agr/ropemode")
     ("project-root" "https://bitbucket.org/piranha/project-root")
-))
+)))
 ;;  Misc commands to run in the externals subdirectory
-(defvar make-projects '(
+(setq make-projects (append make-projects '(
   "cd Pymacs && make"
-))
+)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 ;; Emacs Packaging
@@ -49,7 +44,7 @@
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
-(if (not (boundp 'my-packages))(defvar my-packages '()))
+(defvar my-packages '())
 ;; shared package list
 (setq my-packages (append my-packages
              '(auto-complete autopair auctex paredit undo-tree ace-jump-mode
@@ -59,15 +54,25 @@
                scala-mode haskell-mode slime yasnippet
                solarized-theme zenburn-theme inkpot-theme
                anti-zenburn-theme xml)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; End Variables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 
 ;; Utility functions that all subsequent files can rely on
-(load (concat shared-emacs-dir "elisp-utils.el"))
+(setq emacs-config-root (file-name-directory load-file-name))
+(load (concat emacs-config-root "elisp-utils.el"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Elisp Artifacts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;external elisp artifacts
+ ;; clean up dirnames
+(setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
+(setq shared-externals (expand-file-name shared-externals))
 
 (unless (file-exists-p shared-externals)
   (make-directory shared-externals 't))
@@ -115,6 +120,8 @@
           (add-to-list 'load-path (expand-file-name (concat shared-externals (car e)))))
         (append git-projects hg-projects))
 
+(add-to-list 'load-path (concat emacs-config-root "misc-packages/"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Customizations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -141,6 +148,7 @@
 ;; Save all backup files in this directory (no ~files lying around) 
 (unless (file-exists-p emacs-savefile-dir)
   (make-directory emacs-savefile-dir 't))
+(setq auto-save-list-file-prefix (concat emacs-savefile-dir ".saves-"))
 (setq backup-directory-alist `((".*" . ,emacs-savefile-dir)))
 (setq auto-save-file-name-transforms
           `((".*" ,emacs-savefile-dir t)))
@@ -214,28 +222,28 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; Package Config
-(load (concat shared-emacs-dir "package-config.el"))
+(load (concat emacs-config-root "package-config.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Language Setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(load (concat shared-emacs-dir "modes/python.el"))
-(load (concat shared-emacs-dir "modes/scala.el"))
-(load (concat shared-emacs-dir "modes/clojure.el"))
-(load (concat shared-emacs-dir "modes/r-project.el"))
-(load (concat shared-emacs-dir "modes/cpp.el"))
-(load (concat shared-emacs-dir "modes/elisp.el"))
+(load (concat emacs-config-root "modes/python.el"))
+(load (concat emacs-config-root "modes/scala.el"))
+(load (concat emacs-config-root "modes/clojure.el"))
+(load (concat emacs-config-root "modes/r-project.el"))
+(load (concat emacs-config-root "modes/cpp.el"))
+(load (concat emacs-config-root "modes/elisp.el"))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  General Interactive Commands
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                   
-(load (concat shared-emacs-dir "commands.el"))
+(load (concat emacs-config-root "commands.el"))
 
 ;;;;;;;;;;
 ;; New mode stuff
 ;;;;;;;;;
                              
-(load (concat shared-emacs-dir "modes/undo-tree.el"))
-(load (concat shared-emacs-dir "newstuff.el"))
+(load (concat emacs-config-root "modes/undo-tree.el"))
+(load (concat emacs-config-root "newstuff.el"))
