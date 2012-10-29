@@ -6,7 +6,6 @@
 (defvar emacs-savefile-dir "~/.local-emacs/auto-save-list/")
 (defvar shared-externals "~/.local-emacs/externals/")
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Projects not in elpa
 (defvar git-projects '())
@@ -40,14 +39,14 @@
 (nconc package-archives '(
     ("melpa" . "http://melpa.milkbox.net/packages/"))
     )
-
+(setq package-user-dir shared-externals)
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
 (defvar my-packages '())
 ;; shared package list
 (setq my-packages (append my-packages
-             '(auto-complete autopair auctex paredit undo-tree ace-jump-mode
+             '(auto-complete autopair paredit undo-tree ace-jump-mode
                idle-highlight-mode ess hideshow org move-text
                clojure-mode clojure-test-mode clojurescript-mode 
                rainbow-delimiters
@@ -57,6 +56,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End Variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; clean up dirnames
+(setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
+(setq shared-externals (expand-file-name shared-externals))
+
+;; change default elpa directory
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -70,9 +74,6 @@
 ;; Elisp Artifacts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
- ;; clean up dirnames
-(setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
-(setq shared-externals (expand-file-name shared-externals))
 
 (unless (file-exists-p shared-externals)
   (make-directory shared-externals 't))
