@@ -1,0 +1,404 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python specific keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'python-mode-hook
+          (lambda ()
+            (define-key python-mode-map (kbd "C-M-<return>") 'my-python-send-buffer)
+            (define-key python-mode-map (kbd "M-.") 'my-rope-goto-definition)
+            (define-key python-mode-map (kbd "M-l") 'my-rope-go-backward)
+            (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
+            (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
+            (define-key python-mode-map [f4] 'my-restart-python)
+            ))
+
+(add-hook 'inferior-python-mode-hook
+          (lambda ()
+            (define-key inferior-python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
+            (define-key inferior-python-mode-map [f9] 'my-python-show-graphs)
+            (define-key inferior-python-mode-map [down] 'comint-next-matching-input-from-input)
+            (define-key inferior-python-mode-map [up] 'comint-previous-matching-input-from-input)
+            (define-key inferior-python-mode-map [f4] 'my-restart-python)
+            ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python main setup file
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'python)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+
+;; Package paths
+(add-to-list 'load-path (concat shared-externals "Pymacs/"))
+(setenv "PYTHONPATH" (concat
+         (concat shared-externals "ropemacs" ":")
+         (concat shared-externals "ropemode" ":")
+         (concat shared-externals "rope" ":")
+         (getenv "PYTHONPATH")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Inferior Python shell setup variables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq
+ python-shell-interpreter "ipython"
+ python-shell-interpreter-args ""
+ python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+ python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+ python-shell-completion-setup-code
+   "from IPython.core.completerlib import module_completion"
+ python-shell-completion-module-string-code
+   "';'.join(module_completion('''%s'''))\n"
+ python-shell-completion-string-code
+   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
+
+;; ;; (setq
+;; ;;  python-shell-interpreter (concat shared-externals "\\python-2.7\\python.exe")
+;; ;;  python-shell-interpreter-args
+;; ;;  (concat "-u " (concat shared-externals "\\python-2.7\\scripts\\ipython-script.py"))
+;; ;;  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+;; ;;  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+;; ;;  python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+;; ;;  python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+;; ;;  python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n" 
+;; ;;  )
+
+
+(setq project-roots ;;TODO:  move the other languages out of this file
+      '(("m4-python" :root-contains-files ("atg" "rpy2"))
+        ("m4-sbt" :root-contains-files ("project/build/M4Project.scala"))
+        ("leiningen" :root-contains-files ("project.clj"))
+        ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Global Setup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'pymacs)
+(setq pymacs-auto-restart t)
+
+(defun my-turn-on-ropemacs () (interactive)
+  (if (not (boundp 'ropemacs-mode)) (pymacs-load "ropemacs" "rope-"))
+  (if (and (boundp 'ropemacs-mode) (not ropemacs-mode)) (ropemacs-mode)))
+
+(ac-ropemacs-initialize) ;; hook rope into auto-complete
+
+;; another source for python auto-complete that comes from the *Python* buffer or the unnamed "internal" process
+(require 'ac-python)
+
+(add-to-list 'flymake-allowed-file-name-masks '("\\.py\\'" flymake-pyflakes-init))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hooks - loading a python file
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'python-mode-hook (lambda () 
+   (set-variable 'python-indent-offset 4)
+   (set-variable 'indent-tabs-mode nil)
+   (setq ropemacs-enable-autoimport t)
+   (setq ac-sources '())
+   (add-to-list 'ac-sources 'ac-source-python)
+   ;;(add-to-list 'ac-sources 'ac-source-ropemacs 'ac-source-yasnippet)
+   
+   ;;the internal process is only created once, when python-mode is started
+   (python-get-named-else-internal-process)
+   (my-python-source-file-no-run (buffer-file-name) (python-get-named-else-internal-process))
+   (defun run-python (&optional a b) (interactive "ii") (my-run-python)) ;;advice doesn't work well for overriding interactive functions
+
+   (project-root-fetch)
+   (make-local-variable 'm4-python-root)
+   (make-local-variable 'm4-python-test-root)
+   (setq m4-python-root (cdr project-details))
+   (setq m4-python-test-root (concat (cdr project-details) "atg/test/")) ;; remember, there isn't a "atg" subdirectory in the test-root
+   (setq ropemacs-guess-project (cdr project-details));;get all of the python subdirectories
+   (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
+   (local-set-key [f10] 'my-python-toggle-test-implementation)
+   (my-turn-on-ropemacs) ;;something repeatedly calls pymacs-load "ropemacs" so you have to switch it back on
+))
+
+(add-hook 'inferior-python-mode-hook (lambda ()
+  ;; jump to the bottom of the comint buffer if you start typing
+  (progn (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t))
+))
+
+;;overwrite ropemacs "lucky code assist"
+(add-hook 'ropemacs-mode-hook (lambda ()
+  (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;wrapper to make ac-python work with Gallina's python.el
+(defun python-symbol-completions (symbol)
+  (let ((process (python-get-named-else-internal-process))
+         ;;this breaks the abstraction in ac-python (it's defined without referencing the cursor position
+         ;;but i don't feel like changing ac-python right now
+         (current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+    (python-shell-completion-get-completions process current-line symbol)))
+
+(defun python-get-named-else-internal-process ()
+  "return the current global process if there is one.  Otherwise, start an internal process and return that."
+  (let* ((global-process (python-shell-get-process))
+         (internal-process-state (process-live-p (python-shell-internal-get-process-name)))
+         (internal-process (if internal-process-state (get-process (python-shell-internal-get-process-name))
+                             nil))
+         (existing-process (if global-process global-process internal-process))
+         (process (if (not existing-process)
+                      (progn (message "Starting inferior, unnamed Python process.")
+                             (python-shell-internal-get-or-create-process))
+                    existing-process)))
+         process))
+
+(defun my-rope-goto-definition ()(interactive) (push-current-location) (rope-goto-definition)) 
+(defun my-rope-go-backward () (interactive) (pop-current-location))
+(defun my-python-send-buffer () (interactive) (python-shell-send-buffer) (my-python-shell-smart-switch))
+(defun my-python-shell-smart-switch ()
+  (interactive)
+  (let ((saved-point (point))
+	(saved-frame (selected-frame))
+	(saved-window (selected-window)))
+    (if (string= (python-shell-get-process-name t) "Python") (end-of-buffer) ;;we are in the inferior buffer
+      (let ((display-buffer-reuse-frames t)) (python-shell-switch-to-shell) (end-of-buffer)))
+    (if (and (eq saved-point (point))
+             (eq saved-frame (selected-frame))
+             (eq saved-window (selected-window))) ;;nothing moved - we're at the end of the inferior buffer
+        (progn
+          (raise-frame my-python-most-recent-frame)
+          (select-window my-python-most-recent-window))
+      (if (not (eq saved-window (selected-window))) ;;moved to a different window
+          (progn (setq my-python-most-recent-frame saved-frame)
+                 (setq my-python-most-recent-window saved-window)
+                 )))))
+
+(defun my-run-python () (interactive) (my-create-inferior-python nil t))
+
+(defun my-restart-python () (interactive)
+  (let ((process (python-shell-get-or-create-process))
+        (in-repl (eq major-mode 'inferior-python-mode)))
+    (if in-repl (other-window 1))
+    (python-shell-send-string "quit()" process)
+    (sleep-for 0.1)
+    (python-shell-get-or-create-process)
+    (if in-repl (sleep-for 0.1) (other-window 1) (end-of-buffer))
+))
+
+(defun my-create-inferior-python (is-dedicated-inferior-buffer pop-to-buffer-after-create)
+  "Create an inferior python buffer non-interactively
+Uses the defaults defined for python.el
+
+is-dedicated-inferior-buffer: if nil, create a globally
+           accessible inferior python buffer.  all python files will use
+           this shell if they don't have a dedicated shell of their own.
+
+pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
+           newly created buffer"
+  (python-shell-make-comint (python-shell-parse-command)
+                            (python-shell-get-process-name is-dedicated-inferior-buffer)
+                            pop-to-buffer-after-create)
+  is-dedicated-inferior-buffer)
+                            
+(defun my-python-eval-line ()
+  "Evaluate the current Python line in the inferior Python process."
+  (interactive) (python-shell-send-string (buffer-substring-no-properties (point) (line-end-position))
+                                          (python-get-named-else-internal-process)))
+
+(defun my-python-eval-region (start end)
+  "Send the region delimited by START and END to inferior Python process."
+  (interactive "r")
+  (kill-new (buffer-substring start end))
+  (python-shell-send-string "%paste" nil t))
+
+(defun python-shell-send-region (start end)
+  "Overridden.  Use the %paste IPython method to send copied regions to the inferior Python process."
+  (interactive "r")
+  (my-python-eval-region start end))
+
+(defun my-python-source-file-no-run (filename &optional process)
+  "Call execfile for filename but save/restore __name__ so it's not set to __main__"
+  (let ((command-string-1 "___oldName = __name__")
+        (command-string-2 "__name__ = None")
+        (command-string-3
+         (concat "execfile( \"" filename "\", globals())"))
+        (command-string-4 "__name__ = ___oldName"))
+    (python-shell-send-string command-string-1 process)
+    (python-shell-send-string command-string-2 process)
+    (python-shell-send-string command-string-3 process)
+    (python-shell-send-string command-string-4 process)
+    ))
+
+
+;; pyflakes flymake hook
+(defun flymake-pyflakes-init () 
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy 
+                     'flymake-create-temp-inplace)) 
+         (local-file (file-relative-name 
+                      temp-file 
+                      (file-name-directory buffer-file-name)))) 
+    (list "pyflakes" (list local-file))))
+
+
+(defun my-full-python-module (filename project-root)
+  "Return the package followed by this filename's module.
+  For example, \"~/atg/data/tsy/foo_bar.py\" returns (\"atg.data.tsy\" \"foo_bar\")"
+  (let ((subtree (replace-regexp-in-string project-root "" filename t)))
+    (string-match "^\\(.*\\)/\\(.\+\\).py" subtree)
+    (list (replace-regexp-in-string "/" "." (match-string 1 subtree))
+          (match-string 2 subtree))))
+
+(defun my-python-test-file (filename &optional pr ptr)
+  "Get the corresponding test filename or return filename if it's a valid test file"
+  (if (null pr) (setq pr m4-python-root))
+  (if (null ptr) (setq ptr m4-python-test-root))
+  (let* ((this-local-path (substring (replace-regexp-in-string pr "" filename) 4)) ;; "atg/" has four characters
+         (this-test-file-almost (concat ptr this-local-path))
+         (last-forward-slash (+ 1 (string-match-p "/\\([^/]\+\\)$" this-test-file-almost)))
+         (this-test-filename (concat (substring this-test-file-almost 0 last-forward-slash)
+                                     "test_" (substring this-test-file-almost last-forward-slash))))
+    ;;if you're in the test subdirectory, return the filename
+    (if (string-match-p (concat "^" ptr) filename) filename this-test-filename)))
+
+(defun my-python-implementation-file (filename &optional pr ptr)
+  "Get the corresponding implementation filename or return filename if it's a valid implementation file"
+  (if (null pr) (setq pr m4-python-root))
+  (if (null ptr) (setq ptr m4-python-test-root))
+  (let* ((this-local-path (replace-regexp-in-string ptr "" filename))
+         (this-impl-file-almost (concat pr "atg/" this-local-path))
+         (last-forward-slash (+ 1 (string-match-p "/\\([^/]\+\\)$" this-impl-file-almost)))
+         (this-impl-filename (concat (substring this-impl-file-almost 0 last-forward-slash)
+                                     (substring this-impl-file-almost (+ last-forward-slash 5))))) ;; "test_" has five characters
+    ;;if you're in the test subdirectory, return the implementation filename
+    (if (string-match-p (concat "^" ptr) filename) this-impl-filename filename)))
+
+(defun my-python-class (filename)
+  "Get list of Python class names from -filename-"
+  (list-of-regexp filename "^class \\(\\w+\\)("))
+
+(defun my-python-run-test-in-inferior-buffer ()
+  (interactive)
+  (let* ((test-filename (my-python-test-file (buffer-file-name)))
+         (test-classnames (my-python-class test-filename))
+         (impl-file (my-python-implementation-file (buffer-file-name)))
+         (impl-python-module (my-full-python-module impl-file m4-python-root))
+         (package-name (car impl-python-module))
+         (module-name (cadr impl-python-module))
+         (command-string-1 "import unittest")
+         (command-string-1-1 "import reimport")
+         (command-string-2 (concat "from " package-name " import " module-name))
+         (command-string-3 (concat "reimport.reimport(" module-name ")"))
+         (command-string-4 "unittest.TextTestRunner(verbosity=1).run(___suite)  "))
+    ;;first, force implementation file save because for some reason python functions will turn to 'None' if you don't
+    (with-current-buffer (get-file-buffer impl-file)
+      (set-buffer-modified-p t)  
+      (save-buffer))
+    ;;save test file if necessary
+    (with-current-buffer (get-file-buffer test-filename) (save-buffer))
+    (my-python-source-file-no-run test-filename)
+    (python-shell-send-string command-string-1)
+    (python-shell-send-string command-string-1-1)
+    (python-shell-send-string command-string-2)
+    (python-shell-send-string command-string-3)
+    (mapc (lambda (classname) ;;run the commands for each class name in the test file
+            (python-shell-send-string
+              (concat "___suite = unittest.TestLoader().loadTestsFromTestCase(" classname ")"))
+            (python-shell-send-string command-string-4))
+          test-classnames)
+    ))
+
+
+(defvar my-python-test-template
+  "from atg.test import AtgTestCase
+import doctest
+
+def load_tests(loader, tests, ignore):
+    tests.addTests(doctest.DocTestSuite(%PACKAGENAME%))
+    return tests
+
+class %TESTCLASSNAME%(AtgTestCase):
+    def setUp(self):
+        pass
+    def tearDown(self):
+        pass
+
+    def test_%PACKAGENAME%(self):
+        %CURSOR-HERE%
+        pass
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()"
+)
+
+(defun insert-test-code-into-buffer (module package &optional classname)
+  (let* ((test-class-tag "%TESTCLASSNAME%")
+         (package-tag "%PACKAGENAME%")
+         (cursor-tag "%CURSOR-HERE%")
+         (test-class-replaced
+          (replace-regexp-in-string test-class-tag (concat "Test" (camelcase module)) my-python-test-template t))
+         (final-string (replace-regexp-in-string package-tag module test-class-replaced t)))
+    (insert (format "from %s import %s\n" package module)) ;; import the tested module
+    (if classname (insert (format "from %s import %s\n" (concat package "." module) classname))) ;; also import the classname if it's given
+    (insert final-string)
+    ;;move to CURSOR-HERE location
+    (search-backward cursor-tag nil nil)
+    (replace-match "")
+    ))
+
+(defun my-python-toggle-test-implementation ()
+  (interactive)
+  (if (string-match-p "^test_" (buffer-name)) (my-python-switch-to-implementation)
+    (my-python-switch-to-test)))
+
+(defun my-python-switch-to-implementation ()
+  (interactive)
+  (let ((display-buffer-reuse-frames t))
+    (pop-to-buffer (find-file-noselect (my-python-implementation-file (buffer-file-name))))))
+
+(defun my-python-switch-to-test ()
+  (interactive)
+  (let* ((implementation-file (buffer-file-name))
+         (full-python-module (my-full-python-module implementation-file m4-python-root))
+         (this-module-name (cadr full-python-module))
+         (this-package-name (car full-python-module)))
+    (let ((display-buffer-reuse-frames t))
+      (pop-to-buffer (find-file-noselect (my-python-test-file (buffer-file-name)))))
+    (if (eq (buffer-size) 0)
+        (insert-test-code-into-buffer this-module-name this-package-name (car (my-python-class implementation-file))))
+    ))
+
+;;first attempt at ctrl-click
+(global-set-key [C-down-mouse-1]
+                (lambda (click)
+                  (interactive "e")
+                  (mouse-minibuffer-check click)
+                  (let* ((window (posn-window (event-start click)))
+                         (buf (window-buffer window)))
+                    (with-current-buffer buf
+                      (save-excursion
+                        (goto-char (posn-point (event-start click)))
+                        (my-rope-goto-definition))))))
+
+;;first attempt at ipdb stuff.  from http://pedrokroger.com/2010/07/configuring-emacs-as-a-python-ide-2/
+(setq pdb-path 'c:/Users/jbell8/atg/buildEnvironment/exeternals/python-2.7/Lib/pdb.py
+      gud-pdb-command-name (symbol-name pdb-path))
+(defun annotate-pdb ()
+  (interactive)
+  (highlight-lines-matching-regexp "import ipdb")
+  (highlight-lines-matching-regexp "ipdb.set_trace()"))
+(add-hook 'python-mode-hook 'annotate-pdb)
+
+(defun python-add-breakpoint ()
+  (interactive)
+  (newline-and-indent)
+  (insert "import ipdb; ipdb.set_trace()")
+  (highlight-lines-matching-regexp "^[ 	]*import ipdb; ipdb.set_trace()"))
+(define-key python-mode-map (kbd "C-c C-b") 'python-add-breakpoint)
+
+(defun my-make-python-shell-gui-interactive ()
+  (interactive) (python-shell-send-string "from matplotlib import interactive; interactive(True)"))
+(defun my-python-show-graphs ()
+  (interactive) (python-shell-send-string "from pylab import show; show()"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Virtualenv stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; see https://github.com/aculich/virtualenv.el
+;; doesn't work with ipython.  investigate further.
+;;(require 'virtualenv)
