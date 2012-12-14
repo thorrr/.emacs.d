@@ -20,6 +20,7 @@
     ("emacs-flymake-cursor" "https://github.com/illusori/emacs-flymake-cursor.git")
     ("iflipb" "https://github.com/emacsmirror/iflipb.git")
     ("transpose-frame" "https://github.com/emacsmirror/transpose-frame.git")
+    ("visible-mark" "https://github.com/emacsmirror/visible-mark.git")
 )))
 
 (setq hg-projects (append hg-projects '(
@@ -30,6 +31,9 @@
 )))
 ;;  Misc commands to run in the externals subdirectory
 (setq make-projects (append make-projects '(
+  ;; the "make install" part seems to contaminate your site packages and
+  ;; seems to not be necessary if you add the Pymacs directory to the PYTHONPATH                                          
+  ;;  "cd Pymacs && make && make install"
   "cd Pymacs && make"
 )))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 

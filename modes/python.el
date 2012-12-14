@@ -9,6 +9,8 @@
             (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
             (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
             (define-key python-mode-map [f4] 'my-restart-python)
+            (define-key ropemacs-local-keymap (kbd "M-?") 'auto-complete)
+            (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
             ))
 
 (add-hook 'inferior-python-mode-hook
@@ -27,41 +29,33 @@
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
 ;; Package paths
-(add-to-list 'load-path (concat shared-externals "Pymacs/"))
-(setenv "PYTHONPATH" (concat
-         (concat shared-externals "ropemacs" ":")
-         (concat shared-externals "ropemode" ":")
-         (concat shared-externals "rope" ":")
-         (getenv "PYTHONPATH")))
+(let ((env-sep (if (eq system-type 'windows-nt) ";" ":")))
+  (setenv "PYTHONPATH" (concat
+     (concat shared-externals "Pymacs" env-sep)
+     (concat shared-externals "ropemacs" env-sep)
+     (concat shared-externals "ropemode" env-sep)
+     (concat shared-externals "rope" env-sep)
+     (getenv "PYTHONPATH"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Inferior Python shell setup variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcustom python-shell-interpreter-var
+  "Custom path to python interpreter.  Use ipython by default"
+  "ipython")
+(defcustom python-shell-interpreter-args-var
+  "Custom arguments for starting python interpreter.  Interactive (-i) by default"
+  "-i")
 
 (setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args ""
+ python-shell-interpreter python-shell-interpreter-var
+ python-shell-interpreter-args python-shell-interpreter-args-var
  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
- python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
- python-shell-completion-module-string-code
-   "';'.join(module_completion('''%s'''))\n"
- python-shell-completion-string-code
-   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-
-
-;; ;; (setq
-;; ;;  python-shell-interpreter (concat shared-externals "\\python-2.7\\python.exe")
-;; ;;  python-shell-interpreter-args
-;; ;;  (concat "-u " (concat shared-externals "\\python-2.7\\scripts\\ipython-script.py"))
-;; ;;  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-;; ;;  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-;; ;;  python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-;; ;;  python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-;; ;;  python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n" 
-;; ;;  )
-
+ python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+ python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+ python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n" 
+ )
 
 (setq project-roots ;;TODO:  move the other languages out of this file
       '(("m4-python" :root-contains-files ("atg" "rpy2"))
@@ -99,7 +93,7 @@
    
    ;;the internal process is only created once, when python-mode is started
    (python-get-named-else-internal-process)
-   (my-python-source-file-no-run (buffer-file-name) (python-get-named-else-internal-process))
+   (python-just-source-file (buffer-file-name) (python-get-named-else-internal-process))
    (defun run-python (&optional a b) (interactive "ii") (my-run-python)) ;;advice doesn't work well for overriding interactive functions
 
    (project-root-fetch)
@@ -111,6 +105,10 @@
    (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
    (local-set-key [f10] 'my-python-toggle-test-implementation)
    (my-turn-on-ropemacs) ;;something repeatedly calls pymacs-load "ropemacs" so you have to switch it back on
+   (autopair-mode)
+   (setq autopair-handle-action-fns '(autopair-default-handle-action
+                                      autopair-dont-if-point-non-whitespace
+                                      autopair-python-triple-quote-action))
 ))
 
 (add-hook 'inferior-python-mode-hook (lambda ()
@@ -169,6 +167,7 @@
                  )))))
 
 (defun my-run-python () (interactive) (my-create-inferior-python nil t))
+(defun python-repl () (my-create-inferior-python nil t))
 
 (defun my-restart-python () (interactive)
   (let ((process (python-shell-get-or-create-process))
@@ -211,8 +210,10 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
   (interactive "r")
   (my-python-eval-region start end))
 
-(defun my-python-source-file-no-run (filename &optional process)
-  "Call execfile for filename but save/restore __name__ so it's not set to __main__"
+(defun python-just-source-file (filename &optional process)
+  "Force process to evaluate filename but don't run __main__.
+   Gallina has a similar technique for evaluating buffers in
+   python-shell-send-buffer."
   (let ((command-string-1 "___oldName = __name__")
         (command-string-2 "__name__ = None")
         (command-string-3
@@ -290,7 +291,7 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
       (save-buffer))
     ;;save test file if necessary
     (with-current-buffer (get-file-buffer test-filename) (save-buffer))
-    (my-python-source-file-no-run test-filename)
+    (python-just-source-file test-filename)
     (python-shell-send-string command-string-1)
     (python-shell-send-string command-string-1-1)
     (python-shell-send-string command-string-2)
@@ -396,9 +397,10 @@ if __name__ == '__main__':
 (defun my-python-show-graphs ()
   (interactive) (python-shell-send-string "from pylab import show; show()"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Virtualenv stuff
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; see https://github.com/aculich/virtualenv.el
-;; doesn't work with ipython.  investigate further.
-;;(require 'virtualenv)
+(defun initdev() (interactive)
+  (python-shell-send-string "from atg import java; java.initDev()"
+                            (python-repl)))
+
+(defun initprod() (interactive)
+  (python-shell-send-string "from atg import java; java.initProd()"
+                            (python-repl)))

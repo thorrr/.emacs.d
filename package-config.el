@@ -6,9 +6,10 @@
 (define-key ac-completing-map "\e" 'ac-stop)
 (setq ac-stop-flymake-on-completing t)
 ;;fixes for autopair mode which obliterates the mapping for both kbd "RET" and [return]
-(defun my-ac-complete () (interactive) (ac-complete))
-(define-key ac-completing-map (kbd "RET") 'my-ac-complete)
-(define-key ac-completing-map [return] 'my-ac-complete)
+(define-key ac-completing-map (kbd "RET") 'ac-complete)
+(define-key ac-completing-map [return] 'ac-complete)
+(define-key ac-completing-map (kbd "C-n") 'ac-next)
+(define-key ac-completing-map (kbd "C-p") 'ac-previous)
 (setq ac-auto-start 3) ;;don't automatically start auto-complete until this many characters have been typed
 (setq ac-dwim t)
 (global-set-key (kbd "M-?") 'auto-complete)
@@ -183,8 +184,26 @@
 
 ;; Display ido results vertically, rather than horizontally
 (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+(setq ido-max-prospects 4)
+(setq ido-completion-buffer nil)
 (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
 (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
+;; don't want to open stuff automatically
+(setq ido-confirm-unique-completion 't)
+(add-hook 'ido-setup-hook
+	  (lambda ()
+              ;;need these for vertical results mode
+	      (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
+	      (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
+	      (define-key ido-completion-map (kbd "C-p") 'ido-prev-match)
+	      (define-key ido-completion-map (kbd "<up>") 'ido-prev-match)
+              ;;get rid of annoying "kill file" function
+	      (define-key ido-completion-map (kbd "C-k") nil)
+              ;;C-a goes to the front of the directory tree (home directory)
+	      (define-key ido-completion-map (kbd "C-a") (lambda () (interactive)
+                    (ido-set-current-home)
+                    (setq refresh t) (setq ido-exit 'refresh) (exit-minibuffer)))
+	      ))
 
 ;; rotate windows within a frame
 (require 'transpose-frame)
