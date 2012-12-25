@@ -22,6 +22,8 @@
     ("iflipb" "https://github.com/emacsmirror/iflipb.git")
     ("transpose-frame" "https://github.com/emacsmirror/transpose-frame.git")
     ("visible-mark" "https://github.com/emacsmirror/visible-mark.git")
+    ("real-auto-save" "https://gist.github.com/4373732.git")
+    ("turn-off-messaging" "https://gist.github.com/4373781.git")
 )))
 
 (setq hg-projects (append hg-projects '(
