@@ -10,6 +10,7 @@
 ;;  Projects not in elpa
 (defvar git-projects '())
 (defvar hg-projects '())
+(defvar wget-projects '())
 (defvar make-projects '())
 
 (setq git-projects (append git-projects '(
@@ -29,6 +30,11 @@
     ("ropemode" "https://bitbucket.org/agr/ropemode")
     ("project-root" "https://bitbucket.org/piranha/project-root")
 )))
+
+(setq wget-projects (append wget-projects '(
+    ("ac-python" "http://chrispoole.com/downloads/ac-python.el")
+)))
+
 ;;  Misc commands to run in the externals subdirectory
 (setq make-projects (append make-projects '(
   ;; the "make install" part seems to contaminate your site packages and
@@ -43,7 +49,9 @@
 (nconc package-archives '(
     ("melpa" . "http://melpa.milkbox.net/packages/"))
     )
+;; change default elpa directory
 (setq package-user-dir shared-externals)
+
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -60,12 +68,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End Variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;; clean up dirnames
+;; clean up dirnames
 (setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
 (setq shared-externals (expand-file-name shared-externals))
 
-;; change default elpa directory
-
+;; install new packages
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
@@ -78,10 +85,9 @@
 ;; Elisp Artifacts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (unless (file-exists-p shared-externals)
   (make-directory shared-externals 't))
-      
+
 (defun git-clone (project-name project-url)
   (unless (file-exists-p (concat (expand-file-name default-directory) project-name))
     (let ((cmd (concat "git clone -q " project-url " " project-name)))
@@ -108,6 +114,16 @@
           (let ((default-directory (expand-file-name dir)))
             (shell-command-to-string cmd)))))
 
+(defun wget-clone (project-name project-url)
+  (let ((dir (concat (expand-file-name default-directory) project-name)))
+  (unless (file-exists-p dir)
+    (let ((cmd-1 (concat "mkdir " dir))
+          (cmd-2 (concat "cd " dir "&& wget " project-url)))
+      (message (concat "Running wget for project " project-name " in directory " dir))
+      (shell-command-to-string cmd-1)
+      (shell-command-to-string cmd-2)))))
+
+
 (defun run-local-package-commands (list-of-commands)
   (let ((default-directory (expand-file-name shared-externals)))
     (mapcar 'shell-command-to-string list-of-commands)))
@@ -116,6 +132,7 @@
 (let ((default-directory (expand-file-name shared-externals)))
   (mapcar (lambda (e) (git-clone (car e) (cadr e))) git-projects)
   (mapcar (lambda (e) (hg-clone (car e) (cadr e))) hg-projects)
+  (mapcar (lambda (e) (wget-clone (car e) (cadr e))) wget-projects)
 )
 ;; Run commands in the externals directory
 (run-local-package-commands make-projects)
@@ -123,7 +140,7 @@
 ;; Add externals to load path
 (mapcar (lambda (e)
           (add-to-list 'load-path (expand-file-name (concat shared-externals (car e)))))
-        (append git-projects hg-projects))
+        (append git-projects hg-projects wget-projects))
 
 (add-to-list 'load-path (concat emacs-config-root "misc-packages/"))
 

@@ -58,7 +58,6 @@
       (progn
 	(save-excursion
 	  (dolist (elem real-auto-save-alist)
-;;	    (set-buffer elem)
             (if (ignore-errors (set-buffer elem) t)
                 (if (and (buffer-file-name) (buffer-modified-p))
                     (progn
