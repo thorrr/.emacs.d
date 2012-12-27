@@ -286,11 +286,14 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
          (command-string-3 (concat "reimport.reimport(" module-name ")"))
          (command-string-4 "unittest.TextTestRunner(verbosity=1).run(___suite)  "))
     ;;first, force implementation file save because for some reason python functions will turn to 'None' if you don't
-    (with-current-buffer (get-file-buffer impl-file)
-      (set-buffer-modified-p t)  
-      (save-buffer))
+    (if (get-file-buffer impl-file)
+        (with-current-buffer (get-file-buffer impl-file)
+          (set-buffer-modified-p t)  
+          (save-buffer)))
     ;;save test file if necessary
-    (with-current-buffer (get-file-buffer test-filename) (save-buffer))
+    (if (get-file-buffer test-filename)
+        (with-current-buffer (get-file-buffer test-filename)
+          (save-buffer)))
     (python-just-source-file test-filename)
     (python-shell-send-string command-string-1)
     (python-shell-send-string command-string-1-1)
