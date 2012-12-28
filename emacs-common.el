@@ -159,6 +159,7 @@
 (tool-bar-mode -1)
 (setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
+(setq speedbar-use-images nil)
 ;;show-paren customizations
 (show-paren-mode t)
 (setq show-paren-delay 0)
