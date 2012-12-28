@@ -399,4 +399,5 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (global-set-key (kbd "C-x C-x") 'my-exchange-point-and-mark)
 
 
-
+;; reuse a single buffer for dired
+(require 'joseph-single-dired)

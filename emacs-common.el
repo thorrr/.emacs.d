@@ -35,6 +35,7 @@
 
 (setq wget-projects (append wget-projects '(
     ("ac-python" "http://chrispoole.com/downloads/ac-python.el")
+    ("single-dired" "http://www.emacswiki.org/emacs/download/joseph-single-dired.el")
 )))
 
 ;;  Misc commands to run in the externals subdirectory
@@ -201,7 +202,10 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 (setq undo-tree-history-directory-alist `((".*" . ,emacs-savefile-dir)))
-(setq undo-tree-auto-save-history nil) ;;this won't work until 24.3
+;;this won't work until 24.3
+(if (and (>= emacs-major-version 24) (>= emacs-minor-version 3))
+    (setq undo-tree-auto-save-history 't) 
+    (setq undo-tree-auto-save-history nil))
 (add-hook 'write-file-hooks 'undo-tree-save-history-hook)
 (add-hook 'find-file-hook 'undo-tree-load-history-hook)
 
