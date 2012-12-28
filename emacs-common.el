@@ -150,10 +150,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Customizations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(if (eq system-type 'windows-nt) ;;keep server file out of our pristine .emacs.d directory
+
+;;keep server file out of our pristine .emacs.d directory
+(if (eq system-type 'windows-nt)
     (setq server-auth-dir (concat (getenv "APPDATA") "\\.emacs.d\\server")))
+;;server mode is good
 (load "server")
 (unless (server-running-p) (server-start))
+
+;; Consolas is the best font
+(set-face-attribute 'default nil :font "Consolas")
+(set-face-attribute 'default nil :height 80)
+
 (global-subword-mode)
 (setq column-number-mode t)
 (require 'uniquify) ;;globally unique buffer names
@@ -166,11 +174,6 @@
 (show-paren-mode t)
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression)
-(face-spec-reset-face 'show-paren-match-face)
-(set-face-attribute 'show-paren-match-face nil 
-                    :weight 'bold
-                    :background  "#052B03"
-                    )
 
 ;; ignore ^M in mixed dos/unix files
 (add-hook 'find-file-hook (lambda () (if (fboundp 'remove-dos-eol) (remove-dos-eol)))) ;; protect ourselves if there's a .emacs file problem
@@ -197,7 +200,9 @@
 (setq-default save-place t)
 (setq save-place-file (concat emacs-savefile-dir "saved-places"))
 
+
 ;; set 'proficient coder' color scheme
+;; all face customizations must come after load-theme
 (load-theme 'zenburn t nil)
 ;;(load-theme 'solarized-light t)
 ;;(load-theme 'anti-zenburn t)
@@ -223,7 +228,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  End Global Customizations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Keybindings
@@ -254,8 +258,10 @@
 ;; occur is cool
 (global-set-key (kbd "C-c o") 'my-occur)
 
+
 ;; Package Config
 (load (concat emacs-config-root "package-config.el"))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Language Setup

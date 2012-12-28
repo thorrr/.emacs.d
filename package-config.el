@@ -38,6 +38,14 @@
                                (local-set-key (kbd "M-N") 'flymake-goto-next-error)
                                ))
 
+;; show-paren customizations
+(face-spec-reset-face 'show-paren-match)
+(set-face-attribute 'show-paren-match nil
+                    :foreground nil
+                    :weight 'normal
+                    :background  "#052B03"
+                    )
+
 ;; recentf
 (require 'recentf)
 (recentf-mode 1)
