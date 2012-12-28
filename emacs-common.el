@@ -150,8 +150,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Customizations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(server-start)
+(if (eq system-type 'windows-nt) ;;keep server file out of our pristine .emacs.d directory
+    (setq server-auth-dir (concat (getenv "APPDATA") "\\.emacs.d\\server")))
+(load "server")
+(unless (server-running-p) (server-start))
 (global-subword-mode)
 (setq column-number-mode t)
 (require 'uniquify) ;;globally unique buffer names
@@ -164,9 +166,9 @@
 (show-paren-mode t)
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression)
+(face-spec-reset-face 'show-paren-match-face)
 (set-face-attribute 'show-paren-match-face nil 
                     :weight 'bold
-                    :inherit nil
                     :background  "#052B03"
                     )
 
