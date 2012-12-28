@@ -163,9 +163,11 @@
 (show-paren-mode t)
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression)
-(set-face-foreground 'show-paren-match-face "#94bff3")
 (set-face-attribute 'show-paren-match-face nil 
-                    :weight 'bold :underline nil :overline nil :slant 'normal :inherit nil)
+                    :weight 'bold
+                    :inherit nil
+                    :background  "#052B03"
+                    )
 
 ;; ignore ^M in mixed dos/unix files
 (add-hook 'find-file-hook (lambda () (if (fboundp 'remove-dos-eol) (remove-dos-eol)))) ;; protect ourselves if there's a .emacs file problem
@@ -245,6 +247,9 @@
 (global-set-key (kbd "C-M-/") 'undo-tree-visualize)
 ; replace buffer-menu with ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+;; occur is cool
+(global-set-key (kbd "C-c o") 'my-occur)
 
 ;; Package Config
 (load (concat emacs-config-root "package-config.el"))

@@ -24,7 +24,7 @@
                                          name buffer))
                                  (t
                                   (switch-to-buffer buffer)
-                                  (goto-char point)
+                                  (goto-char (+ point 1))
                                   (recenter 1)))))))
            (cond ((fboundp symbol)
                   (elisp-push-point-marker)

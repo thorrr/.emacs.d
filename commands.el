@@ -125,3 +125,16 @@
   (mapcar (lambda (e) (git-update (car e) (cadr e))) git-projects)
   (mapcar (lambda (e) (hg-update (car e) (cadr e))) hg-projects))
 
+(defun my-occur (&optional regexp)
+  "Switch to the *Occur* buffer or run `occur'."
+  (interactive)
+  (if (get-buffer "*Occur*")
+          (switch-to-buffer-other-window "*Occur*")
+        (call-interactively 'occur)))
+
+(defun run-occur-during-interactive-search ()
+  (interactive)
+   (let ((case-fold-search isearch-case-fold-search))
+      (occur (if isearch-regexp isearch-string
+               (regexp-quote isearch-string)))
+      (switch-to-buffer-other-window "*Occur*")))
