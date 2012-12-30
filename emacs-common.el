@@ -3,8 +3,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;  Path Variables
-(defvar emacs-savefile-dir "~/.local-emacs/auto-save-list/")
-(defvar shared-externals "~/.local-emacs/externals/")
+(defcustom emacs-savefile-dir
+  "Put all autosave files, save point, and undo-tree backups here"
+  "~/.local-emacs/auto-save-list/")
+
+(defcustom shared-externals
+  "Download all emacs packages here."
+  "~/.local-emacs/externals/")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Projects not in elpa
@@ -83,6 +88,10 @@
 ;; Utility functions that all subsequent files can rely on
 (setq emacs-config-root (file-name-directory load-file-name))
 (load (concat emacs-config-root "elisp-utils.el"))
+
+;; make sure scratch buffer tries to open files in home
+(with-current-buffer "*scratch*"
+  (setq default-directory "~/"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Elisp Artifacts
