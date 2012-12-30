@@ -166,7 +166,9 @@
 (unless (server-running-p) (server-start))
 
 ;; Consolas is the best font
-(set-face-attribute 'default nil :font "Consolas")
+(if (ignore-errors
+      (set-face-attribute 'default nil :font "Consolas")) 't
+  (message "*** emacs-common *** Consolas font not available on this system.  Install it using the package manager if you want to use it."))
 (set-face-attribute 'default nil :height 80)
 
 (global-subword-mode)
