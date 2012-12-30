@@ -3,13 +3,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;  Path Variables
-(defcustom emacs-savefile-dir
-  "Put all autosave files, save point, and undo-tree backups here"
-  "~/.local-emacs/auto-save-list/")
+(defcustom emacs-savefile-dir "~/.local-emacs/auto-save-list/" 
+  "Put all autosave files, save point, and undo-tree backups here")
 
-(defcustom shared-externals
-  "Download all emacs packages here."
-  "~/.local-emacs/externals/")
+(defcustom shared-externals "~/.local-emacs/externals/"
+  "Download all emacs packages here.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Projects not in elpa
