@@ -136,4 +136,9 @@
       (minimap-create)
     (minimap-kill)))
 
+(setq minimap-window-location 'right)
+(setq minimap-width-fraction .1)
+(setq minimap-recenter-type 'free)
+;;(setq minimap-recenter-type 'relative)
+(setq minimap-update-delay 1.0)
 (global-set-key (kbd "C-c m") 'minimap-toggle)
