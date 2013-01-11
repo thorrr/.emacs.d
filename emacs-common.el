@@ -3,8 +3,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;  Path Variables
-(defvar emacs-savefile-dir "~/.local-emacs/auto-save-list/")
-(defvar shared-externals "~/.local-emacs/externals/")
+(defcustom emacs-savefile-dir "~/.local-emacs/auto-save-list/" 
+  "Put all autosave files, save point, and undo-tree backups here")
+
+(defcustom shared-externals "~/.local-emacs/externals/"
+  "Download all emacs packages here.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Projects not in elpa
@@ -84,6 +87,10 @@
 (setq emacs-config-root (file-name-directory load-file-name))
 (load (concat emacs-config-root "elisp-utils.el"))
 
+;; make sure scratch buffer tries to open files in home
+(with-current-buffer "*scratch*"
+  (setq default-directory "~/"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Elisp Artifacts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -159,7 +166,9 @@
 (unless (server-running-p) (server-start))
 
 ;; Consolas is the best font
-(set-face-attribute 'default nil :font "Consolas")
+(if (ignore-errors
+      (set-face-attribute 'default nil :font "Consolas")) 't
+  (message "*** emacs-common *** Consolas font not available on this system.  Install it using the package manager if you want to use it."))
 (set-face-attribute 'default nil :height 80)
 
 (global-subword-mode)
