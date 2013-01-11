@@ -129,12 +129,12 @@
 (define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
 
 ;; minimap keybinding
-(defun minimap-toggle ()
-  "Toggle minimap for current buffer."
-  (interactive)
-  (if (null minimap-bufname)
-      (minimap-create)
-    (minimap-kill)))
+;; (defun minimap-toggle ()
+;;   "Toggle minimap for current buffer."
+;;   (interactive)
+;;   (if (null minimap-bufname)
+;;       (minimap-create)
+;;     (minimap-kill)))
 
 (setq minimap-window-location 'right)
 (setq minimap-width-fraction .1)
@@ -142,3 +142,7 @@
 ;;(setq minimap-recenter-type 'relative)
 (setq minimap-update-delay 1.0)
 (global-set-key (kbd "C-c m") 'minimap-toggle)
+
+
+;;fringe experiments
+(toggle-scroll-bar -1)
