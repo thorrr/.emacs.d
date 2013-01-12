@@ -11,10 +11,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Projects not in elpa
-(defvar git-projects '())
-(defvar hg-projects '())
-(defvar wget-projects '())
-(defvar make-projects '())
+(defcustom git-projects '() "")
+(defcustom hg-projects '() "")
+(defcustom wget-projects '() "")
+(defcustom make-projects '() "")
 
 (setq git-projects (append git-projects '(
     ("python" "https://github.com/fgallina/python.el.git")  ;;this should be part of emacs24 but I don't see it in my distro                       
