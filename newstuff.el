@@ -128,19 +128,19 @@
 ;; press C-o to do an occur buffer during an interactive search
 (define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
 
-;; minimap keybinding
-;; (defun minimap-toggle ()
-;;   "Toggle minimap for current buffer."
-;;   (interactive)
-;;   (if (null minimap-bufname)
-;;       (minimap-create)
-;;     (minimap-kill)))
-
+(require 'minimap)
 (setq minimap-window-location 'right)
 (setq minimap-width-fraction .1)
 (setq minimap-recenter-type 'free)
-;;(setq minimap-recenter-type 'relative)
 (setq minimap-update-delay 1.0)
+(setq minimap-dedicated-window 't)
+;;;###autoload
+(defun minimap-toggle ()
+  "Toggle minimap for current buffer."
+  (interactive)
+  (if (null minimap-bufname)
+      (minimap-create)
+    (minimap-kill)))
 (global-set-key (kbd "C-c m") 'minimap-toggle)
 
 
