@@ -128,21 +128,37 @@
 ;; press C-o to do an occur buffer during an interactive search
 (define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
 
-;; minimap keybinding
-;; (defun minimap-toggle ()
-;;   "Toggle minimap for current buffer."
-;;   (interactive)
-;;   (if (null minimap-bufname)
-;;       (minimap-create)
-;;     (minimap-kill)))
-
+(require 'minimap)
 (setq minimap-window-location 'right)
 (setq minimap-width-fraction .1)
 (setq minimap-recenter-type 'free)
-;;(setq minimap-recenter-type 'relative)
 (setq minimap-update-delay 1.0)
+(setq minimap-dedicated-window 't)
+;;;###autoload
+(defun minimap-toggle ()
+  "Toggle minimap for current buffer."
+  (interactive)
+  (if (null minimap-bufname)
+      (minimap-create)
+    (minimap-kill)))
 (global-set-key (kbd "C-c m") 'minimap-toggle)
 
 
 ;;fringe experiments
 (toggle-scroll-bar -1)
+
+
+;; let's try line numbers
+
+(defun toggle-line-numbers ()
+  (interactive)
+  (require 'linum)
+  (face-spec-reset-face 'linum)
+  (set-face-attribute 'linum nil :inherit nil :background "#4f4f4f"
+                      :foreground "slate gray")
+  
+  (let ((linum-format (concat "%" (format "%s" (ceiling (log10 (line-number-at-pos (point-max))))) "d")))
+    (set-fringe-style '(2 . 10)) ;;TODO - save fringe style
+    (if linum-mode (linum-mode 0) (linum-on))))
+(global-set-key (kbd "<f2>") 'toggle-line-numbers)
+
