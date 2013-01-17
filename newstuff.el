@@ -4,7 +4,7 @@
 ;;new visible mark stuff
 (require 'visible-mark)
 (global-visible-mark-mode t)
-(setq visible-mark-max 4)
+(setq visible-mark-max 2)
 
 ;; customize visible faces
 (face-spec-reset-face 'visible-mark-face)
@@ -162,3 +162,21 @@
     (if linum-mode (linum-mode 0) (linum-on))))
 (global-set-key (kbd "<f2>") 'toggle-line-numbers)
 
+;; multiple cursors is fcking awesome
+(require 'multiple-cursors)
+(setq mc/list-file emacs-savefile-dir)
+(global-set-key (kbd "M-S-<down>") 'mc/mark-next-like-this)
+(global-set-key (kbd "M-S-<right>") 'mc/mark-next-like-this)
+(global-set-key (kbd "M-S-<up>") 'mc/mark-previous-like-this)
+(global-set-key (kbd "M-S-<left>") 'mc/mark-previous-like-this)
+(global-set-key (kbd "M-S-<next>") 'mc/mark-all-like-this)
+(global-set-key (kbd "M-S-<prior>") 'mc/mark-all-like-this)
+
+;; this is awesome - commands that work when you've selected something
+(require 'region-bindings-mode)
+(region-bindings-mode-enable)
+(define-key region-bindings-mode-map "a" 'mc/mark-all-like-this)
+(define-key region-bindings-mode-map "p" 'mc/mark-previous-like-this)
+(define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
+;; press "m" then press "right" to skip the next new cursor or "down" to accept it
+(define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended)
