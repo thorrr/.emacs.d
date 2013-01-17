@@ -164,7 +164,7 @@
 
 ;; multiple cursors is fcking awesome
 (require 'multiple-cursors)
-(setq mc/list-file emacs-savefile-dir)
+(setq mc/list-file (concat emacs-savefile-dir ".mc-lists.el"))
 (global-set-key (kbd "M-S-<down>") 'mc/mark-next-like-this)
 (global-set-key (kbd "M-S-<right>") 'mc/mark-next-like-this)
 (global-set-key (kbd "M-S-<up>") 'mc/mark-previous-like-this)
