@@ -255,6 +255,7 @@
 (global-set-key [M-up] 'move-text-up)
 (global-set-key [M-down] 'move-text-down)
 (global-set-key "\M-j" 'join-next-line)
+(global-set-key [f5] 'write-last-macro-to-messages)
 (global-set-key [f12] 'toggle-camelcase-at-point)
 (global-set-key (kbd "M-h") 'my-iflipb-next-buffer)
 (global-set-key (kbd "M-H") 'my-iflipb-previous-buffer)
@@ -269,6 +270,10 @@
 ;; occur is cool
 (global-set-key (kbd "C-c o") 'my-occur)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  End Global Keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Package Config
 (load (concat emacs-config-root "package-config.el"))
