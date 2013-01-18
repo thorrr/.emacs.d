@@ -143,20 +143,16 @@
     (minimap-kill)))
 (global-set-key (kbd "C-c m") 'minimap-toggle)
 
-
 ;;fringe experiments
 (toggle-scroll-bar -1)
 
-
 ;; let's try line numbers
-
 (defun toggle-line-numbers ()
   (interactive)
   (require 'linum)
   (face-spec-reset-face 'linum)
   (set-face-attribute 'linum nil :inherit nil :background "#4f4f4f"
                       :foreground "slate gray")
-  
   (let ((linum-format (concat "%" (format "%s" (ceiling (log10 (line-number-at-pos (point-max))))) "d")))
     (set-fringe-style '(2 . 10)) ;;TODO - save fringe style
     (if linum-mode (linum-mode 0) (linum-on))))
@@ -166,9 +162,7 @@
 (require 'multiple-cursors)
 (setq mc/list-file (concat emacs-savefile-dir ".mc-lists.el"))
 (global-set-key (kbd "M-S-<down>") 'mc/mark-next-like-this)
-(global-set-key (kbd "M-S-<right>") 'mc/mark-next-like-this)
 (global-set-key (kbd "M-S-<up>") 'mc/mark-previous-like-this)
-(global-set-key (kbd "M-S-<left>") 'mc/mark-previous-like-this)
 (global-set-key (kbd "M-S-<next>") 'mc/mark-all-like-this)
 (global-set-key (kbd "M-S-<prior>") 'mc/mark-all-like-this)
 
