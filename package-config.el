@@ -31,7 +31,7 @@
 (face-spec-reset-face 'flymake-infoline)
 ;; customize the flymake overlay.
 (set-face-attribute 'flymake-errline nil :inherit nil :background "HotPink4")
-(set-face-attribute 'flymake-warnline nil :inherit nil :background "dark olive green")
+(set-face-attribute 'flymake-warnline nil :inherit nil :background "#3D4D3B")
 (set-face-attribute 'flymake-infoline nil :inherit nil :background "grey30")
 (add-hook 'flymake-mode-hook (lambda () 
                                (local-set-key (kbd "M-P") 'flymake-goto-prev-error)
@@ -43,7 +43,7 @@
 (set-face-attribute 'show-paren-match nil
                     :foreground nil
                     :weight 'normal
-                    :background  "#052B03"
+                    :background  "#3D5169"
                     )
 
 ;; recentf
