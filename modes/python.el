@@ -71,8 +71,14 @@
 (setq pymacs-auto-restart t)
 
 (defun my-turn-on-ropemacs () (interactive)
+  (setq ropemacs-enable-autoimport 't)
+  (setq ropemacs-autoimport-modules `("os" "shutil"))
   (if (not (boundp 'ropemacs-mode)) (pymacs-load "ropemacs" "rope-"))
   (if (and (boundp 'ropemacs-mode) (not ropemacs-mode)) (ropemacs-mode)))
+
+;; regenerate the import cache whenever you open a project.  this can be slow the first time
+(defadvice rope-open-project (after rope-open-project-then-regenerate-import-cache activate)
+  (rope-generate-autoimport-cache))
 
 (ac-ropemacs-initialize) ;; hook rope into auto-complete
 
