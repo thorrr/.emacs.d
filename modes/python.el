@@ -94,8 +94,9 @@
    (set-variable 'indent-tabs-mode nil)
    (setq ropemacs-enable-autoimport t)
    (setq ac-sources '())
-   (add-to-list 'ac-sources 'ac-source-python)
-   ;;(add-to-list 'ac-sources 'ac-source-ropemacs 'ac-source-yasnippet)
+   (add-to-list 'ac-sources 'ac-source-python 'ac-source-ropemacs)
+   ;; (add-to-list 'ac-sources 'ac-source-python)
+   ;; (add-to-list 'ac-sources 'ac-source-ropemacs 'ac-source-yasnippet)
    
    ;;the internal process is only created once, when python-mode is started
    (python-get-named-else-internal-process)
