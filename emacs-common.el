@@ -176,7 +176,9 @@
       (message "*** sudo apt-get install ttf-inconsolata\nsudo fc-cache -fv to make inconsolata font work on linux")))
 ;; Consolas is the best font
 (if (ignore-errors
-      (set-face-attribute 'default nil :font "Consolas")) 'consolas-good
+    (let ((retval (set-face-attribute 'default nil :font "Consolas")))
+      (if (not retval) 't retval)))
+        'consolas-good
   (message "*** Consolas font not available on this system.  Install it using the package manager if you want to use it."))
 (set-face-attribute 'default nil :height 80)
 
