@@ -27,6 +27,8 @@
     ("visible-mark" "https://github.com/emacsmirror/visible-mark.git")
     ("real-auto-save" "https://gist.github.com/4373732.git")
     ("turn-off-messaging" "https://gist.github.com/4373781.git")
+    ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
+    ("multiple-cursors" "https://github.com/emacsmirror/multiple-cursors.git")
 )))
 
 (setq hg-projects (append hg-projects '(
@@ -253,6 +255,7 @@
 (global-set-key [M-up] 'move-text-up)
 (global-set-key [M-down] 'move-text-down)
 (global-set-key "\M-j" 'join-next-line)
+(global-set-key [f5] 'write-last-macro-to-messages)
 (global-set-key [f12] 'toggle-camelcase-at-point)
 (global-set-key (kbd "M-h") 'my-iflipb-next-buffer)
 (global-set-key (kbd "M-H") 'my-iflipb-previous-buffer)
@@ -267,6 +270,10 @@
 ;; occur is cool
 (global-set-key (kbd "C-c o") 'my-occur)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  End Global Keybindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Package Config
 (load (concat emacs-config-root "package-config.el"))

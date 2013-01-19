@@ -138,3 +138,15 @@
       (occur (if isearch-regexp isearch-string
                (regexp-quote isearch-string)))
       (switch-to-buffer-other-window "*Occur*")))
+
+(defun write-last-macro-to-messages ()
+  "Write the last macro to *Messages*."
+  (interactive)
+  (with-current-buffer "*Messages*"
+    (let ((name '***tmp-macro***))
+      (kmacro-name-last-macro 'name)
+      (goto-char (point-max))
+      (newline)
+      (insert-kbd-macro 'name)
+       (newline))))
+
