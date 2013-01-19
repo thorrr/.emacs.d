@@ -66,7 +66,7 @@
 (defvar my-packages '())
 ;; shared package list
 (setq my-packages (append my-packages
-             '(auto-complete autopair paredit undo-tree ace-jump-mode
+             '(auto-complete autopair auctex paredit undo-tree ace-jump-mode
                idle-highlight-mode ess hideshow org move-text minimap
                clojure-mode clojure-test-mode clojurescript-mode 
                rainbow-delimiters
