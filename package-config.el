@@ -205,6 +205,9 @@
 	      (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
 	      (define-key ido-completion-map (kbd "C-p") 'ido-prev-match)
 	      (define-key ido-completion-map (kbd "<up>") 'ido-prev-match)
+              ;;map m-bsp to just bsp because that's how it acts in ido mode
+	      (define-key ido-completion-map (kbd "M-<del>") 'ido-delete-backward-updir)
+	      (define-key ido-completion-map (kbd "M-<backspace>") 'ido-delete-backward-updir)
               ;;get rid of annoying "kill file" function
 	      (define-key ido-completion-map (kbd "C-k") nil)
               ;;C-a goes to the front of the directory tree (home directory)
