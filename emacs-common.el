@@ -66,7 +66,7 @@
 (defvar my-packages '())
 ;; shared package list
 (setq my-packages (append my-packages
-             '(auto-complete autopair paredit undo-tree ace-jump-mode
+             '(auto-complete autopair auctex paredit undo-tree ace-jump-mode
                idle-highlight-mode ess hideshow org move-text minimap
                clojure-mode clojure-test-mode clojurescript-mode 
                rainbow-delimiters
@@ -167,10 +167,19 @@
 (load "server")
 (unless (server-running-p) (server-start))
 
+;; set up inconsolata by default if we're on linux
+(if (not (eq system-type 'windows-nt))
+    (if (ignore-errors
+    (let ((retval (set-face-attribute 'default nil :font "Inconsolata"))) ;;set-face-attribute returns nil on success
+      (if (not retval) 't retval)))
+        'inconsolata-good
+      (message "*** sudo apt-get install ttf-inconsolata\nsudo fc-cache -fv to make inconsolata font work on linux")))
 ;; Consolas is the best font
 (if (ignore-errors
-      (set-face-attribute 'default nil :font "Consolas")) 't
-  (message "*** emacs-common *** Consolas font not available on this system.  Install it using the package manager if you want to use it."))
+    (let ((retval (set-face-attribute 'default nil :font "Consolas")))
+      (if (not retval) 't retval)))
+        'consolas-good
+  (message "*** Consolas font not available on this system.  Install it using the package manager if you want to use it."))
 (set-face-attribute 'default nil :height 80)
 
 (global-subword-mode)
