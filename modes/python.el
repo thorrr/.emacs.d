@@ -8,7 +8,7 @@
             (define-key python-mode-map (kbd "M-l") 'my-rope-go-backward)
             (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
             (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
-            (define-key python-mode-map [f4] 'my-restart-python)
+            (define-key python-mode-map (kbd "S-<f4>") 'my-restart-python)
             (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
             (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
             ))
@@ -388,8 +388,6 @@ if __name__ == '__main__':
                         (my-rope-goto-definition))))))
 
 ;;first attempt at ipdb stuff.  from http://pedrokroger.com/2010/07/configuring-emacs-as-a-python-ide-2/
-(setq pdb-path 'c:/Users/jbell8/atg/buildEnvironment/exeternals/python-2.7/Lib/pdb.py
-      gud-pdb-command-name (symbol-name pdb-path))
 (defun annotate-pdb ()
   (interactive)
   (highlight-lines-matching-regexp "import ipdb")
@@ -402,6 +400,7 @@ if __name__ == '__main__':
   (insert "import ipdb; ipdb.set_trace()")
   (highlight-lines-matching-regexp "^[ 	]*import ipdb; ipdb.set_trace()"))
 (define-key python-mode-map (kbd "C-c C-b") 'python-add-breakpoint)
+
 
 (defun my-make-python-shell-gui-interactive ()
   (interactive) (python-shell-send-string "from matplotlib import interactive; interactive(True)"))
