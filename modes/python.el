@@ -9,7 +9,7 @@
             (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
             (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
             (define-key python-mode-map [f4] 'my-restart-python)
-            (define-key ropemacs-local-keymap (kbd "M-?") 'auto-complete)
+            (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
             (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
             ))
 
@@ -93,10 +93,11 @@
    (set-variable 'python-indent-offset 4)
    (set-variable 'indent-tabs-mode nil)
    (setq ropemacs-enable-autoimport t)
-   (setq ac-sources '())
-   (add-to-list 'ac-sources 'ac-source-python 'ac-source-ropemacs)
-   ;; (add-to-list 'ac-sources 'ac-source-python)
-   ;; (add-to-list 'ac-sources 'ac-source-ropemacs 'ac-source-yasnippet)
+   ;;(setq ac-sources '())
+   (add-to-list 'ac-sources 'ac-source-python)
+   ;;TODO - make symbolName : packagea.packageb.packageC trigger an import statement
+   (add-to-list 'ac-sources 'ac-source-ropemacs)
+   ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
    
    ;;the internal process is only created once, when python-mode is started
    (python-get-named-else-internal-process)
