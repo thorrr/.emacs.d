@@ -414,3 +414,62 @@ if __name__ == '__main__':
 (defun initprod() (interactive)
   (python-shell-send-string "from atg import java; java.initProd()"
                             (python-repl)))
+
+(defun source-shell-script (script)
+  (interactive)
+  (let* ((fn (expand-file-name script))
+         (cmd (concat (format "sh -c \"source \"%s\" 2>&1 /dev/null && env | " fn )  ;; source the file and call 'env'
+                      "sed -e 's/\\\\\\\\/\\\\\\\\\\\\\\\\/g' | " ;; change single backslashes to double backslashes
+                      "sed -e 's/\\\"/\\\\\\\\\\\"/g' | " ;; escape quotes in environment values
+                      "sed -e 's/\\([^=]*\\)=\\(.*\\)/(setenv \\\"\\1\\\" \\\"\\2\\\" \\)/g' " ;; create 'setenv' pairs
+                      "\""                                          ;; end of argument to 'sh'
+                      ))
+         (string (shell-command-to-string cmd))
+         (cmd-list (split-string string "\n")))
+    ;;individually execute each pair
+    (mapcar (lambda (arg) (message arg) (if (not (string= "" arg)) (eval (car (read-from-string arg))))) cmd-list))
+  't)
+
+
+;;(source-shell-script "c:/Users/jbell8/svn/test-python-virtualenv/Scripts/activate")
+(defun absolute-dirname (path)
+  "Return the directory name portion of a path.
+
+If PATH is local, return it unaltered.
+If PATH is remote, return the remote diretory portion of the path."
+  (if (tramp-tramp-file-p path)
+      (elt (tramp-dissect-file-name path) 3)
+    path))
+
+(defun run-virtualenv-python (&optional env)
+  "Run Python in this virtualenv."
+  (interactive)
+  (let* ((python-subpath (if (eq system-type 'windows-nt)
+                           "Scripts\\python.exe"
+                           "bin/python"))
+         (env-root (locate-dominating-file
+                   (or env default-directory) python-subpath)))
+    (debug)
+    (apply 'run-python
+           (when env-root
+             (list (concat (absolute-dirname env-root) python-subpath))))))
+
+(defun python-generate-repl-name (&optional buffer)
+  "Generate a better name for a Python buffer."
+  (let ((buffer (or buffer (window-buffer))))
+    (with-current-buffer buffer
+      (concat
+       "*Python-"
+       (file-name-nondirectory
+        (substring default-directory 0
+                   (when (equal (substring default-directory -1) "/") -1)))
+       "@"
+       (car (split-string (if (tramp-tramp-file-p default-directory)
+                              (with-parsed-tramp-file-name default-directory py
+                                py-host)
+                            (system-name)) "\\."))
+       "*"))))
+
+(add-hook 'inferior-python-mode-hook
+          (lambda () (rename-buffer (python-generate-repl-name))))     
+
