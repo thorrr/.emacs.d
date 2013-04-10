@@ -150,3 +150,21 @@
       (insert-kbd-macro 'name)
        (newline))))
 
+;;(source-shell-script "c:/Users/jbell8/svn/test-python-virtualenv/Scripts/activate")
+(defun source-shell-script (script)
+  (interactive)
+  (let* ((fn (expand-file-name script))
+         (cmd (concat (format "sh -c \"source \"%s\" 2>&1 /dev/null && env | " fn )  ;; source the file and call 'env'
+                      "sed -e 's/\\\\\\\\/\\\\\\\\\\\\\\\\/g' | " ;; change single backslashes to double backslashes
+                      "sed -e 's/\\\"/\\\\\\\\\\\"/g' | " ;; escape quotes in environment values
+                      "sed -e 's/\\([^=]*\\)=\\(.*\\)/(setenv \\\"\\1\\\" \\\"\\2\\\" \\)/g' " ;; create 'setenv' pairs
+                      "\""                                          ;; end of argument to 'sh'
+                      ))
+         (string (shell-command-to-string cmd))
+         (cmd-list (split-string string "\n")))
+    ;;individually execute each pair
+    (mapcar (lambda (arg) (message arg) (if (not (string= "" arg)) (eval (car (read-from-string arg))))) cmd-list))
+  't)
+
+
+

@@ -47,6 +47,30 @@
   "Custom arguments for starting python interpreter.  Interactive (-i) by default"
   "-i")
 
+(defcustom my-python-test-template
+  "Python test template file"
+  "from test.package import AtgTestCase
+import doctest
+
+def load_tests(loader, tests, ignore):
+    tests.addTests(doctest.DocTestSuite(%PACKAGENAME%))
+    return tests
+
+class %TESTCLASSNAME%(AtgTestCase):
+    def setUp(self):
+        pass
+    def tearDown(self):
+        pass
+
+    def test_%PACKAGENAME%(self):
+        %CURSOR-HERE%
+        pass
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()"
+)
+
 (setq
  python-shell-interpreter python-shell-interpreter-var
  python-shell-interpreter-args python-shell-interpreter-args-var
@@ -57,11 +81,6 @@
  python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n" 
  )
 
-(setq project-roots ;;TODO:  move the other languages out of this file
-      '(("m4-python" :root-contains-files ("atg" "rpy2"))
-        ("m4-sbt" :root-contains-files ("project/build/M4Project.scala"))
-        ("leiningen" :root-contains-files ("project.clj"))
-        ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global Setup
@@ -105,10 +124,6 @@
    (defun run-python (&optional a b) (interactive "ii") (my-run-python)) ;;advice doesn't work well for overriding interactive functions
 
    (project-root-fetch)
-   (make-local-variable 'm4-python-root)
-   (make-local-variable 'm4-python-test-root)
-   (setq m4-python-root (cdr project-details))
-   (setq m4-python-test-root (concat (cdr project-details) "atg/test/")) ;; remember, there isn't a "atg" subdirectory in the test-root
    (setq ropemacs-guess-project (cdr project-details));;get all of the python subdirectories
    (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
    (local-set-key [f10] 'my-python-toggle-test-implementation)
@@ -121,7 +136,9 @@
 
 (add-hook 'inferior-python-mode-hook (lambda ()
   ;; jump to the bottom of the comint buffer if you start typing
-  (progn (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t))
+  (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t)
+  ;; make python repls have nicer names
+  (rename-buffer (python-generate-repl-name))
 ))
 
 ;;overwrite ropemacs "lucky code assist"
@@ -246,7 +263,7 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
 
 (defun my-full-python-module (filename project-root)
   "Return the package followed by this filename's module.
-  For example, \"~/atg/data/tsy/foo_bar.py\" returns (\"atg.data.tsy\" \"foo_bar\")"
+  For example, \"~/goo/data/tsy/foo_bar.py\" returns (\"goo.data.tsy\" \"foo_bar\")"
   (let ((subtree (replace-regexp-in-string project-root "" filename t)))
     (string-match "^\\(.*\\)/\\(.\+\\).py" subtree)
     (list (replace-regexp-in-string "/" "." (match-string 1 subtree))
@@ -254,8 +271,10 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
 
 (defun my-python-test-file (filename &optional pr ptr)
   "Get the corresponding test filename or return filename if it's a valid test file"
-  (if (null pr) (setq pr m4-python-root))
-  (if (null ptr) (setq ptr m4-python-test-root))
+  (if (or (null python-root) (null python-test-root))
+      (message "Warning: local variable python-root or python-test-root is not defined"))
+  (if (null pr) (setq pr python-root))
+  (if (null ptr) (setq ptr python-test-root))
   (let* ((this-local-path (substring (replace-regexp-in-string pr "" filename) 4)) ;; "atg/" has four characters
          (this-test-file-almost (concat ptr this-local-path))
          (last-forward-slash (+ 1 (string-match-p "/\\([^/]\+\\)$" this-test-file-almost)))
@@ -266,8 +285,10 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
 
 (defun my-python-implementation-file (filename &optional pr ptr)
   "Get the corresponding implementation filename or return filename if it's a valid implementation file"
-  (if (null pr) (setq pr m4-python-root))
-  (if (null ptr) (setq ptr m4-python-test-root))
+  (if (or (null python-root) (null python-test-root))
+      (message "Warning: local variable python-root or python-test-root is not defined"))
+  (if (null pr) (setq pr python-root))
+  (if (null ptr) (setq ptr python-test-root))
   (let* ((this-local-path (replace-regexp-in-string ptr "" filename))
          (this-impl-file-almost (concat pr "atg/" this-local-path))
          (last-forward-slash (+ 1 (string-match-p "/\\([^/]\+\\)$" this-impl-file-almost)))
@@ -285,7 +306,7 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
   (let* ((test-filename (my-python-test-file (buffer-file-name)))
          (test-classnames (my-python-class test-filename))
          (impl-file (my-python-implementation-file (buffer-file-name)))
-         (impl-python-module (my-full-python-module impl-file m4-python-root))
+         (impl-python-module (my-full-python-module impl-file python-root))
          (package-name (car impl-python-module))
          (module-name (cadr impl-python-module))
          (command-string-1 "import unittest")
@@ -313,30 +334,6 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
             (python-shell-send-string command-string-4))
           test-classnames)
     ))
-
-
-(defvar my-python-test-template
-  "from atg.test import AtgTestCase
-import doctest
-
-def load_tests(loader, tests, ignore):
-    tests.addTests(doctest.DocTestSuite(%PACKAGENAME%))
-    return tests
-
-class %TESTCLASSNAME%(AtgTestCase):
-    def setUp(self):
-        pass
-    def tearDown(self):
-        pass
-
-    def test_%PACKAGENAME%(self):
-        %CURSOR-HERE%
-        pass
-
-if __name__ == '__main__':
-    import unittest
-    unittest.main()"
-)
 
 (defun insert-test-code-into-buffer (module package &optional classname)
   (let* ((test-class-tag "%TESTCLASSNAME%")
@@ -366,7 +363,7 @@ if __name__ == '__main__':
 (defun my-python-switch-to-test ()
   (interactive)
   (let* ((implementation-file (buffer-file-name))
-         (full-python-module (my-full-python-module implementation-file m4-python-root))
+         (full-python-module (my-full-python-module implementation-file python-root))
          (this-module-name (cadr full-python-module))
          (this-package-name (car full-python-module)))
     (let ((display-buffer-reuse-frames t))
@@ -407,43 +404,18 @@ if __name__ == '__main__':
 (defun my-python-show-graphs ()
   (interactive) (python-shell-send-string "from pylab import show; show()"))
 
-(defun initdev() (interactive)
-  (python-shell-send-string "from atg import java; java.initDev()"
-                            (python-repl)))
-
-(defun initprod() (interactive)
-  (python-shell-send-string "from atg import java; java.initProd()"
-                            (python-repl)))
-
-(defun source-shell-script (script)
-  (interactive)
-  (let* ((fn (expand-file-name script))
-         (cmd (concat (format "sh -c \"source \"%s\" 2>&1 /dev/null && env | " fn )  ;; source the file and call 'env'
-                      "sed -e 's/\\\\\\\\/\\\\\\\\\\\\\\\\/g' | " ;; change single backslashes to double backslashes
-                      "sed -e 's/\\\"/\\\\\\\\\\\"/g' | " ;; escape quotes in environment values
-                      "sed -e 's/\\([^=]*\\)=\\(.*\\)/(setenv \\\"\\1\\\" \\\"\\2\\\" \\)/g' " ;; create 'setenv' pairs
-                      "\""                                          ;; end of argument to 'sh'
-                      ))
-         (string (shell-command-to-string cmd))
-         (cmd-list (split-string string "\n")))
-    ;;individually execute each pair
-    (mapcar (lambda (arg) (message arg) (if (not (string= "" arg)) (eval (car (read-from-string arg))))) cmd-list))
-  't)
-
-
-;;(source-shell-script "c:/Users/jbell8/svn/test-python-virtualenv/Scripts/activate")
-(defun absolute-dirname (path)
-  "Return the directory name portion of a path.
-
-If PATH is local, return it unaltered.
-If PATH is remote, return the remote diretory portion of the path."
-  (if (tramp-tramp-file-p path)
-      (elt (tramp-dissect-file-name path) 3)
-    path))
 
 (defun run-virtualenv-python (&optional env)
   "Run Python in this virtualenv."
   (interactive)
+  (defun absolute-dirname (path)
+    "Return the directory name portion of a path.
+
+    If PATH is local, return it unaltered.
+    If PATH is remote, return the remote diretory portion of the path."
+    (if (tramp-tramp-file-p path)
+        (elt (tramp-dissect-file-name path) 3)
+      path))
   (let* ((python-subpath (if (eq system-type 'windows-nt)
                            "Scripts\\python.exe"
                            "bin/python"))
@@ -469,7 +441,3 @@ If PATH is remote, return the remote diretory portion of the path."
                                 py-host)
                             (system-name)) "\\."))
        "*"))))
-
-(add-hook 'inferior-python-mode-hook
-          (lambda () (rename-buffer (python-generate-repl-name))))     
-
