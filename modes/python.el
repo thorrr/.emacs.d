@@ -137,8 +137,6 @@ if __name__ == '__main__':
 (add-hook 'inferior-python-mode-hook (lambda ()
   ;; jump to the bottom of the comint buffer if you start typing
   (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t)
-  ;; make python repls have nicer names
-  (rename-buffer (python-generate-repl-name))
 ))
 
 ;;overwrite ropemacs "lucky code assist"
@@ -425,19 +423,3 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
     (apply 'run-python
            (when env-root
              (list (concat (absolute-dirname env-root) python-subpath))))))
-
-(defun python-generate-repl-name (&optional buffer)
-  "Generate a better name for a Python buffer."
-  (let ((buffer (or buffer (window-buffer))))
-    (with-current-buffer buffer
-      (concat
-       "*Python-"
-       (file-name-nondirectory
-        (substring default-directory 0
-                   (when (equal (substring default-directory -1) "/") -1)))
-       "@"
-       (car (split-string (if (tramp-tramp-file-p default-directory)
-                              (with-parsed-tramp-file-name default-directory py
-                                py-host)
-                            (system-name)) "\\."))
-       "*"))))
