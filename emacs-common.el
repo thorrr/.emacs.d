@@ -43,7 +43,7 @@
     ("single-dired" "http://www.emacswiki.org/emacs/download/joseph-single-dired.el")
 )))
 
-;;  Misc commands to run in the externals subdirectory
+;; Misc commands to run in the externals subdirectory
 (setq make-projects (append make-projects '(
   ;; the "make install" part seems to contaminate your site packages and
   ;; seems to not be necessary if you add the Pymacs directory to the PYTHONPATH                                          
@@ -205,6 +205,9 @@
 (setq backup-directory-alist `((".*" . ,emacs-savefile-dir)))
 (setq auto-save-file-name-transforms
           `((".*" ,emacs-savefile-dir t)))
+
+;; put the .recentf file in the autosave directory
+(setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
 
 ;; Enable versioning with default values
 (setq
