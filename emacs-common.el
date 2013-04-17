@@ -17,7 +17,7 @@
 (defcustom make-projects '() "")
 
 (setq git-projects (append git-projects '(
-    ("python" "https://github.com/fgallina/python.el.git")  ;;this should be part of emacs24 but I don't see it in my distro                       
+;;    ("python" "https://github.com/fgallina/python.el.git")
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
     ("ensime" "https://github.com/aemoncannon/ensime.git")
     ("emacs-flymake" "https://github.com/illusori/emacs-flymake.git")
@@ -30,6 +30,14 @@
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
     ("multiple-cursors" "https://github.com/emacsmirror/multiple-cursors.git")
 )))
+
+(setq git-projects (append git-projects
+    (if (< emacs-major-version 24) '(
+        ("python" "-b emacs23 https://github.com/fgallina/python.el.git")
+        ("python" "-b emacs24 https://github.com/fgallina/python.el.git")
+        ))))
+
+
 
 (setq hg-projects (append hg-projects '(
     ("ropemacs" "https://bitbucket.org/agr/ropemacs")
@@ -51,8 +59,17 @@
   "cd Pymacs && make"
 )))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
-
 ;; Emacs Packaging
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; If we're on version 23, download the latest package.el and load it
+(if (< emacs-major-version 24)
+    (let* ((default-directory (expand-file-name shared-externals))
+           (package-file (concat default-directory "pkg-el23")))
+      (unless (file-exists-p package-file)
+        (shell-command-to-string "wget http://bit.ly/pkg-el23"))
+      (load package-file)))
+
 (require 'package)
 (nconc package-archives '(
     ("melpa" . "http://melpa.milkbox.net/packages/"))
@@ -67,12 +84,12 @@
 ;; shared package list
 (setq my-packages (append my-packages
              '(auto-complete autopair auctex paredit undo-tree ace-jump-mode
-               idle-highlight-mode ess hideshow org move-text minimap
+               idle-highlight-mode ess org move-text minimap
                clojure-mode clojure-test-mode clojurescript-mode 
                rainbow-delimiters
                scala-mode haskell-mode slime yasnippet
-               solarized-theme zenburn-theme inkpot-theme
-               anti-zenburn-theme xml)))
+;;               inkpot-theme solarized-theme anti-zenburn-theme
+               zenburn-theme)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End Variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -146,6 +163,8 @@
   (mapcar (lambda (e) (hg-clone (car e) (cadr e))) hg-projects)
   (mapcar (lambda (e) (wget-clone (car e) (cadr e))) wget-projects)
 )
+
+  
 ;; Run commands in the externals directory
 (run-local-package-commands make-projects)
 
@@ -223,13 +242,14 @@
 (setq-default save-place t)
 (setq save-place-file (concat emacs-savefile-dir "saved-places"))
 
-
-;; set 'proficient coder' color scheme
+;;(if (< emacs-major-version 24) 't 'f)
 ;; all face customizations must come after load-theme
-(load-theme 'zenburn t nil)
-;;(load-theme 'solarized-light t)
-;;(load-theme 'anti-zenburn t)
-;;(load-theme 'inkpot t)
+(if (>= emacs-major-version 24) (progn
+   (load-theme 'zenburn t nil)
+   ;;(load-theme 'solarized-light t)
+   ;;(load-theme 'anti-zenburn t)
+   ;;(load-theme 'inkpot t)
+   ))
 
 ;; undo-tree
 (require 'undo-tree)
