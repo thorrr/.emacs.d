@@ -17,7 +17,6 @@
 (defcustom make-projects '() "")
 
 (setq git-projects (append git-projects '(
-;;    ("python" "https://github.com/fgallina/python.el.git")
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
     ("ensime" "https://github.com/aemoncannon/ensime.git")
     ("emacs-flymake" "https://github.com/illusori/emacs-flymake.git")
@@ -29,15 +28,14 @@
     ("turn-off-messaging" "https://gist.github.com/4373781.git")
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
     ("multiple-cursors" "https://github.com/emacsmirror/multiple-cursors.git")
+    ("zenburn-emacs23" "https://github.com/dbrock/zenburn-el.git")
 )))
 
 (setq git-projects (append git-projects
-    (if (< emacs-major-version 24) '(
-        ("python" "-b emacs23 https://github.com/fgallina/python.el.git")
-        ("python" "-b emacs24 https://github.com/fgallina/python.el.git")
-        ))))
-
-
+    (if (< emacs-major-version 24)
+      '(("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git"))
+      '(("python-emacs24" "-b emacs24 https://github.com/fgallina/python.el.git"))
+        )))
 
 (setq hg-projects (append hg-projects '(
     ("ropemacs" "https://bitbucket.org/agr/ropemacs")
@@ -49,6 +47,7 @@
 (setq wget-projects (append wget-projects '(
     ("ac-python" "http://chrispoole.com/downloads/ac-python.el")
     ("single-dired" "http://www.emacswiki.org/emacs/download/joseph-single-dired.el")
+    ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
 )))
 
 ;; Misc commands to run in the externals subdirectory
@@ -57,6 +56,9 @@
   ;; seems to not be necessary if you add the Pymacs directory to the PYTHONPATH                                          
   ;;  "cd Pymacs && make && make install"
   "cd Pymacs && make"
+  "cd color-theme-6.6.0 && unzip color-theme-6.6.0.zip && rm color-theme-6.6.0.zip && cd .. &&
+    mv color-theme-6.6.0 color-theme-tmp && cd color-theme-tmp && mv color-theme-6.6.0 .. &&
+    cd .. && rmdir color-theme-tmp"
 )))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 ;; Emacs Packaging
@@ -242,14 +244,18 @@
 (setq-default save-place t)
 (setq save-place-file (concat emacs-savefile-dir "saved-places"))
 
-;;(if (< emacs-major-version 24) 't 'f)
 ;; all face customizations must come after load-theme
 (if (>= emacs-major-version 24) (progn
    (load-theme 'zenburn t nil)
    ;;(load-theme 'solarized-light t)
    ;;(load-theme 'anti-zenburn t)
    ;;(load-theme 'inkpot t)
-   ))
+   ) (progn
+       (require 'color-theme)
+       (add-to-list 'load-path (concat shared-externals "zenburn-emacs23"))
+       (require 'zenburn)
+       (color-theme-zenburn)
+))
 
 ;; undo-tree
 (require 'undo-tree)
