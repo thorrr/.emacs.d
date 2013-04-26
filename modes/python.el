@@ -419,7 +419,7 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
                            "bin/python"))
          (env-root (locate-dominating-file
                    (or env default-directory) python-subpath)))
-    (debug)
+;;    (debug)
     (apply 'run-python
            (when env-root
              (list (concat (absolute-dirname env-root) python-subpath))))))

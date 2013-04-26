@@ -208,7 +208,8 @@
 
 ;; put the .recentf file in the autosave directory
 (setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
-
+;; same with eshell aliases
+(setq eshell-directory-name (concat emacs-savefile-dir "eshell/"))
 ;; Enable versioning with default values
 (setq
    backup-by-copying t      ; don't clobber symlinks

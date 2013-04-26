@@ -9,9 +9,8 @@
 ;; customize visible faces
 (face-spec-reset-face 'visible-mark-face)
 (face-spec-reset-face 'visible-mark-non-trailing-face0)
-(set-face-attribute 'visible-mark-face nil :inherit nil
-                    :background "#76487A")
-(set-face-attribute 'visible-mark-non-trailing-face0 nil :inherit nil :underline 't :strike-through 't :background nil
+(set-face-attribute 'visible-mark-face nil :inherit nil :background "#656555")
+(set-face-attribute 'visible-mark-non-trailing-face0 nil :inherit nil :underline 't  :strike-through nil :background nil
                     :overline 't :foreground "#76487A")
 
 
