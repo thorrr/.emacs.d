@@ -89,6 +89,7 @@
 
 (setq-default indent-tabs-mode nil)
 
+(setq project-root-storage-file (concat emacs-savefile-dir ".project-roots"))
 (setq project-roots
       '(("m4-python" :root-contains-files ("atg" "rpy2"))
         ("m4-sbt" :root-contains-files ("project/build/M4Project.scala"))
