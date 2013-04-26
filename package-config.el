@@ -193,9 +193,11 @@
 ;; Display ido results vertically, rather than horizontally
 (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
 (setq ido-max-prospects 4)
-(setq ido-completion-buffer nil)
+;;the following tweak doesn't work on old emacs versions
+(if (>= emacs-major-version 24) (setq ido-completion-buffer nil))
 (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
 (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
+
 ;; don't want to open stuff automatically
 (setq ido-confirm-unique-completion 't)
 (add-hook 'ido-setup-hook
