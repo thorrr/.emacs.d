@@ -34,7 +34,7 @@
 (setq git-projects (append git-projects
     (if (< emacs-major-version 24)
       '(("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git"))
-      '(("python-emacs24" "-b emacs24 https://github.com/fgallina/python.el.git"))
+      '(("python-emacs24" "-b emacs-24 https://github.com/fgallina/python.el.git"))
         )))
 
 (setq hg-projects (append hg-projects '(
