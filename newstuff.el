@@ -83,7 +83,7 @@
 ;;(add-hook 'emacs-lisp-mode-hook 'turn-on-real-auto-save)  ;; mode specific auto-save
 
 ;; turn off the "file saved message" because it gets annoying
-(require 'turn-off-messaging)
+;;(require 'turn-off-messaging)
 (defadvice real-auto-save (around real-auto-save-no-message activate)
   (setq messaging-on nil) ad-do-it (setq messaging-on t))
 
