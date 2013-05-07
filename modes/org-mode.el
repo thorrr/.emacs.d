@@ -1,7 +1,7 @@
-;; you have to use org-defkey to override conflictingorg mode keybindings
-(add-hook 'org-mode-hook (lambda ()
-   (org-defkey org-mode-map (kbd "M-h") 'my-iflipb-next-buffer)
-   ))
+(require 'org)
+
+;; you have to use org-defkey to override conflicting org mode keybindings
+(org-defkey org-mode-map (kbd "M-h") 'my-iflipb-next-buffer)
 
 
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
