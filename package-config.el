@@ -20,11 +20,6 @@
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 (eval-after-load 'flymake '(require 'flymake-cursor))
 (setq flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
-;;modify pyflakes' output
-(add-hook 'python-mode-hook (lambda ()
-   ;; use \\| to separate multiple match criteria                              
-   (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
-   (setq flymake-info-line-regexp "is assigned to but never used")))
 ;;get rid of existing overlay properties
 (face-spec-reset-face 'flymake-errline)
 (face-spec-reset-face 'flymake-warnline)

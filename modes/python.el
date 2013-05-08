@@ -1,32 +1,28 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python main setup file
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'python)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python specific keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'python-mode-hook
-          (lambda ()
+(add-hook 'python-mode-hook (lambda ()
             (define-key python-mode-map (kbd "C-M-<return>") 'my-python-send-buffer)
             (define-key python-mode-map (kbd "M-.") 'my-rope-goto-definition)
             (define-key python-mode-map (kbd "M-l") 'my-rope-go-backward)
             (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
             (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
             (define-key python-mode-map (kbd "S-<f4>") 'my-restart-python)
-            (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
-            (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
             ))
 
-(add-hook 'inferior-python-mode-hook
-          (lambda ()
+(add-hook 'inferior-python-mode-hook (lambda ()
             (define-key inferior-python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
             (define-key inferior-python-mode-map [f9] 'my-python-show-graphs)
             (define-key inferior-python-mode-map [down] 'comint-next-matching-input-from-input)
             (define-key inferior-python-mode-map [up] 'comint-previous-matching-input-from-input)
             (define-key inferior-python-mode-map [f4] 'my-restart-python)
             ))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Python main setup file
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'python)
-(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
 ;; Package paths
 (let ((env-sep (if (eq system-type 'windows-nt) ";" ":")))
@@ -103,10 +99,12 @@ if __name__ == '__main__':
 (require 'ac-python)
 
 (add-to-list 'flymake-allowed-file-name-masks '("\\.py\\'" flymake-pyflakes-init))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hooks - loading a python file
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'python-mode-hook (lambda () 
+
+(add-hook 'python-mode-hook (lambda ()
    (set-variable 'python-indent-offset 4)
    (set-variable 'indent-tabs-mode nil)
    (setq ropemacs-enable-autoimport t)
@@ -118,7 +116,7 @@ if __name__ == '__main__':
    
    ;;the internal process is only created once, when python-mode is started
    (python-get-named-else-internal-process)
-   (python-just-source-file (buffer-file-name) (python-get-named-else-internal-process))
+   ;;(python-just-source-file (buffer-file-name) (python-get-named-else-internal-process))
    (defun run-python (&optional a b) (interactive "ii") (my-run-python)) ;;advice doesn't work well for overriding interactive functions
 
    (project-root-fetch)
@@ -126,11 +124,15 @@ if __name__ == '__main__':
    (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
    (local-set-key [f10] 'my-python-toggle-test-implementation)
    (my-turn-on-ropemacs) ;;something repeatedly calls pymacs-load "ropemacs" so you have to switch it back on
+   (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
+   (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
    (autopair-mode)
    (setq autopair-handle-action-fns '(autopair-default-handle-action
                                       autopair-dont-if-point-non-whitespace
                                       autopair-python-triple-quote-action))
 ))
+
+
 
 (add-hook 'inferior-python-mode-hook (lambda ()
   ;; jump to the bottom of the comint buffer if you start typing
@@ -255,6 +257,12 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
                       temp-file 
                       (file-name-directory buffer-file-name)))) 
     (list "pyflakes" (list local-file))))
+
+;;modify pyflakes' output
+(add-hook 'python-mode-hook (lambda ()
+   ;; use \\| to separate multiple match criteria                              
+   (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
+   (setq flymake-info-line-regexp "is assigned to but never used")))
 
 
 (defun my-full-python-module (filename project-root)
@@ -430,7 +438,3 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
          (env-root (locate-dominating-file
                    (or env default-directory) python-subpath)))
     env-root))
-
-
-
-
