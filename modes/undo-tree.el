@@ -13,3 +13,6 @@
           (concat dir (undo-tree-basename buffer-filename)
                   ".gz" ;;comment out this line to turn off compression
                   ))))
+(defadvice undo-tree-save-history (around undo-tree-save-history-no-message activate)
+  (setq messaging-on nil) ad-do-it (setq messaging-on t))
+

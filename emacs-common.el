@@ -25,7 +25,7 @@
     ("transpose-frame" "https://github.com/emacsmirror/transpose-frame.git")
     ("visible-mark" "https://github.com/emacsmirror/visible-mark.git")
     ("real-auto-save" "https://gist.github.com/4373732.git")
-    ("turn-off-messaging" "https://gist.github.com/4373781.git")
+;;    ("turn-off-messaging" "https://gist.github.com/4373781.git")
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
     ("multiple-cursors" "https://github.com/emacsmirror/multiple-cursors.git")
     ("zenburn-emacs23" "https://github.com/dbrock/zenburn-el.git")

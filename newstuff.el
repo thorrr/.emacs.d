@@ -84,8 +84,8 @@
 
 ;; turn off the "file saved message" because it gets annoying
 ;;(require 'turn-off-messaging)
-(defadvice real-auto-save (around real-auto-save-no-message activate)
-  (setq messaging-on nil) ad-do-it (setq messaging-on t))
+;;(defadvice real-auto-save (around real-auto-save-no-message activate)
+;;  (setq messaging-on nil) ad-do-it (setq messaging-on t))
 
 (setq-default indent-tabs-mode nil)
 
