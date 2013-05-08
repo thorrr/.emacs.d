@@ -40,15 +40,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Inferior Python shell setup variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defcustom python-shell-interpreter-var
-  "Custom path to python interpreter.  Use ipython by default"
-  "ipython")
-(defcustom python-shell-interpreter-args-var
-  "Custom arguments for starting python interpreter.  Interactive (-i) by default"
-  "-i")
+(defcustom python-shell-interpreter-var "ipython"
+  "Custom path to python interpreter.  Use ipython by default")
+(defcustom python-shell-interpreter-args-var "-i"
+  "Custom arguments for starting python interpreter.  Interactive (-i) by default")
 
 (defcustom my-python-test-template
-  "Python test template file"
   "from test.package import AtgTestCase
 import doctest
 
@@ -69,6 +66,7 @@ class %TESTCLASSNAME%(AtgTestCase):
 if __name__ == '__main__':
     import unittest
     unittest.main()"
+    "Python test template file"
 )
 
 (setq
@@ -423,3 +421,16 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
     (apply 'run-python
            (when env-root
              (list (concat (absolute-dirname env-root) python-subpath))))))
+
+
+(defun virtualenv-test (path)
+  (let* ((python-subpath (if (eq system-type 'windows-nt)
+                           "Scripts\\python.exe"
+                           "bin/python"))
+         (env-root (locate-dominating-file
+                   (or env default-directory) python-subpath)))
+    env-root))
+
+
+
+
