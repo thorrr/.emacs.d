@@ -8,6 +8,7 @@
 ;; Python specific keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-hook 'python-mode-hook (lambda ()
+            (message "********** running keybindings **********************")
             (define-key python-mode-map (kbd "C-M-<return>") 'my-python-send-buffer)
             (define-key python-mode-map (kbd "M-.") 'my-rope-goto-definition)
             (define-key python-mode-map (kbd "M-l") 'my-rope-go-backward)
@@ -23,6 +24,8 @@
             (define-key inferior-python-mode-map [up] 'comint-previous-matching-input-from-input)
             (define-key inferior-python-mode-map [f4] 'my-restart-python)
             ))
+
+;; TODO - use python-shell-extra-pythonpaths and python-shell-process-environment
 
 ;; Package paths
 (let ((env-sep (if (eq system-type 'windows-nt) ";" ":")))
@@ -105,6 +108,7 @@ if __name__ == '__main__':
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-hook 'python-mode-hook (lambda ()
+   (message "************** running second python-mode-hook *********************")
    (set-variable 'python-indent-offset 4)
    (set-variable 'indent-tabs-mode nil)
    (setq ropemacs-enable-autoimport t)
@@ -113,12 +117,11 @@ if __name__ == '__main__':
    ;;TODO - make symbolName : packagea.packageb.packageC trigger an import statement
    (add-to-list 'ac-sources 'ac-source-ropemacs)
    ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
-   
-   ;;the internal process is only created once, when python-mode is started
-   (python-get-named-else-internal-process)
-   ;;(python-just-source-file (buffer-file-name) (python-get-named-else-internal-process))
-   (defun run-python (&optional a b) (interactive "ii") (my-run-python)) ;;advice doesn't work well for overriding interactive functions
 
+   ;; an Internal Process is created for each unique configuration.
+   ;; set up the virtualenv before calling this and each virtualenv
+   ;; will have its own internal process
+   (python-just-source-file (buffer-file-name) (python-shell-internal-get-or-create-process))
    (project-root-fetch)
    (setq ropemacs-guess-project (cdr project-details));;get all of the python subdirectories
    (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
@@ -155,6 +158,8 @@ if __name__ == '__main__':
          (current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
     (python-shell-completion-get-completions process current-line symbol)))
 
+
+;; This equivalent function doesn't exist in Gallina's code
 (defun python-get-named-else-internal-process ()
   "return the current global process if there is one.  Otherwise, start an internal process and return that."
   (let* ((global-process (python-shell-get-process))
@@ -189,9 +194,6 @@ if __name__ == '__main__':
                  (setq my-python-most-recent-window saved-window)
                  )))))
 
-(defun my-run-python () (interactive) (my-create-inferior-python nil t))
-(defun python-repl () (my-create-inferior-python nil t))
-
 (defun my-restart-python () (interactive)
   (let ((process (python-shell-get-or-create-process))
         (in-repl (eq major-mode 'inferior-python-mode)))
@@ -202,26 +204,14 @@ if __name__ == '__main__':
     (if in-repl (sleep-for 0.1) (other-window 1) (end-of-buffer))
 ))
 
-(defun my-create-inferior-python (is-dedicated-inferior-buffer pop-to-buffer-after-create)
-  "Create an inferior python buffer non-interactively
-Uses the defaults defined for python.el
+;; I never want run-python to ask me for a path
+ (defun run-python (&optional a b) (interactive "ii")
+   (python-shell-make-comint (python-shell-parse-command) (python-shell-get-process-name nil) t))
 
-is-dedicated-inferior-buffer: if nil, create a globally
-           accessible inferior python buffer.  all python files will use
-           this shell if they don't have a dedicated shell of their own.
-
-pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
-           newly created buffer"
-  (python-shell-make-comint (python-shell-parse-command)
-                            (python-shell-get-process-name is-dedicated-inferior-buffer)
-                            pop-to-buffer-after-create)
-  is-dedicated-inferior-buffer)
-                            
 (defun my-python-eval-line ()
   "Evaluate the current Python line in the inferior Python process."
   (interactive) (python-shell-send-string (buffer-substring-no-properties (point) (line-end-position))
                                           (python-get-named-else-internal-process)))
-
 (defun my-python-eval-region (start end)
   "Send the region delimited by START and END to inferior Python process."
   (interactive "r")
@@ -236,7 +226,8 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
 (defun python-just-source-file (filename &optional process)
   "Force process to evaluate filename but don't run __main__.
    Gallina has a similar technique for evaluating buffers in
-   python-shell-send-buffer."
+   python-shell-send-buffer.  But his doesn't allow us to specify
+   an internal Python process"
   (let ((command-string-1 "___oldName = __name__")
         (command-string-2 "__name__ = None")
         (command-string-3
@@ -260,6 +251,7 @@ pop-to-buffer-after-create: if not nil, call pop-to-buffer on the
 
 ;;modify pyflakes' output
 (add-hook 'python-mode-hook (lambda ()
+   (message "******* setting up pyflakes ***********")
    ;; use \\| to separate multiple match criteria                              
    (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
    (setq flymake-info-line-regexp "is assigned to but never used")))
