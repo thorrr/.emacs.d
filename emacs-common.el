@@ -16,6 +16,7 @@
 (defcustom wget-projects '() "")
 (defcustom make-projects '() "")
 
+;; FIXME - use alist notation (list of dotted pairs)
 (setq git-projects (append git-projects '(
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
     ("ensime" "https://github.com/aemoncannon/ensime.git")
