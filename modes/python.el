@@ -116,9 +116,11 @@ if __name__ == '__main__':
    (add-to-list 'ac-sources 'ac-source-ropemacs)
    ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
 
+   
    ;; an Internal Process is created for each unique configuration.
    ;; set up the virtualenv before calling this and each virtualenv
    ;; will have its own internal process
+   (virtualenv-hook)
    (python-just-source-file (buffer-file-name) (python-shell-internal-get-or-create-process))
    (project-root-fetch)
    (setq ropemacs-guess-project (cdr project-details));;get all of the python subdirectories
@@ -399,28 +401,6 @@ if __name__ == '__main__':
   (interactive) (python-shell-send-string "from pylab import show; show()"))
 
 
-(defun run-virtualenv-python (&optional env)
-  "Run Python in this virtualenv."
-  (interactive)
-  (defun absolute-dirname (path)
-    "Return the directory name portion of a path.
-
-    If PATH is local, return it unaltered.
-    If PATH is remote, return the remote diretory portion of the path."
-    (if (tramp-tramp-file-p path)
-        (elt (tramp-dissect-file-name path) 3)
-      path))
-  (let* ((python-subpath (if (eq system-type 'windows-nt)
-                           "Scripts\\python.exe"
-                           "bin/python"))
-         (env-root (locate-dominating-file
-                   (or env default-directory) python-subpath)))
-;;    (debug)
-    (apply 'run-python
-           (when env-root
-             (list (concat (absolute-dirname env-root) python-subpath))))))
-
-
 (defun virtualenv-test (path)
   (let* ((python-subpath (if (eq system-type 'windows-nt)
                            "Scripts\\python.exe"
@@ -428,3 +408,92 @@ if __name__ == '__main__':
          (env-root (locate-dominating-file
                    (or env default-directory) python-subpath)))
     env-root))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Virtualenv support
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcustom auto-detect-virtualenv 't
+  "When loading a python file attempt to find its virtualenv using function detect-virtualenv.")
+
+(defcustom current-virtualenv nil
+  "Open python files using this virtualenv")
+
+(defcustom ipython-use-with-virtualenv 't
+  "Set up python-shell-interpreter-args-var correctly to
+use ipython with the current virtualenv")
+
+(defvar virtualenv-bin-dir (if (eq system-type 'windows-nt) "Scripts" "bin"))
+
+(defun set-current-virtualenv (dir)
+  (interactive "D")
+  (setq current-virtualenv (expand-file-name dir))
+  't)
+
+(defun reset-current-virtualenv ()
+  (interactive)
+  (setq current-virtualenv nil)
+  't)
+
+(defun detect-virtualenv (filename)
+  "resets variable current-virtualenv if it can detect this
+  python file has a virtualenv in its path"
+  (expand-file-name "~/svn/FedtradeAutoLogin/env"))
+
+(defun virtualenv-hook ()
+  "This should be run in python-mode-hook before any comints are
+run"
+  (let ((used-virtualenv
+         (cond (current-virtualenv
+                current-virtualenv)
+               (auto-detect-virtualenv
+                (detect-virtualenv (buffer-file-name)))
+               ('t
+                default-value python-shell-virtualenv-path))))
+    (setq python-shell-virtualenv-path used-virtualenv)
+    (if ipython-use-with-virtualenv
+        (setq python-shell-interpreter-args (format "-u %s/%s/%s" used-virtualenv
+                                                    virtualenv-bin-dir
+                                                    "ipython-script.py")))))
+
+(defun python-shell-calculate-process-environment ()
+  "Calculate process environment given `python-shell-virtualenv-path'.
+Overridden from Gallina - his doesn't work with win32"
+  
+  (let ((process-environment (append
+                              python-shell-process-environment
+                              process-environment nil))
+        (virtualenv (if python-shell-virtualenv-path
+                        (directory-file-name python-shell-virtualenv-path)
+                      nil)))
+    (when python-shell-extra-pythonpaths
+      (setenv "PYTHONPATH"
+              (format "%s%s%s"
+                      (mapconcat 'identity
+                                 python-shell-extra-pythonpaths
+                                 path-separator)
+                      path-separator
+                      (or (getenv "PYTHONPATH") ""))))
+    (if (not virtualenv)
+        process-environment
+      (setenv "PYTHONHOME" nil)
+      (setenv "PATH" (format "%s/%s%s%s"
+                             virtualenv virtualenv-bin-dir
+                             path-separator
+                             (or (getenv "PATH") "")))
+      (setenv "VIRTUAL_ENV" virtualenv))
+    process-environment))
+
+(defun python-shell-calculate-exec-path ()
+  "Calculate exec path given `python-shell-virtualenv-path'.
+Overridden from Gallina - his doesn't work with win32"
+  (let ((path (append python-shell-exec-path
+                      exec-path nil)))
+    (if (not python-shell-virtualenv-path)
+        path
+      (cons (format "%s/%s"
+                    (directory-file-name python-shell-virtualenv-path)
+                    virtualenv-bin-dir)
+            path))))
+
