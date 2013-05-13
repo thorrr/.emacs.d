@@ -25,14 +25,13 @@
             (define-key inferior-python-mode-map [f4] 'my-restart-python)
             ))
 
-;; TODO - use python-shell-extra-pythonpaths and python-shell-process-environment
-;; Package paths
-(setenv "PYTHONPATH" (concat
-   (concat shared-externals "Pymacs" path-separator)
-   (concat shared-externals "ropemacs" path-separator)
-   (concat shared-externals "ropemode" path-separator)
-   (concat shared-externals "rope" path-separator)
-   (getenv "PYTHONPATH")))
+;; can't use python-shell-extra-pythonpaths because these have to be set before we require 'pymacs
+ (setenv "PYTHONPATH" (concat
+    (concat shared-externals "Pymacs" path-separator)
+    (concat shared-externals "ropemacs" path-separator)
+    (concat shared-externals "ropemode" path-separator)
+    (concat shared-externals "rope" path-separator)
+    (getenv "PYTHONPATH")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Inferior Python shell setup variables
