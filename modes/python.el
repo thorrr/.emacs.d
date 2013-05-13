@@ -26,15 +26,13 @@
             ))
 
 ;; TODO - use python-shell-extra-pythonpaths and python-shell-process-environment
-
 ;; Package paths
-(let ((env-sep (if (eq system-type 'windows-nt) ";" ":")))
-  (setenv "PYTHONPATH" (concat
-     (concat shared-externals "Pymacs" env-sep)
-     (concat shared-externals "ropemacs" env-sep)
-     (concat shared-externals "ropemode" env-sep)
-     (concat shared-externals "rope" env-sep)
-     (getenv "PYTHONPATH"))))
+(setenv "PYTHONPATH" (concat
+   (concat shared-externals "Pymacs" path-separator)
+   (concat shared-externals "ropemacs" path-separator)
+   (concat shared-externals "ropemode" path-separator)
+   (concat shared-externals "rope" path-separator)
+   (getenv "PYTHONPATH")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Inferior Python shell setup variables
