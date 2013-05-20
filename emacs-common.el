@@ -234,6 +234,7 @@
 (setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
 ;; eshell stuff is machine-local too
 (setq eshell-directory-name (concat emacs-savefile-dir  "eshell/"))
+(setq eshell-aliases-file (concat emacs-savefile-dir  "eshell/alias"))
 ;; Enable versioning with default values
 (setq
    backup-by-copying t      ; don't clobber symlinks
