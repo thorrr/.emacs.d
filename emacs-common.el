@@ -213,6 +213,8 @@
 (setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
 (require 'sr-speedbar)
+(add-hook 'speedbar-mode-hook (lambda () (save-current-buffer (set-buffer "*SPEEDBAR*") (visual-line-mode)))) ;;word wrapping for deep directories
+
 (setq speedbar-use-images nil)
 ;;show-paren customizations
 (show-paren-mode t)
