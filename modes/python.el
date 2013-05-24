@@ -8,7 +8,6 @@
 ;; Python specific keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-hook 'python-mode-hook (lambda ()
-            (message "********** running keybindings **********************")
             (define-key python-mode-map (kbd "C-M-<return>") 'my-python-send-buffer)
             (define-key python-mode-map (kbd "M-.") 'my-rope-goto-definition)
             (define-key python-mode-map (kbd "M-l") 'my-rope-go-backward)
@@ -105,7 +104,6 @@ if __name__ == '__main__':
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-hook 'python-mode-hook (lambda ()
-   (message "************** running second python-mode-hook *********************")
    (set-variable 'python-indent-offset 4)
    (set-variable 'indent-tabs-mode nil)
    (setq ropemacs-enable-autoimport t)
@@ -250,7 +248,6 @@ if __name__ == '__main__':
 
 ;;modify pyflakes' output
 (add-hook 'python-mode-hook (lambda ()
-   (message "******* setting up pyflakes ***********")
    ;; use \\| to separate multiple match criteria                              
    (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
    (setq flymake-info-line-regexp "is assigned to but never used")))

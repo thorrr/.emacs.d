@@ -11,12 +11,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Projects not in elpa
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcustom git-projects '() "")
 (defcustom hg-projects '() "")
 (defcustom wget-projects '() "")
 (defcustom make-projects '() "")
 
-;; FIXME - use alist notation (list of dotted pairs)
 (setq git-projects (append git-projects '(
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
     ("ensime" "https://github.com/aemoncannon/ensime.git")
@@ -49,6 +49,7 @@
     ("ac-python" "http://chrispoole.com/downloads/ac-python.el")
     ("single-dired" "http://www.emacswiki.org/emacs/download/joseph-single-dired.el")
     ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
+    ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
 )))
 
 ;; Misc commands to run in the externals subdirectory
@@ -211,6 +212,9 @@
 (tool-bar-mode -1)
 (setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
+(require 'sr-speedbar)
+(add-hook 'speedbar-mode-hook (lambda () (save-current-buffer (set-buffer "*SPEEDBAR*") (visual-line-mode)))) ;;word wrapping for deep directories
+
 (setq speedbar-use-images nil)
 ;;show-paren customizations
 (show-paren-mode t)
@@ -232,6 +236,7 @@
 (setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
 ;; eshell stuff is machine-local too
 (setq eshell-directory-name (concat emacs-savefile-dir  "eshell/"))
+(setq eshell-aliases-file (concat emacs-savefile-dir  "eshell/alias"))
 ;; Enable versioning with default values
 (setq
    backup-by-copying t      ; don't clobber symlinks
