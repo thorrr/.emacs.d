@@ -187,8 +187,8 @@
 (if (eq system-type 'windows-nt)
     (setq server-auth-dir (concat (getenv "APPDATA") "\\.emacs.d\\server")))
 ;;server mode is good
-(load "server")
-(unless (server-running-p) (server-start))
+;;(load "server")
+;;(unless (server-running-p) (server-start))
 
 ;; set up inconsolata by default if we're on linux
 (if (not (eq system-type 'windows-nt))
