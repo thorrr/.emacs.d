@@ -166,6 +166,8 @@
 (global-set-key (kbd "M-S-<up>") 'mc/mark-previous-like-this)
 (global-set-key (kbd "M-S-<next>") 'mc/mark-all-like-this)
 (global-set-key (kbd "M-S-<prior>") 'mc/mark-all-like-this)
+;;turn off prompt for autopair function
+(nconc mc/cmds-to-run-for-all `(autopair-insert-opening autopair-skip-close-maybe autopair-insert-or-skip-quote))
 
 ;; this is awesome - commands that work when you've selected something
 (require 'region-bindings-mode)
