@@ -410,13 +410,13 @@ if __name__ == '__main__':
 ;; Virtualenv support
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcustom auto-detect-virtualenv 't
+(defcustom auto-detect-virtualenv nil
   "When loading a python file attempt to find its virtualenv using function detect-virtualenv.")
 
 (defcustom current-virtualenv nil
   "Open python files using this virtualenv")
 
-(defcustom ipython-use-with-virtualenv 't
+(defcustom ipython-use-with-virtualenv nil
   "Set up python-shell-interpreter-args-var correctly to
 use ipython with the current virtualenv")
 
@@ -435,7 +435,9 @@ use ipython with the current virtualenv")
 (defun detect-virtualenv (filename)
   "resets variable current-virtualenv if it can detect this
   python file has a virtualenv in its path"
-  (expand-file-name "~/svn/FedtradeAutoLogin/env"))
+;;  (expand-file-name "~/svn/FedtradeAutoLogin/env")
+  nil
+  )
 
 (defun virtualenv-hook ()
   "This should be run in python-mode-hook before any comints are
@@ -446,8 +448,9 @@ run"
                (auto-detect-virtualenv
                 (detect-virtualenv (buffer-file-name)))
                ('t
-                default-value python-shell-virtualenv-path))))
+                python-shell-virtualenv-path))))
     (setq python-shell-virtualenv-path used-virtualenv)
+    ;; TODO - detect whether ipython is there, don't just blindly try to load it
     (if ipython-use-with-virtualenv
         (setq python-shell-interpreter-args (format "-u %s/%s/%s" used-virtualenv
                                                     virtualenv-bin-dir
