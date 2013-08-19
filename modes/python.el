@@ -86,7 +86,9 @@ if __name__ == '__main__':
   (setq ropemacs-enable-autoimport 't)
   (setq ropemacs-autoimport-modules `("os" "shutil"))
   (if (not (boundp 'ropemacs-mode)) (pymacs-load "ropemacs" "rope-"))
-  (if (and (boundp 'ropemacs-mode) (not ropemacs-mode)) (ropemacs-mode)))
+  (if (and (boundp 'ropemacs-mode) (not ropemacs-mode)) (ropemacs-mode))
+  )
+
 
 ;; regenerate the import cache whenever you open a project.  this can be slow the first time
 (defadvice rope-open-project (after rope-open-project-then-regenerate-import-cache activate)
@@ -138,10 +140,6 @@ if __name__ == '__main__':
   ;; jump to the bottom of the comint buffer if you start typing
   (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t)
 ))
-
-;;overwrite ropemacs "lucky code assist"
-(add-hook 'ropemacs-mode-hook (lambda ()
-  (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions

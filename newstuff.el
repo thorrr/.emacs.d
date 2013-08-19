@@ -27,9 +27,6 @@
 (add-hook 'ess-mode-hook (lambda () (glasses-mode)))
 (add-hook 'inferior-ess-mode-hook (lambda () (glasses-mode)))
 
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(setq org-M-RET-may-split-line nil)
-(add-hook 'org-mode-hook 'turn-on-auto-fill)
 (global-set-key (kbd "C-c q") 'auto-fill-mode)
 
 (require 'autopair)
@@ -83,9 +80,9 @@
 ;;(add-hook 'emacs-lisp-mode-hook 'turn-on-real-auto-save)  ;; mode specific auto-save
 
 ;; turn off the "file saved message" because it gets annoying
-;;(require 'turn-off-messaging)
-;;(defadvice real-auto-save (around real-auto-save-no-message activate)
-;;  (setq messaging-on nil) ad-do-it (setq messaging-on t))
+(require 'turn-off-messaging)
+(defadvice real-auto-save (around real-auto-save-no-message activate)
+(setq messaging-on nil) ad-do-it (setq messaging-on t))
 
 (setq-default indent-tabs-mode nil)
 
@@ -177,3 +174,12 @@
 (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
 ;; press "m" then press "right" to skip the next new cursor or "down" to accept it
 (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended)
+
+
+;; eclim testing
+(require 'eclim)
+(global-eclim-mode)
+(require 'eclimd)
+;; add the emacs-eclim source
+(require 'ac-emacs-eclim-source)
+(ac-emacs-eclim-config)
