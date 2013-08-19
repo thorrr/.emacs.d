@@ -14,6 +14,8 @@
             (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
             (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
             (define-key python-mode-map (kbd "S-<f4>") 'my-restart-python)
+            (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
+            (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
             ))
 
 (add-hook 'inferior-python-mode-hook (lambda ()
@@ -89,6 +91,11 @@ if __name__ == '__main__':
   (if (and (boundp 'ropemacs-mode) (not ropemacs-mode)) (ropemacs-mode))
   )
 
+;; override ropemacs' code assist key shortcuts
+(add-hook 'ropemacs-mode-hook (lambda ()
+    (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
+    (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
+))
 
 ;; regenerate the import cache whenever you open a project.  this can be slow the first time
 (defadvice rope-open-project (after rope-open-project-then-regenerate-import-cache activate)
@@ -115,7 +122,6 @@ if __name__ == '__main__':
    (add-to-list 'ac-sources 'ac-source-ropemacs)
    ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
 
-   
    ;; an Internal Process is created for each unique configuration.
    ;; set up the virtualenv before calling this and each virtualenv
    ;; will have its own internal process
@@ -126,20 +132,17 @@ if __name__ == '__main__':
    (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
    (local-set-key [f10] 'my-python-toggle-test-implementation)
    (my-turn-on-ropemacs) ;;something repeatedly calls pymacs-load "ropemacs" so you have to switch it back on
-   (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
-   (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
    (autopair-mode)
    (setq autopair-handle-action-fns '(autopair-default-handle-action
                                       autopair-dont-if-point-non-whitespace
                                       autopair-python-triple-quote-action))
-))
+   ))
 
 
 
 (add-hook 'inferior-python-mode-hook (lambda ()
   ;; jump to the bottom of the comint buffer if you start typing
-  (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t)
-))
+  (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions
