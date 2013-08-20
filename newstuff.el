@@ -57,22 +57,6 @@
 ;;Comint tweak
 (setq-default comint-input-ring-size 5000)
 
-;; automatically save buffers associated with files on buffer switch
-;; and on windows switch
-(defadvice switch-to-buffer (before save-buffer-now activate)
-  (when buffer-file-name (save-buffer)))
-(defadvice other-window (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
-(defadvice windmove-up (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
-(defadvice windmove-down (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
-(defadvice windmove-left (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
-(defadvice windmove-right (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
-
-
 ;; real-auto-save allows mode-specific auto saving
 (require 'real-auto-save)
 (setq real-auto-save-interval 5)
@@ -82,7 +66,7 @@
 ;; turn off the "file saved message" because it gets annoying
 (require 'turn-off-messaging)
 (defadvice real-auto-save (around real-auto-save-no-message activate)
-(setq messaging-on nil) ad-do-it (setq messaging-on t))
+  (setq messaging-on nil) ad-do-it (setq messaging-on t))
 
 (setq-default indent-tabs-mode nil)
 
