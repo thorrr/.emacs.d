@@ -14,8 +14,6 @@
             (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
             (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
             (define-key python-mode-map (kbd "S-<f4>") 'my-restart-python)
-            (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
-            (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
             ))
 
 (add-hook 'inferior-python-mode-hook (lambda ()
@@ -25,6 +23,11 @@
             (define-key inferior-python-mode-map [up] 'comint-previous-matching-input-from-input)
             (define-key inferior-python-mode-map [f4] 'my-restart-python)
             ))
+
+(add-hook 'ropemacs-mode-hook (lambda ()
+    (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
+    (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
+))
 
 ;; can't use python-shell-extra-pythonpaths because these have to be set before we require 'pymacs
  (setenv "PYTHONPATH" (concat
@@ -91,22 +94,30 @@ if __name__ == '__main__':
   (if (and (boundp 'ropemacs-mode) (not ropemacs-mode)) (ropemacs-mode))
   )
 
-;; override ropemacs' code assist key shortcuts
-(add-hook 'ropemacs-mode-hook (lambda ()
-    (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
-    (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
-))
-
 ;; regenerate the import cache whenever you open a project.  this can be slow the first time
 (defadvice rope-open-project (after rope-open-project-then-regenerate-import-cache activate)
   (rope-generate-autoimport-cache))
 
+;; Autocomplete
+(require 'ac-python) ;; a source for python auto-complete that comes from the
+                     ;; *Python* buffer or the unnamed "internal" process
 (ac-ropemacs-initialize) ;; hook rope into auto-complete
 
-;; another source for python auto-complete that comes from the *Python* buffer or the unnamed "internal" process
-(require 'ac-python)
-
+;; Flymake
 (add-to-list 'flymake-allowed-file-name-masks '("\\.py\\'" flymake-pyflakes-init))
+(defun flymake-pyflakes-init () 
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy 
+                     'flymake-create-temp-inplace)) 
+         (local-file (file-relative-name 
+                      temp-file 
+                      (file-name-directory buffer-file-name)))) 
+    (list "pyflakes" (list local-file))))
+
+(add-hook 'python-mode-hook (lambda ()
+   ;;modify pyflakes' output
+   ;; use \\| to separate multiple match criteria                              
+   (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
+   (setq flymake-info-line-regexp "is assigned to but never used")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hooks - loading a python file
@@ -116,7 +127,6 @@ if __name__ == '__main__':
    (set-variable 'python-indent-offset 4)
    (set-variable 'indent-tabs-mode nil)
    (setq ropemacs-enable-autoimport t)
-   ;;(setq ac-sources '())
    (add-to-list 'ac-sources 'ac-source-python)
    ;;TODO - make symbolName : packagea.packageb.packageC trigger an import statement
    (add-to-list 'ac-sources 'ac-source-ropemacs)
@@ -236,22 +246,6 @@ if __name__ == '__main__':
     (python-shell-send-string command-string-3 process)
     (python-shell-send-string command-string-4 process)
     ))
-
-
-;; pyflakes flymake hook
-(defun flymake-pyflakes-init () 
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy 
-                     'flymake-create-temp-inplace)) 
-         (local-file (file-relative-name 
-                      temp-file 
-                      (file-name-directory buffer-file-name)))) 
-    (list "pyflakes" (list local-file))))
-
-;;modify pyflakes' output
-(add-hook 'python-mode-hook (lambda ()
-   ;; use \\| to separate multiple match criteria                              
-   (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
-   (setq flymake-info-line-regexp "is assigned to but never used")))
 
 
 (defun my-full-python-module (filename project-root)
@@ -398,15 +392,6 @@ if __name__ == '__main__':
   (interactive) (python-shell-send-string "from pylab import show; show()"))
 
 
-(defun virtualenv-test (path)
-  (let* ((python-subpath (if (eq system-type 'windows-nt)
-                           "Scripts\\python.exe"
-                           "bin/python"))
-         (env-root (locate-dominating-file
-                   (or env default-directory) python-subpath)))
-    env-root))
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Virtualenv support
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -457,6 +442,14 @@ run"
                                                     virtualenv-bin-dir
                                                     "ipython-script.py")))))
 
+(defun virtualenv-test (path)
+  (let* ((python-subpath (if (eq system-type 'windows-nt)
+                           "Scripts\\python.exe"
+                           "bin/python"))
+         (env-root (locate-dominating-file
+                   (or env default-directory) python-subpath)))
+    env-root))
+
 (defun python-shell-calculate-process-environment ()
   "Calculate process environment given `python-shell-virtualenv-path'.
 Overridden from Gallina - his doesn't work with win32"
@@ -496,4 +489,3 @@ Overridden from Gallina - his doesn't work with win32"
                     (directory-file-name python-shell-virtualenv-path)
                     virtualenv-bin-dir)
             path))))
-
