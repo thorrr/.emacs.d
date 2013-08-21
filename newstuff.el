@@ -59,14 +59,11 @@
 
 ;; real-auto-save allows mode-specific auto saving
 (require 'real-auto-save)
-(setq real-auto-save-interval 5)
+(setq real-auto-save-interval 3)
+(setq real-auto-save-only-after-regular-save 't)
+(setq real-auto-save-messaging nil)
 (add-hook 'find-file-hooks 'turn-on-real-auto-save) ;; real-auto-save every single file
 ;;(add-hook 'emacs-lisp-mode-hook 'turn-on-real-auto-save)  ;; mode specific auto-save
-
-;; turn off the "file saved message" because it gets annoying
-(require 'turn-off-messaging)
-(defadvice real-auto-save (around real-auto-save-no-message activate)
-  (setq messaging-on nil) ad-do-it (setq messaging-on t))
 
 (setq-default indent-tabs-mode nil)
 
