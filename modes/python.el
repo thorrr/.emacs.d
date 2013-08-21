@@ -88,6 +88,7 @@ if __name__ == '__main__':
 (setq pymacs-auto-restart t)
 
 (defun my-turn-on-ropemacs () (interactive)
+  (setq ropemacs-enable-shortcuts 'nil) ;;otherwise this overwrites M-/ and M-?
   (setq ropemacs-enable-autoimport 't)
   (setq ropemacs-autoimport-modules `("os" "shutil"))
   (if (not (boundp 'ropemacs-mode)) (pymacs-load "ropemacs" "rope-"))
