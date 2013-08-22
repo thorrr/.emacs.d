@@ -124,6 +124,10 @@
 
 ;;fringe experiments
 (toggle-scroll-bar -1)
+(require 'yascroll)
+(setq yascroll:scroll-bar 'right-fringe)
+(setq yascroll:delay-to-hide nil)
+
 
 ;; let's try line numbers
 (defun toggle-line-numbers ()
@@ -155,12 +159,3 @@
 (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
 ;; press "m" then press "right" to skip the next new cursor or "down" to accept it
 (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended)
-
-
-;; eclim testing
-(require 'eclim)
-(global-eclim-mode)
-(require 'eclimd)
-;; add the emacs-eclim source
-(require 'ac-emacs-eclim-source)
-(ac-emacs-eclim-config)

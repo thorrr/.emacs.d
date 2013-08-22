@@ -8,8 +8,8 @@
 ;;fixes for autopair mode which obliterates the mapping for both kbd "RET" and [return]
 (define-key ac-completing-map (kbd "RET") 'ac-complete)
 (define-key ac-completing-map [return] 'ac-complete)
-(define-key ac-completing-map (kbd "C-n") 'ac-next)
-(define-key ac-completing-map (kbd "C-p") 'ac-previous)
+(define-key ac-menu-map (kbd "C-n") 'ac-next)
+(define-key ac-menu-map (kbd "C-p") 'ac-previous)
 (setq ac-auto-start 3) ;;don't automatically start auto-complete until this many characters have been typed
 (setq ac-dwim t)
 (global-set-key (kbd "M-?") 'auto-complete)

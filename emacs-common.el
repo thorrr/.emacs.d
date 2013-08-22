@@ -29,6 +29,7 @@
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
     ("multiple-cursors" "https://github.com/emacsmirror/multiple-cursors.git")
     ("zenburn-emacs23" "https://github.com/dbrock/zenburn-el.git")
+    ("yascroll" "https://github.com/m2ym/yascroll-el.git")
 )))
 
 (setq git-projects (append git-projects
