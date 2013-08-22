@@ -439,8 +439,8 @@ run"
     (setq python-shell-virtualenv-path used-virtualenv)
     ;; TODO - detect whether ipython is there, don't just blindly try to load it
     (if ipython-use-with-virtualenv
-        (setq python-shell-interpreter-args (format "-u %s/%s/%s" used-virtualenv
-                                                    virtualenv-bin-dir
+        (setq python-shell-interpreter-args (format "-u %s%s%s%s%s" used-virtualenv path-separator
+                                                    virtualenv-bin-dir path-separator
                                                     "ipython-script.py")))))
 
 (defun virtualenv-test (path)
