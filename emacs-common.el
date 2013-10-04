@@ -335,6 +335,7 @@
 (load (concat emacs-config-root "modes/cpp.el"))
 (load (concat emacs-config-root "modes/elisp.el"))
 (load (concat emacs-config-root "modes/org-mode.el"))
+(load (concat emacs-config-root "modes/markdown.el"))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
