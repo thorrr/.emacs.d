@@ -25,12 +25,12 @@
     ("iflipb" "https://github.com/emacsmirror/iflipb.git")
     ("transpose-frame" "https://github.com/emacsmirror/transpose-frame.git")
     ("visible-mark" "https://github.com/emacsmirror/visible-mark.git")
-    ("real-auto-save" "https://gist.github.com/4373732.git")
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
     ("multiple-cursors" "https://github.com/emacsmirror/multiple-cursors.git")
     ("zenburn-emacs23" "https://github.com/dbrock/zenburn-el.git")
     ("yascroll" "https://github.com/m2ym/yascroll-el.git")
     ("markdown-mode" "http://jblevins.org/git/markdown-mode.git")
+    ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
 )))
 
 (setq git-projects (append git-projects
