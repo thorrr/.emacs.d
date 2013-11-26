@@ -226,6 +226,7 @@
 
 ;; eshell customizations
 ;;   fix colors
+(require 'ansi-color)
 (setq ansi-color-names-vector
       ["black" "tomato" "PaleGreen2" "gold1"
        "DeepSkyBlue1" "MediumOrchid1" "cyan" "white"])
