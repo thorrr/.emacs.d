@@ -223,3 +223,16 @@
 (setq ace-jump-mode-case-fold t) ;; case insensitive
 (setq ace-jump-mode-move-keys
       (loop for i from ?a to ?z collect i)) ;;only lowercase jump characters
+
+;; eshell customizations
+;;   fix colors
+(setq ansi-color-names-vector
+      ["black" "tomato" "PaleGreen2" "gold1"
+       "DeepSkyBlue1" "MediumOrchid1" "cyan" "white"])
+(setq ansi-color-map (ansi-color-make-color-map))
+;;   make sure eshell is cleanly machine local
+(setq eshell-directory-name (concat emacs-savefile-dir  "eshell/"))
+(setq eshell-aliases-file (concat emacs-savefile-dir  "eshell/alias"))
+;;   add this line to the bottom of .bash_aliases to parse your bash
+;;   aliases into an eshell "alias" file:
+;;   alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" > ~/.local-emacs/auto-save-list/eshell/alias
