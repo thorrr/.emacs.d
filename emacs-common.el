@@ -325,6 +325,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Language Setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load (concat emacs-config-root "modes/python-goodies.el"))
 (load (concat emacs-config-root "modes/python.el"))
 (load (concat emacs-config-root "modes/scala.el"))
 (load (concat emacs-config-root "modes/clojure.el"))
