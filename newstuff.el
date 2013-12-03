@@ -127,6 +127,7 @@
 (require 'yascroll)
 (setq yascroll:scroll-bar 'right-fringe)
 (setq yascroll:delay-to-hide nil)
+(global-yascroll-bar-mode)
 
 
 ;; let's try line numbers
