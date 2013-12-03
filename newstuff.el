@@ -58,12 +58,12 @@
 (setq-default comint-input-ring-size 5000)
 
 ;; real-auto-save allows mode-specific auto saving
-(require 'real-auto-save)
-(setq real-auto-save-interval 3)
-(setq real-auto-save-only-after-regular-save 't)
-(setq real-auto-save-messaging nil)
-(add-hook 'find-file-hooks 'turn-on-real-auto-save) ;; real-auto-save every single file
-;;(add-hook 'emacs-lisp-mode-hook 'turn-on-real-auto-save)  ;; mode specific auto-save
+(require 'auto-save-buffer)
+(setq auto-save-buffer-interval 3)
+(setq auto-save-buffer-only-after-regular-save 't)
+(setq auto-save-buffer-messaging nil)
+(add-hook 'find-file-hooks 'turn-on-auto-save-buffer) ;; real-auto-save every single file
+;;(add-hook 'emacs-lisp-mode-hook 'turn-on-auto-save-buffer)  ;; mode specific auto-save
 
 (setq-default indent-tabs-mode nil)
 
