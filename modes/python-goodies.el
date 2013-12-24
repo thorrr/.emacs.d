@@ -120,7 +120,7 @@
 
 (add-hook 'python-mode-hook (lambda ()
    ;;modify pyflakes' output
-   ;; use \\| to separate multiple match criteria                              
+   ;; use \\| to separate multiple match criteria
    (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
    (setq flymake-info-line-regexp "is assigned to but never used")))
 
@@ -166,26 +166,38 @@
 
 ;;wrapper to make ac-python work with Gallina's python.el
 (defun python-symbol-completions (symbol)
-  (let ((process (python-get-named-else-internal-process))
+  (let* ((process (python-get-named-else-internal-process))
          ;;this breaks the abstraction in ac-python (it's defined without referencing the cursor position
          ;;but i don't feel like changing ac-python right now
-         (current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-    (python-shell-completion-get-completions process current-line symbol)))
+         (current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+         ;; have to eliminate leading tabs/spaces
+         (curline (replace-regexp-in-string "\\(^[[:space:]]*\\)" "" current-line))
+         (psc (python-shell-completion--get-completions curline process python-shell-completion-string-code)))
+    psc))
 
 
 ;; This equivalent function doesn't exist in Gallina's code
 (defun python-get-named-else-internal-process ()
   "return the current global process if there is one.  Otherwise, start an internal process and return that."
-  (let* ((global-process (python-shell-get-process))
-         (internal-process-state (process-live-p (python-shell-internal-get-process-name)))
-         (internal-process (if internal-process-state (get-process (python-shell-internal-get-process-name))
-                             nil))
-         (existing-process (if global-process global-process internal-process))
-         (process (if (not existing-process)
-                      (progn (message "Starting inferior, unnamed Python process.")
-                             (python-shell-internal-get-or-create-process))
-                    existing-process)))
-         process))
+      (if (< emacs-major-version 24)
+      (defun process-live-p (process)
+        "Returns non-nil if PROCESS is alive.
+         A process is considered alive if its status is `run',
+         `open',`listen', `connect' or `stop'. Value is nil if PROCESS is
+          not a process."
+        (and (processp process)
+             (memq (process-status process)
+                   '(run open listen connect stop)))))
+      (let* ((global-process (python-shell-get-process))
+             (internal-process-state (process-live-p (python-shell-internal-get-process-name)))
+             (internal-process (if internal-process-state (get-process (python-shell-internal-get-process-name))
+                                 nil))
+             (existing-process (if global-process global-process internal-process))
+             (process (if (not existing-process)
+                          (progn (message "Starting inferior, unnamed Python process.")
+                                 (python-shell-internal-get-or-create-process))
+                        existing-process)))
+        process))
 
 
 
