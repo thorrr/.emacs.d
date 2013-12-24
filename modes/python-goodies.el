@@ -175,7 +175,6 @@
          (psc (python-shell-completion--get-completions curline process python-shell-completion-string-code)))
     psc))
 
-
 ;; This equivalent function doesn't exist in Gallina's code
 (defun python-get-named-else-internal-process ()
   "return the current global process if there is one.  Otherwise, start an internal process and return that."
@@ -320,7 +319,7 @@ use ipython with the current virtualenv")
             (ls (mapcar (lambda (f) (concat cd f)) (directory-files cd)))
             (subdir-p (lambda (dir) (if (file-directory-p dir) dir nil)))
             (subdirs (delq nil (mapcar subdir-p ls)))
-            (subdir-ls (mapcar (lambda (dir) (directory-files dir)) subdirs))
+            (subdir-ls (mapcar (lambda (dir) (ignore-errors (directory-files dir))) subdirs))
             (subdir-match (mapcar (lambda (subdir-ls-elem)
               (if (equal (sort subdir-ls-elem 'string=) (sort dirlist 'string=)) 't nil)) subdir-ls))
             (l (length (memq t subdir-match)))
