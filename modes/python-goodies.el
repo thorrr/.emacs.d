@@ -5,25 +5,25 @@
 ;; Python specific keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-hook 'python-mode-hook (lambda ()
-            (define-key python-mode-map (kbd "C-M-<return>") 'my-python-send-buffer)
-            (define-key python-mode-map (kbd "M-.") 'my-rope-goto-definition)
-            (define-key python-mode-map (kbd "M-l") 'my-rope-go-backward)
-            (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
-            (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
-            (define-key python-mode-map (kbd "S-<f4>") 'my-restart-python)
-            ))
+  (define-key python-mode-map (kbd "C-M-<return>") 'my-python-send-buffer)
+  (define-key python-mode-map (kbd "M-.") 'my-rope-goto-definition)
+  (define-key python-mode-map (kbd "M-l") 'my-rope-go-backward)
+  (define-key python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
+  (define-key python-mode-map (kbd "C-c C-j") 'my-python-eval-line)
+  (define-key python-mode-map (kbd "S-<f4>") 'my-restart-python)
+))
 
 (add-hook 'inferior-python-mode-hook (lambda ()
-            (define-key inferior-python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
-            (define-key inferior-python-mode-map [f9] 'my-python-show-graphs)
-            (define-key inferior-python-mode-map [down] 'comint-next-matching-input-from-input)
-            (define-key inferior-python-mode-map [up] 'comint-previous-matching-input-from-input)
-            (define-key inferior-python-mode-map [f4] 'my-restart-python)
-            ))
+  (define-key inferior-python-mode-map (kbd "M-i") 'my-python-shell-smart-switch)
+  (define-key inferior-python-mode-map [f9] 'my-python-show-graphs)
+  (define-key inferior-python-mode-map [down] 'comint-next-matching-input-from-input)
+  (define-key inferior-python-mode-map [up] 'comint-previous-matching-input-from-input)
+  (define-key inferior-python-mode-map [f4] 'my-restart-python)
+))
 
 (add-hook 'ropemacs-mode-hook (lambda ()
-    (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
-    (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
+  (define-key ropemacs-local-keymap (kbd "M-?") 'ac-start)
+  (define-key ropemacs-local-keymap (kbd "M-/") 'hippie-expand)
 ))
 
 ;;first attempt at ctrl-click
@@ -39,12 +39,12 @@
                         (my-rope-goto-definition))))))
 
 ;; can't use python-shell-extra-pythonpaths because these have to be set before we require 'pymacs
- (setenv "PYTHONPATH" (concat
-    (concat shared-externals "Pymacs" path-separator)
-    (concat shared-externals "ropemacs" path-separator)
-    (concat shared-externals "ropemode" path-separator)
-    (concat shared-externals "rope" path-separator)
-    (getenv "PYTHONPATH")))
+(setenv "PYTHONPATH" (concat
+  (concat shared-externals "Pymacs" path-separator)
+  (concat shared-externals "ropemacs" path-separator)
+  (concat shared-externals "ropemode" path-separator)
+  (concat shared-externals "rope" path-separator)
+  (getenv "PYTHONPATH")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Inferior Python shell setup variables
@@ -58,27 +58,27 @@
 
 (defun python-shell-setup (shell-type)
   (cond ((eq shell-type 'ipython)
-         (message "Changing python-shell-inferior variables to support ipython")
-         (setq
-          python-shell-interpreter "ipython"
-          python-shell-interpreter-args "-i"
-          python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-          python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-          python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-          python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-          python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n" 
-          ) 't)
+    (message "Changing python-shell-inferior variables to support ipython")
+    (setq
+     python-shell-interpreter "ipython"
+     python-shell-interpreter-args "-i"
+     python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+     python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+     python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+     python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+     python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n" 
+     ) 't)
         ((eq shell-type 'python)
-         (message "Changing python-shell-inferior variables to support python")
-         (setq
-          python-shell-interpreter (car (get 'python-shell-interpreter 'standard-value))
-          python-shell-interpreter-args (car (get 'python-shell-interpreter-args 'standard-value))
-          python-shell-prompt-regexp (car (get 'python-shell-prompt-regexp 'standard-value))
-          python-shell-prompt-output-regexp (car (get 'python-shell-prompt-output-regexp 'standard-value))
-          python-shell-completion-setup-code (car (get 'python-shell-completion-setup-code 'standard-value))
-          python-shell-completion-module-string-code (car (get 'python-shell-completion-module-string-code 'standard-value))
-          python-shell-completion-string-code (car (get 'python-shell-completion-string-code 'standard-value))
-          ) 't)
+     (message "Changing python-shell-inferior variables to support python")
+     (setq
+      python-shell-interpreter (car (get 'python-shell-interpreter 'standard-value))
+      python-shell-interpreter-args (car (get 'python-shell-interpreter-args 'standard-value))
+      python-shell-prompt-regexp (car (get 'python-shell-prompt-regexp 'standard-value))
+      python-shell-prompt-output-regexp (car (get 'python-shell-prompt-output-regexp 'standard-value))
+      python-shell-completion-setup-code (car (get 'python-shell-completion-setup-code 'standard-value))
+      python-shell-completion-module-string-code (car (get 'python-shell-completion-module-string-code 'standard-value))
+      python-shell-completion-string-code (car (get 'python-shell-completion-string-code 'standard-value))
+      ) 't)
         ('t (error "python-shell-setup must be called with 'python or 'ipython"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -94,9 +94,10 @@
   (setq ropemacs-autoimport-modules `("os" "shutil"))
   (if (not (boundp 'ropemacs-mode)) (pymacs-load "ropemacs" "rope-"))
   (if (and (boundp 'ropemacs-mode) (not ropemacs-mode)) (ropemacs-mode))
-  )
+)
 
-;; regenerate the import cache whenever you open a project.  this can be slow the first time
+;; regenerate the import cache whenever you open a project.  this can
+;; be slow the first time
 (defadvice rope-open-project (after rope-open-project-then-regenerate-import-cache activate)
   (rope-generate-autoimport-cache))
 
@@ -119,46 +120,47 @@
     ))
 
 (add-hook 'python-mode-hook (lambda ()
-   ;;modify pyflakes' output
-   ;; use \\| to separate multiple match criteria
-   (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
-   (setq flymake-info-line-regexp "is assigned to but never used")))
+  ;;modify pyflakes' output
+  ;; use \\| to separate multiple match criteria
+  (setq flymake-warn-line-regexp "imported but unused\\|unable to detect undefined names")
+  (setq flymake-info-line-regexp "is assigned to but never used")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hooks - loading a python file
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-hook 'python-mode-hook (lambda ()
-   (set-variable 'python-indent-offset 4)
-   (set-variable 'indent-tabs-mode nil)
-   (setq ropemacs-enable-autoimport t)
-   (add-to-list 'ac-sources 'ac-source-python)
-   ;;TODO - make symbolName : packagea.packageb.packageC trigger an import statement
-   (add-to-list 'ac-sources 'ac-source-ropemacs)
-   ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
-
-   (python-shell-setup python-inferior-shell-type)
-   ;; An Internal Process is created for each unique configuration.
-   ;; Set up each file's virtualenv before calling python-just-source-file so that each virtualenv
-   ;; will have a single internal process
-   (virtualenv-hook)
-   (python-just-source-file (buffer-file-name) (python-shell-internal-get-or-create-process))
-   (project-root-fetch)
-   (setq ropemacs-guess-project (cdr project-details));;get all of the python subdirectories
-   (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
-   (local-set-key [f10] 'my-python-toggle-test-implementation)
-   (my-turn-on-ropemacs) ;;something repeatedly calls pymacs-load "ropemacs" so you have to switch it back on
-   (autopair-mode)
-   (setq autopair-handle-action-fns '(autopair-default-handle-action
-                                      autopair-dont-if-point-non-whitespace
-                                      autopair-python-triple-quote-action))
-   ))
+  (set-variable 'python-indent-offset 4)
+  (set-variable 'indent-tabs-mode nil)
+  (setq ropemacs-enable-autoimport t)
+  (add-to-list 'ac-sources 'ac-source-python)
+  ;;TODO - make symbolName : packagea.packageb.packageC trigger an import statement
+  (add-to-list 'ac-sources 'ac-source-ropemacs)
+  ;; (add-to-list 'ac-sources 'ac-source-yasnippet)
+  
+  (python-shell-setup python-inferior-shell-type)
+  ;; An Internal Process is created for each unique configuration.
+  ;; Set up each file's virtualenv before calling python-just-source-file so that each virtualenv
+  ;; will have a single internal process
+  (virtualenv-hook)
+  (python-just-source-file (buffer-file-name) (python-shell-internal-get-or-create-process))
+  (project-root-fetch)
+  (setq ropemacs-guess-project (cdr project-details));;get all of the python subdirectories
+  (local-set-key [S-f10] 'my-python-run-test-in-inferior-buffer)
+  (local-set-key [f10] 'my-python-toggle-test-implementation)
+  (my-turn-on-ropemacs) ;;something repeatedly calls pymacs-load "ropemacs" so you have to switch it back on
+  (autopair-mode)
+  (setq autopair-handle-action-fns '(autopair-default-handle-action
+                                     autopair-dont-if-point-non-whitespace
+                                     autopair-python-triple-quote-action))
+))
 
 
 
 (add-hook 'inferior-python-mode-hook (lambda ()
   ;; jump to the bottom of the comint buffer if you start typing
-  (make-local-variable 'comint-scroll-to-bottom-on-input) (setq comint-scroll-to-bottom-on-input t)))
+  (make-local-variable 'comint-scroll-to-bottom-on-input) 
+  (setq comint-scroll-to-bottom-on-input t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions
@@ -177,7 +179,8 @@
 
 ;; This equivalent function doesn't exist in Gallina's code
 (defun python-get-named-else-internal-process ()
-  "return the current global process if there is one.  Otherwise, start an internal process and return that."
+  "return the current global process if there is one.  Otherwise,
+start an internal process and return that."
       (if (< emacs-major-version 24)
       (defun process-live-p (process)
         "Returns non-nil if PROCESS is alive.
@@ -237,8 +240,11 @@
 
 (defun my-python-eval-line ()
   "Evaluate the current Python line in the inferior Python process."
-  (interactive) (python-shell-send-string (buffer-substring-no-properties (point) (line-end-position))
-                                          (python-get-named-else-internal-process)))
+  (interactive) 
+  (python-shell-send-string
+   (buffer-substring-no-properties (point) (line-end-position))
+   (python-get-named-else-internal-process)))
+
 (defun ipython-eval-region (start end)
   "Send the region delimited by START and END to inferior ipython process."
   (interactive "r")
