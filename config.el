@@ -32,14 +32,34 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  End Global Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; undo-tree
+(require 'undo-tree)
+(global-undo-tree-mode)
+(setq undo-tree-history-directory-alist `((".*" . ,emacs-savefile-dir)))
+;;this won't work until 24.3
+(if (and (>= emacs-major-version 24) (>= emacs-minor-version 3))
+    (setq undo-tree-auto-save-history 't) 
+    (setq undo-tree-auto-save-history nil))
+(add-hook 'write-file-hooks 'undo-tree-save-history-hook)
+(add-hook 'find-file-hook 'undo-tree-load-history-hook)
 
-;; ;; Autocomplete
+;; "y or n" instead of "yes or no"
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; disable slowwww git vc backend on Windows
+(setq vc-handled-backends (quote (SVN)))
+
+;; make sure scratch buffer tries to open files in home
+(with-current-buffer "*scratch*"
+  (setq default-directory "~/"))
+
 (require 'auto-complete)
 (require 'auto-complete-config)
 (global-auto-complete-mode t)
 (setq ac-comphist-file (concat emacs-savefile-dir "ac-comphist.dat"))
 (define-key ac-completing-map "\e" 'ac-stop)
 (setq ac-stop-flymake-on-completing t)
+
 ;;fixes for autopair mode which obliterates the mapping for both kbd "RET" and [return]
 (define-key ac-completing-map (kbd "RET") 'ac-complete)
 (define-key ac-completing-map [return] 'ac-complete)
@@ -49,6 +69,44 @@
 (setq ac-dwim t)
 (global-set-key (kbd "M-?") 'auto-complete)
 (ac-config-default)
+
+;;keep server file out of our pristine .emacs.d directory
+(if (eq system-type 'windows-nt)
+    (setq server-auth-dir (concat (getenv "APPDATA") "\\.emacs.d\\server")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Fonts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; set up inconsolata by default if we're on linux
+(if (not (eq system-type 'windows-nt))
+    (if (ignore-errors
+    (let ((retval (set-face-attribute 'default nil :font "Inconsolata"))) ;;set-face-attribute returns nil on success
+      (if (not retval) 't retval)))
+        'inconsolata-good
+      (message "*** sudo apt-get install ttf-inconsolata\nsudo fc-cache -fv to make inconsolata font work on linux")))
+;; Consolas is the best font
+(if (ignore-errors
+    (let ((retval (set-face-attribute 'default nil :font "Consolas")))
+      (if (not retval) 't retval)))
+        'consolas-good
+  (message "*** Consolas font not available on this system.  Install it using the package manager if you want to use it."))
+(set-face-attribute 'default nil :height 80)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; End Fonts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;misc
+(global-subword-mode)
+(setq column-number-mode t)
+(require 'uniquify) ;;globally unique buffer names
+(global-font-lock-mode t)
+(tool-bar-mode -1)
+(setq inhibit-startup-echo-area-message t)
+(setq inhibit-startup-message t)
+;;show-paren customizations
+(show-paren-mode t)
+(setq show-paren-delay 0)
+(setq show-paren-style 'expression)
 
 ;; Flymake
 (when (load "flymake" t) (setq flymake-allowed-file-name-masks nil))  ;;otherwise flymake runs for everything
@@ -83,6 +141,7 @@
 (setq recentf-max-saved-items 100)
 (setq recentf-max-menu-items 60)
 (global-set-key [(meta f12)] 'recentf-open-files)
+(setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
 
 ;; hide/show mode
 (defun sane-hs-toggle-hiding ()
@@ -264,3 +323,29 @@
 ;;   add this line to the bottom of .bash_aliases to parse your bash
 ;;   aliases into an eshell "alias" file:
 ;;   alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" > ~/.local-emacs/auto-save-list/eshell/alias
+
+;; save point location
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (concat emacs-savefile-dir "saved-places"))
+
+;; ignore ^M in mixed dos/unix files
+(add-hook 'find-file-hook (lambda () (if (fboundp 'remove-dos-eol) (remove-dos-eol)))) ;; protect ourselves if there's a .emacs file problem
+
+;; Save all backup files in this directory (no ~files lying around) 
+(unless (file-exists-p emacs-savefile-dir)
+  (make-directory emacs-savefile-dir 't))
+(setq auto-save-list-file-prefix (concat emacs-savefile-dir ".saves-"))
+(setq backup-directory-alist `((".*" . ,emacs-savefile-dir)))
+(setq auto-save-file-name-transforms
+          `((".*" ,emacs-savefile-dir t)))
+
+;; Enable versioning with default values
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   make-backup-files t
+   version-control t)       ; use versioned backups
+

@@ -160,3 +160,9 @@
 (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
 ;; press "m" then press "right" to skip the next new cursor or "down" to accept it
 (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended)
+
+;; is speedbar good?
+(require 'sr-speedbar)
+(add-hook 'speedbar-mode-hook (lambda () (save-current-buffer (set-buffer "*SPEEDBAR*") (visual-line-mode)))) ;;word wrapping for deep directories
+
+(setq speedbar-use-images nil)
