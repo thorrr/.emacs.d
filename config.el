@@ -136,12 +136,13 @@
 
 ;; recentf
 (require 'recentf)
+(setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
 (recentf-mode 1)
 (setq recentf-auto-cleanup 'never)
 (setq recentf-max-saved-items 100)
 (setq recentf-max-menu-items 60)
 (global-set-key [(meta f12)] 'recentf-open-files)
-(setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
+
 
 ;; hide/show mode
 (defun sane-hs-toggle-hiding ()
