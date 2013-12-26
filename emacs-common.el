@@ -1,7 +1,3 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  Package Setup
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;;  Path Variables
 (defcustom emacs-savefile-dir "~/.local-emacs/auto-save-list/" 
   "Put all autosave files, save point, and undo-tree backups here")
@@ -9,13 +5,30 @@
 (defcustom shared-externals "~/.local-emacs/externals/"
   "Download all emacs packages here.")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  Projects not in elpa
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defcustom git-projects '() "")
-(defcustom hg-projects '() "")
-(defcustom wget-projects '() "")
-(defcustom make-projects '() "")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Package Setup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcustom my-packages '()
+  "List of packages for the local machine")
+(defcustom git-projects '()
+  "List of git project URLs for the local machine")
+(defcustom hg-projects '()
+  "List of mercurial project URLs for the local machine")
+(defcustom wget-projects '()
+  "List of projects to be fetched via wget for the local machine")
+(defcustom make-projects '()
+  "Additional actions to be run in the externals directory")
+
+(setq my-packages (append my-packages '(
+    auto-complete autopair auctex paredit undo-tree ace-jump-mode
+    idle-highlight-mode ess org move-text minimap
+    clojure-mode clojure-test-mode clojurescript-mode 
+    rainbow-delimiters
+    scala-mode haskell-mode slime yasnippet
+;;  inkpot-theme solarized-theme anti-zenburn-theme
+    zenburn-theme)
+))
 
 (setq git-projects (append git-projects '(
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
@@ -53,7 +66,6 @@
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
 )))
 
-;; Misc commands to run in the externals subdirectory
 (setq make-projects (append make-projects '(
   ;; the "make install" part seems to contaminate your site packages and
   ;; seems to not be necessary if you add the Pymacs directory to the PYTHONPATH                                          
@@ -63,9 +75,11 @@
     mv color-theme-6.6.0 color-theme-tmp && cd color-theme-tmp && mv color-theme-6.6.0 .. &&
     cd .. && rmdir color-theme-tmp"
 )))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
-;; Emacs Packaging
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; make the externals directory
+(setq shared-externals (expand-file-name shared-externals))
+(unless (file-exists-p shared-externals)
+  (make-directory shared-externals 't))
 
 ;; If we're on version 23, download the latest package.el and load it
 (if (< emacs-major-version 24)
@@ -76,51 +90,19 @@
       (load package-file)))
 
 (require 'package)
-(nconc package-archives '(
+(setq package-archives (append package-archives  '(
     ("melpa" . "http://melpa.milkbox.net/packages/"))
-    )
-;; change default elpa directory
-(setq package-user-dir shared-externals)
+))
 
+;; change default elpa directory and load packages
+(setq package-user-dir shared-externals)
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents))
-(defvar my-packages '())
-;; shared package list
-(setq my-packages (append my-packages
-             '(auto-complete autopair auctex paredit undo-tree ace-jump-mode
-               idle-highlight-mode ess org move-text minimap
-               clojure-mode clojure-test-mode clojurescript-mode 
-               rainbow-delimiters
-               scala-mode haskell-mode slime yasnippet
-;;               inkpot-theme solarized-theme anti-zenburn-theme
-               zenburn-theme)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; End Variables
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; clean up dirnames
-(setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
-(setq shared-externals (expand-file-name shared-externals))
-
 ;; install new packages
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
-
-;; Utility functions that all subsequent files can rely on
-(setq emacs-config-root (file-name-directory load-file-name))
-(load (concat emacs-config-root "elisp-utils.el"))
-
-;; make sure scratch buffer tries to open files in home
-(with-current-buffer "*scratch*"
-  (setq default-directory "~/"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Elisp Artifacts
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(unless (file-exists-p shared-externals)
-  (make-directory shared-externals 't))
 
 (defun git-clone (project-name project-url)
   (unless (file-exists-p (concat (expand-file-name default-directory) project-name))
@@ -164,6 +146,8 @@
 
 ;; Install packages from git and hg
 (let ((default-directory (expand-file-name shared-externals)))
+  (unless (file-exists-p shared-externals)
+    (make-directory shared-externals 't))
   (mapcar (lambda (e) (git-clone (car e) (cadr e))) git-projects)
   (mapcar (lambda (e) (hg-clone (car e) (cadr e))) hg-projects)
   (mapcar (lambda (e) (wget-clone (car e) (cadr e))) wget-projects)
@@ -178,11 +162,21 @@
           (add-to-list 'load-path (expand-file-name (concat shared-externals (car e)))))
         (append git-projects hg-projects wget-projects))
 
-(add-to-list 'load-path (concat emacs-config-root "misc-packages/"))
+;;(add-to-list 'load-path (concat emacs-config-root "misc-packages/"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Customizations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utility functions that all subsequent files can rely on
+(setq emacs-config-root (file-name-directory load-file-name))
+(load (concat emacs-config-root "elisp-utils.el"))
+
+;; clean up dirnames
+(setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
+
+;; make sure scratch buffer tries to open files in home
+(with-current-buffer "*scratch*"
+  (setq default-directory "~/"))
 
 ;;keep server file out of our pristine .emacs.d directory
 (if (eq system-type 'windows-nt)
