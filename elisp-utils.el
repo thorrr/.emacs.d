@@ -1,3 +1,5 @@
+
+
 ;;from http://emacswiki.org/emacs/ThreadMacroFromClojure
 (defmacro ->> (&rest body)
   (let ((result (pop body)))
@@ -22,8 +24,8 @@
     (recur)))
 
 (defun chomp (str)
-      "Chomp leading and tailing whitespace from STR."
-      (while (string-match "\\`\n+\\|^\\s-+\\|\\s-+$\\|\n+\\'"
-                           str)
-        (setq str (replace-match "" t t str)))
-      str)
+  "Chomp leading and tailing whitespace from STR."
+  (while (string-match "\\`\n+\\|^\\s-+\\|\\s-+$\\|\n+\\'"
+                       str)
+    (setq str (replace-match "" t t str)))
+  str)
