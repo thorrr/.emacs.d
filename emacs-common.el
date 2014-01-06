@@ -22,7 +22,7 @@
 (setq my-packages (append my-packages '(
     auto-complete autopair auctex paredit undo-tree ace-jump-mode
     idle-highlight-mode ess org move-text minimap
-    clojure-mode clojure-test-mode clojurescript-mode 
+    clojure-mode clojure-test-mode
     rainbow-delimiters
     scala-mode haskell-mode slime yasnippet
 ;;  inkpot-theme solarized-theme anti-zenburn-theme
@@ -53,8 +53,8 @@
         )))
 
 (setq hg-projects (append hg-projects '(
-    ("ropemacs" "https://bitbucket.org/agr/ropemacs")
     ("rope" "https://bitbucket.org/agr/rope")
+    ("ropemacs" "https://bitbucket.org/agr/ropemacs")
     ("ropemode" "https://bitbucket.org/agr/ropemode")
     ("project-root" "https://bitbucket.org/piranha/project-root")
 )))
@@ -64,13 +64,14 @@
     ("single-dired" "http://www.emacswiki.org/emacs/download/joseph-single-dired.el")
     ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
+    ("ntcmd" "http://www.emacswiki.org/emacs/download/ntcmd.el")
 )))
 
-(setq make-projects (append make-projects '(
-  ;; the "make install" part seems to contaminate your site packages and
-  ;; seems to not be necessary if you add the Pymacs directory to the PYTHONPATH                                          
-  ;;  "cd Pymacs && make && make install"
-  "cd Pymacs && make"
+(setq make-projects (append make-projects (list
+  (concat "cd Pymacs && make" (if (eq system-type 'windows-nt) "&& make install" ""))
+  (concat  "cd rope" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))
+  (concat  "cd ropemacs" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))
+  (concat  "cd ropemode" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))
   "cd color-theme-6.6.0 && unzip color-theme-6.6.0.zip && rm color-theme-6.6.0.zip && cd .. &&
     mv color-theme-6.6.0 color-theme-tmp && cd color-theme-tmp && mv color-theme-6.6.0 .. &&
     cd .. && rmdir color-theme-tmp"
