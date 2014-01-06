@@ -1,9 +1,11 @@
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (define-key emacs-lisp-mode-map (kbd "M-.") 'elisp-find-definition)
-            (define-key emacs-lisp-mode-map (kbd "M-l") 'pop-current-location)))
+(add-hook 'emacs-lisp-mode-hook (lambda ()
+  (define-key emacs-lisp-mode-map (kbd "M-.") 'elisp-find-definition)
+  (define-key emacs-lisp-mode-map (kbd "M-,") 'pop-current-location)
+))
 
-            
+(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+
 (defun elisp-find-definition (name)  ;;from http://lists.gnu.org/archive/html/help-gnu-emacs/2009-09/msg00669.html
   "Jump to the definition of the function (or variable) at point."
   (defun elisp-push-point-marker ()
@@ -35,4 +37,3 @@
                  (t
                   (message "Symbol not bound: %S" symbol)))))
   (t (message "No symbol at point"))))
-
