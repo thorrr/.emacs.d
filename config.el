@@ -183,7 +183,6 @@
     (local-set-key (kbd "M-(") 'my-paredit-wrap-around)
     (local-set-key (kbd "M-[") 'my-paredit-wrap-square)
     (local-set-key (kbd "M-{") 'my-paredit-wrap-curly)
-    (local-set-key (kbd "C-M-x") 'slime-eval-defun)  ;;just like elisp
     ))
 	    
 ;; make M-z evaluate "this" sexp
