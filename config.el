@@ -415,6 +415,9 @@
   (define-key eshell-mode-map [tab] 'auto-complete)
 ))
 
+;;paredit for things that want it
+(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+
 ;;el-doc for lisp languages
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
