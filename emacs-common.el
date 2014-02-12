@@ -53,7 +53,7 @@
         )))
 
 (setq hg-projects (append hg-projects '(
-    ("rope" "https://bitbucket.org/agr/rope")
+    ("rope" "https://bitbucket.org/jbell9999/rope")
     ("ropemacs" "https://bitbucket.org/agr/ropemacs")
     ("ropemode" "https://bitbucket.org/agr/ropemode")
     ("project-root" "https://bitbucket.org/piranha/project-root")
