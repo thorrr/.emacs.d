@@ -14,4 +14,5 @@
 ;; you have to use org-defkey to override conflicting org mode keybindings
 (org-defkey org-mode-map (kbd "M-h") 'my-iflipb-next-buffer)
 
-
+(setq org-src-fontify-natively 't)
+(setq org-confirm-babel-evaluate nil)
