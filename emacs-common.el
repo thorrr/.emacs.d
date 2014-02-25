@@ -23,7 +23,7 @@
     auto-complete autopair auctex paredit undo-tree ace-jump-mode
     idle-highlight-mode ess org move-text minimap
     clojure-mode clojure-test-mode
-    rainbow-delimiters
+    rainbow-delimiters htmlize
     scala-mode haskell-mode slime yasnippet paredit
 ;;  inkpot-theme solarized-theme anti-zenburn-theme
     zenburn-theme)

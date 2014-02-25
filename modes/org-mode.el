@@ -8,7 +8,8 @@
  'org-babel-load-languages
   '( (sh . t)
      (python . t)
-     (emacs-lisp . t)   
+     (emacs-lisp . t)
+     (C . t)
    ))
 
 ;; you have to use org-defkey to override conflicting org mode keybindings
