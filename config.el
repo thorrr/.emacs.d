@@ -150,6 +150,7 @@
   (save-excursion (end-of-line)(hs-toggle-hiding))
   )
 (global-set-key (kbd "C-+") 'sane-hs-toggle-hiding)
+(global-set-key [C-kp-add] 'sane-hs-toggle-hiding)
 
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
@@ -161,6 +162,7 @@
 (add-hook 'scala-mode-hook      'hs-minor-mode)
 (add-hook 'ensime-mode-hook     'hs-minor-mode)
 (add-hook 'ensime-scala-mode-hook 'hs-minor-mode)
+(add-hook 'python-mode-hook 'hs-minor-mode)
 
 ;; project-root
 (require 'project-root)
