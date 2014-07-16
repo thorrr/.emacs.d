@@ -30,7 +30,7 @@ Programatically add git repositories with a list of 2-lists:
       ("package-name-B" "https://github.com/rms/package-name-B")
     )
 
-Or if your list is in ELPA, a list of package names:
+Or if your package is in ELPA, a list of package names:
 
     (setq my-packages `(
       "elpa-package-A" "elpa-package-B"
