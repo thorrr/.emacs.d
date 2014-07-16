@@ -331,9 +331,6 @@
 (setq-default save-place t)
 (setq save-place-file (concat emacs-savefile-dir "saved-places"))
 
-;; ignore ^M in mixed dos/unix files
-(add-hook 'find-file-hook (lambda () (if (fboundp 'remove-dos-eol) (remove-dos-eol)))) ;; protect ourselves if there's a .emacs file problem
-
 ;; Save all backup files in this directory (no ~files lying around) 
 (unless (file-exists-p emacs-savefile-dir)
   (make-directory emacs-savefile-dir 't))

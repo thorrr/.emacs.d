@@ -150,7 +150,6 @@
       (insert-kbd-macro 'name)
        (newline))))
 
-;;(source-shell-script "c:/Users/jbell8/svn/test-python-virtualenv/Scripts/activate")
 (defun source-shell-script (script)
   (interactive)
   (let* ((fn (expand-file-name script))
@@ -166,5 +165,42 @@
     (mapcar (lambda (arg) (message arg) (if (not (string= "" arg)) (eval (car (read-from-string arg))))) cmd-list))
   't)
 
+(defun normalize-line-endings (buffer)
+  "Delete ^M in files with a mixture of dos and unix line
+   endings.  Mark buffer modified"
+  (interactive "*b")
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward (string ?\C-m) nil t)
+      (replace-match "" nil t))))
 
+(defun set-eol-conversion (new-eol)
+  "Specify new end-of-line conversion NEW-EOL for the buffer's file
+   coding system. This marks the buffer as modified.
+   This function is equivalent to C-x RET f [unix,dos,mac] "
+  (interactive "Send-of-line conversion for visited file: \n")
+  ;; Check for valid user input.
+  (unless (or (string-equal new-eol "unix")
+              (string-equal new-eol "dos")
+              (string-equal new-eol "mac"))
+    (error "Invalid EOL type, %s" new-eol))
+  (if buffer-file-coding-system
+      (let ((new-coding-system (coding-system-change-eol-conversion
+                                buffer-file-coding-system new-eol)))
+        (set-buffer-file-coding-system new-coding-system))
+    (let ((new-coding-system (coding-system-change-eol-conversion
+                              'undecided new-eol)))
+      (set-buffer-file-coding-system new-coding-system)))
+  (message "EOL conversion now %s" new-eol))
 
+(defun hide-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+(defun show-dos-eol ()
+  "Show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M nil))
