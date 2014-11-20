@@ -141,9 +141,3 @@ if __name__ == '__main__':
     (if (eq (buffer-size) 0)
         (insert-test-code-into-buffer this-module-name this-package-name (car (my-python-class implementation-file))))
     ))
-
-
-(defun my-make-python-shell-gui-interactive ()
-  (interactive) (python-shell-send-string "from matplotlib import interactive; interactive(True)"))
-(defun my-python-show-graphs ()
-  (interactive) (python-shell-send-string "from pylab import show; show()"))
