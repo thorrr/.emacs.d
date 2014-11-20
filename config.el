@@ -70,6 +70,7 @@
 (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 (setq ac-auto-start 3) ;;don't automatically start auto-complete until this many characters have been typed
 (setq ac-dwim t)
+(setq ac-auto-show-menu 't)  ;;if we want a delay, change this to 0.5, for example
 (global-set-key (kbd "M-?") 'auto-complete)
 (ac-config-default)
 
@@ -213,7 +214,6 @@
 ;;buffer flipping
 (require 'iflipb)
 (setq iflipb-wrap-around t)
-
 ;; auto off function iflipb'ing
 (setq my-iflipb-timeout 0.8)
 (setq my-iflipb-timer-object nil)
