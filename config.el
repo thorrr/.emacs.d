@@ -65,7 +65,7 @@
 (define-key ac-completing-map (kbd "RET") 'ac-complete)
 (define-key ac-completing-map [return] 'ac-complete)
 
-(setq ac-use-menu-map t)
+(setq ac-use-menu-map 't)
 (define-key ac-menu-map (kbd "C-n") 'ac-next)
 (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 (setq ac-auto-start 3) ;;don't automatically start auto-complete until this many characters have been typed
