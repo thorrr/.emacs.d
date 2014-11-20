@@ -55,6 +55,7 @@
 
 (require 'auto-complete)
 (require 'auto-complete-config)
+
 (global-auto-complete-mode t)
 (setq ac-comphist-file (concat emacs-savefile-dir "ac-comphist.dat"))
 (define-key ac-completing-map "\e" 'ac-stop)
@@ -63,6 +64,8 @@
 ;;fixes for autopair mode which obliterates the mapping for both kbd "RET" and [return]
 (define-key ac-completing-map (kbd "RET") 'ac-complete)
 (define-key ac-completing-map [return] 'ac-complete)
+
+(setq ac-use-menu-map t)
 (define-key ac-menu-map (kbd "C-n") 'ac-next)
 (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 (setq ac-auto-start 3) ;;don't automatically start auto-complete until this many characters have been typed
