@@ -245,6 +245,18 @@
 
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
+(if (not (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) (progn
+  (defun revert-buffer-keep-undo (&rest -)
+    "Revert buffer but keep undo history."
+    (interactive)
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (insert-file-contents (buffer-file-name))
+      (set-visited-file-modtime (visited-file-modtime))
+      (set-buffer-modified-p nil)))
+  (setq revert-buffer-function 'revert-buffer-keep-undo)
+))
+
 
 ;; hippie expand is dabbrev expand on steroids
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
