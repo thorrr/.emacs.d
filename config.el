@@ -1,4 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; shift arrow buffer navigation
@@ -255,8 +255,10 @@
       (set-visited-file-modtime (visited-file-modtime))
       (set-buffer-modified-p nil)))
   (setq revert-buffer-function 'revert-buffer-keep-undo)
+  (defun ask-user-about-supersession-threat (fn)
+    "blatantly ignore files that changed on disk"
+    )
 ))
-
 
 ;; hippie expand is dabbrev expand on steroids
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
