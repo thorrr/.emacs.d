@@ -2,6 +2,7 @@
 ;;  Global Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; shift arrow buffer navigation
+;;
 (when (fboundp 'windmove-default-keybindings)
        (windmove-default-keybindings))
 (global-set-key "\M-g" 'goto-line)
@@ -246,15 +247,22 @@
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
 (if (not (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) (progn
-  (defun revert-buffer-keep-undo (&rest -)
-    "Revert buffer but keep undo history."
+  (defun revert-buffer-keep-history (&optional IGNORE-AUTO NOCONFIRM PRESERVE-MODES)
     (interactive)
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (insert-file-contents (buffer-file-name))
-      (set-visited-file-modtime (visited-file-modtime))
-      (set-buffer-modified-p nil)))
-  (setq revert-buffer-function 'revert-buffer-keep-undo)
+    ;; from http://stackoverflow.com/q/4924389
+    ;; tell Emacs the modtime is fine, so we can edit the buffer
+    (clear-visited-file-modtime)
+    
+    ;; insert the current contents of the file on disk
+    (widen)
+    (delete-region (point-min) (point-max))
+    (insert-file-contents (buffer-file-name))
+    
+    ;; mark the buffer as not modified
+    (not-modified)
+    (set-visited-file-modtime))
+  
+  (setq revert-buffer-function 'revert-buffer-keep-history)
   (defun ask-user-about-supersession-threat (fn)
     "blatantly ignore files that changed on disk"
     )
