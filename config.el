@@ -445,3 +445,22 @@
 ;;el-doc for lisp languages
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+
+;;shell improvements
+(defun bash ()
+  (interactive)
+  (async-shell-command "fakecygpty.exe bash --login -i -c \"mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; cd ~/; exec /bin/bash\""))
+
+(add-hook 'shell-mode-hook (lambda ()
+  (set (make-local-variable 'comint-scroll-to-bottom-on-input) 't) ;; jump to bottom when you start typing
+   ;; fakecygpty makes unprintable characters visible, get rid of them
+  (if (eq system-type 'windows-nt)
+      (add-hook 'comint-preoutput-filter-functions (lambda (output)
+        (replace-regexp-in-string  "\^\[.+\^G" "" output))))
+  ;; make C-z background the running process, not Emacs itself.  Send a C-z then RET:
+  (local-set-key (kbd "C-z") 'self-insert-command)
+  (local-set-key (kbd "C-c") 'self-insert-command)
+  (add-hook 'post-self-insert-hook (lambda ()
+    (if (= last-command-event 26) (comint-send-input)) ;; C-z is "26"
+    (if (= last-command-event 3) (comint-send-input))  ;; C-c is "3"
+    ))))
