@@ -65,6 +65,7 @@
     ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
     ("ntcmd" "http://www.emacswiki.org/emacs/download/ntcmd.el")
+    ("cygwin-mount" "http://www.emacswiki.org/emacs/download/cygwin-mount.el")
 )))
 
 (setq make-projects (append make-projects (list

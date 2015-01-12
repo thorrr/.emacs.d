@@ -79,6 +79,11 @@
 (if (eq system-type 'windows-nt)
     (setq server-auth-dir (concat (getenv "APPDATA") "\\.emacs.d\\server")))
 
+;;use cygwin style mountpoints
+(if (eq system-type 'windows-nt) (progn
+  (require 'cygwin-mount)
+  (cygwin-mount-activate)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Fonts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
