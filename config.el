@@ -468,4 +468,7 @@
   (add-hook 'post-self-insert-hook (lambda ()
     (if (= last-command-event 26) (comint-send-input)) ;; C-z is "26"
     (if (= last-command-event 3) (comint-send-input))  ;; C-c is "3"
-    ))))
+    ))
+  ;; give this a sane name
+  (rename-buffer "*Bash*" 't)
+  ))
