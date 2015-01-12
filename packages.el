@@ -17,6 +17,7 @@
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 
 ;; change default elpa directory and load packages
 (setq package-user-dir shared-externals)
