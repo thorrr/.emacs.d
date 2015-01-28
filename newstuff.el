@@ -29,30 +29,30 @@
 
 (global-set-key (kbd "C-c q") 'auto-fill-mode)
 
-(require 'autopair)
-(setq autopair-autowrap t)
+;; (require 'autopair)
+;; (setq autopair-autowrap t)
 ;;(autopair-global-mode) ;; enable autopair in all buffers
 
 ;; autopair mode fixes.
-(add-hook 'python-mode-hook  ;;make python work with triple quotes
-           #'(lambda () (setq autopair-handle-action-fns (list #'autopair-default-handle-action
-                           #'autopair-dont-if-point-non-whitespace
-                           #'autopair-python-triple-quote-action))))
+;; (add-hook 'python-mode-hook  ;;make python work with triple quotes
+;;            #'(lambda () (setq autopair-handle-action-fns (list #'autopair-default-handle-action
+;;                            #'autopair-dont-if-point-non-whitespace
+;;                            #'autopair-python-triple-quote-action))))
 
-(defun autopair-dont-if-point-non-whitespace (action pair pos-before)
-  (if (or (eq 'opening action) (eq 'insert-quote action) (eq 'paired-delimiter action))
-      (let ((delete? (save-excursion
-         ;;move forward past the paired element
-         (goto-char (+ (point) 1))
-         (let* ((eol? (eq (point) (line-end-position)))
-                (next-whitespace (save-excursion (search-forward " " (point-max) t) (point)))
-                (next-char-is-whitespace? (eq next-whitespace (+ (point) 1)))
-                (delete? (not (or eol? next-char-is-whitespace?))))
-           delete?))))
-        (if delete? (delete-char 1) 't))
-    't))
+;; (defun autopair-dont-if-point-non-whitespace (action pair pos-before)
+;;   (if (or (eq 'opening action) (eq 'insert-quote action) (eq 'paired-delimiter action))
+;;       (let ((delete? (save-excursion
+;;          ;;move forward past the paired element
+;;          (goto-char (+ (point) 1))
+;;          (let* ((eol? (eq (point) (line-end-position)))
+;;                 (next-whitespace (save-excursion (search-forward " " (point-max) t) (point)))
+;;                 (next-char-is-whitespace? (eq next-whitespace (+ (point) 1)))
+;;                 (delete? (not (or eol? next-char-is-whitespace?))))
+;;            delete?))))
+;;         (if delete? (delete-char 1) 't))
+;;     't))
            
-(add-hook 'python-mode-hook (lambda () (autopair-mode)))
+;; (add-hook 'python-mode-hook (lambda () (autopair-mode)))
 
 ;;Comint tweak
 (setq-default comint-input-ring-size 5000)
@@ -150,7 +150,7 @@
 (global-set-key (kbd "M-S-<next>") 'mc/mark-all-like-this)
 (global-set-key (kbd "M-S-<prior>") 'mc/mark-all-like-this)
 ;;turn off prompt for autopair function
-(nconc mc/cmds-to-run-for-all `(autopair-insert-opening autopair-skip-close-maybe autopair-insert-or-skip-quote))
+;; (nconc mc/cmds-to-run-for-all `(autopair-insert-opening autopair-skip-close-maybe autopair-insert-or-skip-quote))
 
 ;; this is awesome - commands that work when you've selected something
 (require 'region-bindings-mode)
