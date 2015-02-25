@@ -166,3 +166,13 @@
 (add-hook 'speedbar-mode-hook (lambda () (save-current-buffer (set-buffer "*SPEEDBAR*") (visual-line-mode)))) ;;word wrapping for deep directories
 
 (setq speedbar-use-images nil)
+
+(global-git-gutter-mode +1)
+(git-gutter:linum-setup)
+;; otherwise the second character bleeds into the first digit of the line number
+(setq git-gutter:added-sign "+")
+(setq git-gutter:modified-sign " ")
+(setq git-gutter:deleted-sign "-")
+;; auto-save-buffer calls write-file which doesn't naturally call the git-gutter refresh fn
+(defadvice write-file (after write-file-git-gutter-mode activate) (git-gutter))
+

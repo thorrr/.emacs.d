@@ -24,7 +24,7 @@
     idle-highlight-mode ess org move-text minimap
     clojure-mode clojure-test-mode
     rainbow-delimiters htmlize
-    scala-mode haskell-mode slime yasnippet paredit
+    scala-mode haskell-mode slime yasnippet paredit git-gutter
 ;;  inkpot-theme solarized-theme anti-zenburn-theme
     zenburn-theme)
 ))
