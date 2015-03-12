@@ -167,6 +167,7 @@
 
 (setq speedbar-use-images nil)
 
+(require 'git-gutter-fringe)
 (global-git-gutter-mode +1)
 (git-gutter:linum-setup)
 ;; otherwise the second character bleeds into the first digit of the line number
