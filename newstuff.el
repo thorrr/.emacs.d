@@ -177,3 +177,8 @@
 ;; auto-save-buffer calls write-file which doesn't naturally call the git-gutter refresh fn
 (defadvice write-file (after write-file-git-gutter-mode activate) (git-gutter))
 
+
+(require 'ahk-mode)
+(setq ahk-syntax-directory (concat shared-externals "autohotkey-syntax"))
+(add-to-list 'auto-mode-alist '("\\.ahk$" . ahk-mode))
+(autoload 'ahk-mode "ahk-mode")

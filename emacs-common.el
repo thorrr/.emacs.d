@@ -44,6 +44,7 @@
     ("markdown-mode" "http://jblevins.org/git/markdown-mode.git")
     ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
+    ("autohotkey-syntax" "https://github.com/ahkscript/AutoHotkey-Editors.git") 
 )))
 
 (setq git-projects (append git-projects
@@ -66,6 +67,7 @@
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
     ("ntcmd" "http://www.emacswiki.org/emacs/download/ntcmd.el")
     ("cygwin-mount" "http://www.emacswiki.org/emacs/download/cygwin-mount.el")
+    ("autohotkey-mode" "http://www.robf.de/Hacking/elisp/ahk-mode.el") 
 )))
 
 (setq make-projects (append make-projects (list
