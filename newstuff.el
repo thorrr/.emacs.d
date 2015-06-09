@@ -113,13 +113,7 @@
 (setq minimap-recenter-type 'free)
 (setq minimap-update-delay 1.0)
 (setq minimap-dedicated-window 't)
-;;;###autoload
-(defun minimap-toggle ()
-  "Toggle minimap for current buffer."
-  (interactive)
-  (if (null minimap-bufname)
-      (minimap-create)
-    (minimap-kill)))
+(defun minimap-sync-overlays () ) ;; override because this function is broken in minimap
 (global-set-key (kbd "C-c m") 'minimap-toggle)
 
 ;;fringe experiments
