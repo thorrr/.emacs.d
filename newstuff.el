@@ -176,3 +176,13 @@
 (setq ahk-syntax-directory (concat shared-externals "autohotkey-syntax"))
 (add-to-list 'auto-mode-alist '("\\.ahk$" . ahk-mode))
 (autoload 'ahk-mode "ahk-mode")
+
+(defun narrow-to-region-indirect (start end)
+  "Restrict editing in this buffer to the current region, indirectly."
+  (interactive "r")
+  (deactivate-mark)
+  (let ((buf (clone-indirect-buffer nil nil)))
+    (with-current-buffer buf
+      (narrow-to-region start end))
+      (switch-to-buffer buf)))
+
