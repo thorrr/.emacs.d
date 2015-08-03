@@ -44,7 +44,8 @@
     ("markdown-mode" "http://jblevins.org/git/markdown-mode.git")
     ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
-    ("autohotkey-syntax" "https://github.com/ahkscript/AutoHotkey-Editors.git") 
+    ("autohotkey-syntax" "https://github.com/ahkscript/AutoHotkey-Editors.git")
+    ("ob-ipython" "https://github.com/thorrr/ob-ipython.git")
 )))
 
 (setq git-projects (append git-projects
@@ -84,17 +85,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; all face customizations must come after load-theme
-(if (>= emacs-major-version 24) (progn
-   (load-theme 'zenburn t nil)
-   ;;(load-theme 'solarized-light t)
-   ;;(load-theme 'anti-zenburn t)
-   ;;(load-theme 'inkpot t)
-   ) (progn
-       (require 'color-theme)
-       (add-to-list 'load-path (concat shared-externals "zenburn-emacs23"))
-       (require 'zenburn)
-       (color-theme-zenburn)
-))
+(if window-system 
+    (if (>= emacs-major-version 24)
+        (progn
+          (load-theme 'zenburn t nil)
+          ;;(load-theme 'solarized-light t)
+          ;;(load-theme 'anti-zenburn t)
+          ;;(load-theme 'inkpot t)
+          )
+      (progn
+        (require 'color-theme)
+        (add-to-list 'load-path (concat shared-externals "zenburn-emacs23"))
+        (require 'zenburn)
+        (color-theme-zenburn)
+        )))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -125,3 +129,4 @@
                              
 (load (concat emacs-config-root "modes/undo-tree.el"))
 (load (concat emacs-config-root "newstuff.el"))
+(require 'ob-ipython)
