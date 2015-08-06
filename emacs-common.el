@@ -21,9 +21,9 @@
 
 (setq my-packages (append my-packages '(
     auto-complete autopair auctex paredit undo-tree ace-jump-mode
-    idle-highlight-mode ess org move-text minimap
+    idle-highlight-mode org move-text minimap
     clojure-mode clojure-test-mode
-    rainbow-delimiters htmlize
+    rainbow-delimiters htmlize ido-vertical-mode
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
 ;;  inkpot-theme solarized-theme anti-zenburn-theme
     zenburn-theme)
@@ -111,7 +111,7 @@
 (load (concat emacs-config-root "modes/python.el"))
 (load (concat emacs-config-root "modes/scala.el"))
 (load (concat emacs-config-root "modes/clojure.el"))
-(load (concat emacs-config-root "modes/r-project.el"))
+;; (load (concat emacs-config-root "modes/r-project.el"))
 (load (concat emacs-config-root "modes/cpp.el"))
 (load (concat emacs-config-root "modes/elisp.el"))
 (load (concat emacs-config-root "modes/org-mode.el"))

@@ -301,8 +301,11 @@
 (set-default 'imenu-auto-rescan t)
 
 ;; Display ido results vertically, rather than horizontally
-(setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+(require 'ido-vertical-mode)
+(setq ido-vertical-show-count 't)
+(ido-vertical-mode 't)
 (setq ido-max-prospects 4)
+
 ;;the following tweak doesn't work on old emacs versions
 (if (>= emacs-major-version 24) (setq ido-completion-buffer nil))
 (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
