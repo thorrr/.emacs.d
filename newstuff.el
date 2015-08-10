@@ -190,3 +190,4 @@
 (require 'fill-column-indicator)
 (setq fci-always-use-textual-rule 't)
 (add-hook 'after-change-major-mode-hook 'fci-mode)  ;; enable globally
+(setq fci-rule-color "gray29")
