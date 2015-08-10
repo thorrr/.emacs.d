@@ -186,3 +186,7 @@
       (narrow-to-region start end))
       (switch-to-buffer buf)))
 
+;; fill column indicator mode - pretty good so far
+(require 'fill-column-indicator)
+(setq fci-always-use-textual-rule 't)
+(add-hook 'after-change-major-mode-hook 'fci-mode)  ;; enable globally
