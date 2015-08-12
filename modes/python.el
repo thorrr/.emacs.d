@@ -4,6 +4,7 @@
 (require 'python-goodies)
 (setq python-inferior-shell-type 'python)
 (setq auto-detect-virtualenv 't)
+(setq pymacs-parent-dir shared-externals)
 
 (defcustom my-python-test-template
   "from test.package import AtgTestCase
