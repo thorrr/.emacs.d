@@ -2,6 +2,7 @@
 ;; Python main setup file
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'python-goodies)
+(setq python-column-width 100)
 (setq python-inferior-shell-type 'python)
 (setq auto-detect-virtualenv 't)
 (setq pymacs-parent-dir shared-externals)
