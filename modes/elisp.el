@@ -1,4 +1,9 @@
 (add-hook 'emacs-lisp-mode-hook (lambda ()
+  (setq-local fill-column 90)
+))
+
+
+(add-hook 'emacs-lisp-mode-hook (lambda ()
   (define-key emacs-lisp-mode-map (kbd "M-.") 'elisp-find-definition)
   (define-key emacs-lisp-mode-map (kbd "M-,") 'pop-current-location)
 ))
