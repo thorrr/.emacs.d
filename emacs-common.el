@@ -129,4 +129,3 @@
                              
 (load (concat emacs-config-root "modes/undo-tree.el"))
 (load (concat emacs-config-root "newstuff.el"))
-(require 'ob-ipython)
