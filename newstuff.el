@@ -188,9 +188,23 @@
 
 ;; fill column indicator mode - pretty good so far
 (require 'fill-column-indicator)
+
 (setq fci-always-use-textual-rule 't)
 (add-hook 'after-change-major-mode-hook 'fci-mode)  ;; enable globally
+(defvar sanityinc/fci-mode-suppressed nil)
+(defadvice popup-create (before suppress-fci-mode activate)
+  "Suspend fci-mode while popups are visible"
+  (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-mode)
+  (when fci-mode
+    (turn-off-fci-mode)))
+(defadvice popup-delete (after restore-fci-mode activate)
+  "Restore fci-mode when all popups have closed"
+  (when (and (not popup-instances) sanityinc/fci-mode-suppressed)
+    (setq sanityinc/fci-mode-suppressed nil)
+    (turn-on-fci-mode)))
+(setq fci-handle-truncate-lines nil)
 ;; (setq fci-rule-color "gray29")
 
 ;; new ob-ipython stuff
 (require 'ob-ipython)
+
