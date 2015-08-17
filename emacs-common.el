@@ -25,8 +25,8 @@
     clojure-mode clojure-test-mode
     rainbow-delimiters htmlize ido-vertical-mode
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
-;;  inkpot-theme solarized-theme anti-zenburn-theme
-    zenburn-theme)
+    inkpot-theme solarized-theme zenburn-theme
+    )
 ))
 
 (setq git-projects (append git-projects '(
@@ -88,10 +88,12 @@
 (if window-system 
     (if (>= emacs-major-version 24)
         (progn
-          (load-theme 'zenburn t nil)
-          ;;(load-theme 'solarized-light t)
-          ;;(load-theme 'anti-zenburn t)
-          ;;(load-theme 'inkpot t)
+          ;; 4th arg = nil:  actually load
+          (load-theme 'zenburn 't nil)
+          ;; these themes are switchable but not loaded by default
+          (load-theme 'solarized-light 't 'no-enable)
+          (load-theme 'solarized-dark 't 'no-enable)
+          (load-theme 'inkpot 't 'no-enable)
           )
       (progn
         (require 'color-theme)
