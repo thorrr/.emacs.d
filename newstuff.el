@@ -128,9 +128,9 @@
 (defun toggle-line-numbers ()
   (interactive)
   (require 'linum)
-  (face-spec-reset-face 'linum)
-  (set-face-attribute 'linum nil :inherit nil :background "#4f4f4f"
-                      :foreground "slate gray")
+  ;; (face-spec-reset-face 'linum)
+  ;; (set-face-attribute 'linum nil :inherit nil :background "#4f4f4f"
+  ;;                     :foreground "slate gray")
   (let ((linum-format (concat "%" (format "%s" (ceiling (log10 (line-number-at-pos (point-max))))) "d")))
     (set-fringe-style '(2 . 10)) ;;TODO - save fringe style
     (if linum-mode (linum-mode 0) (linum-on))))
@@ -190,6 +190,7 @@
 (require 'fill-column-indicator)
 (setq fci-always-use-textual-rule 't)
 (add-hook 'after-change-major-mode-hook 'fci-mode)  ;; enable globally
-(setq fci-rule-color "gray29")
+;; (setq fci-rule-color "gray29")
+
 ;; new ob-ipython stuff
 (require 'ob-ipython)

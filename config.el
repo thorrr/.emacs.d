@@ -124,25 +124,26 @@
 (eval-after-load 'flymake '(require 'flymake-cursor))
 (setq flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
 ;;get rid of existing overlay properties
-(face-spec-reset-face 'flymake-errline)
-(face-spec-reset-face 'flymake-warnline)
-(face-spec-reset-face 'flymake-infoline)
-;; customize the flymake overlay.
-(set-face-attribute 'flymake-errline nil :inherit nil :background "HotPink4")
-(set-face-attribute 'flymake-warnline nil :inherit nil :background "#3D4D3B")
-(set-face-attribute 'flymake-infoline nil :inherit nil :background "grey30")
-(add-hook 'flymake-mode-hook (lambda () 
-                               (local-set-key (kbd "M-P") 'flymake-goto-prev-error)
-                               (local-set-key (kbd "M-N") 'flymake-goto-next-error)
-                               ))
+;; (face-spec-reset-face 'flymake-errline)
+;; (face-spec-reset-face 'flymake-warnline)
+;; (face-spec-reset-face 'flymake-infoline)
+;; ;; customize the flymake overlay.
+;; (set-face-attribute 'flymake-errline nil :inherit nil :background "HotPink4")
+;; (set-face-attribute 'flymake-warnline nil :inherit nil :background "#3D4D3B")
+;; (set-face-attribute 'flymake-infoline nil :inherit nil :background "grey30")
+;; (add-hook 'flymake-mode-hook (lambda () 
+;;                                (local-set-key (kbd "M-P") 'flymake-goto-prev-error)
+;;                                (local-set-key (kbd "M-N") 'flymake-goto-next-error)
+;;                                ))
 
-;; show-paren customizations
-(face-spec-reset-face 'show-paren-match)
-(set-face-attribute 'show-paren-match nil
-                    :foreground nil
-                    :weight 'normal
-                    :background  "#3D5169"
-                    )
+
+;; ;; show-paren customizations
+;; (face-spec-reset-face 'show-paren-match)
+;; (set-face-attribute 'show-paren-match nil
+;;                     :foreground nil
+;;                     :weight 'normal
+;;                     :background  "#3D5169"
+;;                     )
 
 ;; recentf
 (require 'recentf)
