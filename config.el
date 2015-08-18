@@ -37,13 +37,13 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 (setq undo-tree-history-directory-alist `((".*" . ,emacs-savefile-dir)))
+(prefer-coding-system 'utf-8)
 ;;this won't work until 24.3
 (if (and (>= emacs-major-version 24) (>= emacs-minor-version 3))
     (setq undo-tree-auto-save-history 't) 
     (setq undo-tree-auto-save-history nil))
 (add-hook 'write-file-hooks 'undo-tree-save-history-hook)
 (add-hook 'find-file-hook 'undo-tree-load-history-hook)
-(prefer-coding-system 'utf-8)
 
 ;; "y or n" instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
