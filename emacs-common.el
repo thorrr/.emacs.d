@@ -91,9 +91,9 @@
           ;; 4th arg = nil:  actually load
           (load-theme 'zenburn 't nil)
           ;; these themes are switchable but not loaded by default
-          (load-theme 'solarized-light 't 'no-enable)
-          (load-theme 'solarized-dark 't 'no-enable)
-          (load-theme 'inkpot 't 'no-enable)
+          ;; (load-theme 'solarized-light 't 'no-enable)
+          ;; (load-theme 'solarized-dark 't 'no-enable)
+          ;; (load-theme 'inkpot 't 'no-enable)
           )
       (progn
         (require 'color-theme)
