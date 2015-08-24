@@ -37,7 +37,9 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 (setq undo-tree-history-directory-alist `((".*" . ,emacs-savefile-dir)))
-(prefer-coding-system 'utf-8)
+;;undo-tree-save-history fn doesn't like being interruped to ask about encodings
+(add-hook 'temp-buffer-setup-hook (lambda ()
+  (prefer-coding-system 'utf-8)))
 ;;this won't work until 24.3
 (if (and (>= emacs-major-version 24) (>= emacs-minor-version 3))
     (setq undo-tree-auto-save-history 't) 
