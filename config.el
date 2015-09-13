@@ -459,9 +459,11 @@
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
 ;;shell improvements
-(defun bash ()
-  (interactive)
-  (async-shell-command "fakecygpty.exe bash --login -i -c \"mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; cd ~/; exec /bin/bash\""))
+(if (eq system-type 'windows-nt)
+    (defun bash ()
+      (interactive)
+      (async-shell-command
+       "fakecygpty.exe bash --login -i -c \"mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; cd ~/; exec /bin/bash\"")))
 
 (add-hook 'shell-mode-hook (lambda ()
   (set (make-local-variable 'comint-scroll-to-bottom-on-input) 't) ;; jump to bottom when you start typing
