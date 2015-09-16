@@ -207,3 +207,17 @@
 
 ;; new ob-ipython stuff
 (require 'ob-ipython)
+
+;; wrapper for ssh on nt using fakecygpty
+(if (eq system-type 'windows-nt)
+    (defun ssh (hostname port &optional flags)
+      "Start an SSH session in a shell window. 
+  C-u <port number> M-x ssh
+to specify a custom port"
+      (interactive "MSSH to host: \nP")
+      (let* ((buf (concat "*SSH:" hostname "*"))
+             (port (if port port 22))
+             (port-flag (concat "-p " (format "%d " port))))
+        (if (and (get-buffer buf) (get-buffer-process buf))
+            (switch-to-buffer-other-window buf)
+          (async-shell-command (concat "fakecygpty ssh " port-flag flags (when flags " ") hostname) buf)))))
