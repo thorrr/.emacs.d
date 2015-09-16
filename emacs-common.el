@@ -22,7 +22,7 @@
 (setq my-packages (append my-packages '(
     auto-complete autopair auctex paredit undo-tree ace-jump-mode
     idle-highlight-mode org move-text minimap
-    clojure-mode clojure-test-mode
+    clojure-mode clojure-test-mode unicode-fonts
     rainbow-delimiters htmlize ido-vertical-mode
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
     inkpot-theme solarized-theme zenburn-theme
