@@ -105,12 +105,12 @@
   (message "*** Consolas font not available on this system.  Install it using the package manager if you want to use it."))
 (set-face-attribute 'default nil :height 80)
 
-;; unicode-fonts means we display weird unicode chars that aren't in the default font.  crucial.
+;; unicode-fonts means we display weird unicode chars that aren't in the default font.
 (setq pcache-directory "~/.local-emacs/pcache")
 (make-directory pcache-directory 't)
-(require 'unicode-fonts)
-(unicode-fonts-setup)
-
+;; unicode-fonts is crucial, but slow at startup so moved to haskell-mode-hook
+;; (require 'unicode-fonts)
+;; (unicode-fonts-setup)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; End Fonts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
