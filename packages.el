@@ -80,7 +80,7 @@
 
   
 ;; Run commands in the externals directory
-(run-local-package-commands make-projects)
+;; (run-local-package-commands make-projects)
 
 ;; Add externals to load path
 (mapcar (lambda (e)

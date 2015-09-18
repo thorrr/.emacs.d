@@ -1,5 +1,3 @@
-(require 'org)
-
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (setq org-M-RET-may-split-line nil)
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
