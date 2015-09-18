@@ -205,9 +205,6 @@
 (setq fci-handle-truncate-lines nil)
 ;; (setq fci-rule-color "gray29")
 
-;; new ob-ipython stuff
-(require 'ob-ipython)
-
 ;; wrapper for ssh on nt using fakecygpty
 (if (eq system-type 'windows-nt)
     (defun ssh (hostname port &optional flags)
