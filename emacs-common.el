@@ -31,6 +31,9 @@
 
 (setq git-projects (append git-projects '(
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
+    ("rope" "https://github.com/python-rope/rope.git")
+    ("ropemacs" "https://github.com/python-rope/ropemacs.git")
+    ("ropemode" "https://github.com/python-rope/ropemode.git")
     ("ensime" "https://github.com/aemoncannon/ensime.git")
     ("emacs-flymake" "https://github.com/illusori/emacs-flymake.git")
     ("emacs-flymake-cursor" "https://github.com/illusori/emacs-flymake-cursor.git")
@@ -54,9 +57,6 @@
         )))
 
 (setq hg-projects (append hg-projects '(
-    ("rope" "https://bitbucket.org/jbell9999/rope")
-    ("ropemacs" "https://bitbucket.org/agr/ropemacs")
-    ("ropemode" "https://bitbucket.org/agr/ropemode")
     ("project-root" "https://bitbucket.org/piranha/project-root")
 )))
 
@@ -72,21 +72,28 @@
 
 
 (setq make-project-commands (append make-project-commands (list
-  (lambda () (shell-command-to-string 
-    (concat "cd Pymacs && make" (if (eq system-type 'windows-nt) " && make install" ""))))
-  (lambda () (shell-command-to-string
-   (concat  "cd rope" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))))
-  (lambda () (shell-command-to-string
-   (concat  "cd ropemacs" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))))
-  (lambda () (shell-command-to-string
-   (concat  "cd ropemode" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))))
-  (lambda () (shell-command-to-string
-   "cd color-theme-6.6.0 && unzip color-theme-6.6.0.zip && rm color-theme-6.6.0.zip && cd .. &&
-    mv color-theme-6.6.0 color-theme-tmp && cd color-theme-tmp && mv color-theme-6.6.0 .. &&
-    cd .. && rmdir color-theme-tmp"))
+   (lambda () (if (not (file-exists-p (concat default-directory "Pymacs/build")))
+    (shell-command-to-string 
+     (concat "cd Pymacs && make" (if (eq system-type 'windows-nt) " && make install" "")))))
+   (lambda () (if (not (file-exists-p "rope/build"))
+     (shell-command-to-string
+      (concat  "cd rope" (if (eq system-type 'windows-nt) "&& python setup.py install" "")))))
+  (lambda () (if (not (file-exists-p "ropemacs/build"))
+    (shell-command-to-string
+     (concat  "cd ropemacs" (if (eq system-type 'windows-nt) "&& python setup.py install" "")))))
+  (lambda () (if (not (file-exists-p "ropemode/build"))
+    (shell-command-to-string
+     (concat  "cd ropemode" (if (eq system-type 'windows-nt) "&& python setup.py install" "")))))
+  ;; this command will only load color-theme on emacs < 24, load-theme supercedes it
+  (lambda () (if (not (functionp 'load-theme)) 
+    (shell-command-to-string (concat
+     "cd color-theme-6.6.0 && unzip color-theme-6.6.0.zip && rm color-theme-6.6.0.zip"
+     " && cd .. && mv color-theme-6.6.0 color-theme-tmp && cd color-theme-tmp"
+     " && mv color-theme-6.6.0 .. && cd .. && rmdir color-theme-tmp"))))
   )))
 
-(setq emacs-config-root (file-name-directory load-file-name))
+;; (setq emacs-config-root (file-name-directory load-file-name))
+(setq emacs-config-root "c:/Users/bellj/.emacs.d/")
 (load (concat emacs-config-root "packages.el"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
