@@ -92,8 +92,10 @@
      " && mv color-theme-6.6.0 .. && cd .. && rmdir color-theme-tmp"))))
   )))
 
-;; (setq emacs-config-root (file-name-directory load-file-name))
-(setq emacs-config-root "c:/Users/bellj/.emacs.d/")
+(if load-file-name
+    (setq emacs-config-root (file-name-directory load-file-name))
+    ;;else hardcode .emacs.d for esup
+    (setq emacs-config-root (expand-file-name "~/.emacs.d")))
 (load (concat emacs-config-root "packages.el"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
