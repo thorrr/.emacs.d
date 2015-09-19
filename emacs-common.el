@@ -16,7 +16,7 @@
   "List of mercurial project URLs for the local machine")
 (defcustom wget-projects '()
   "List of projects to be fetched via wget for the local machine")
-(defcustom make-projects '()
+(defcustom make-project-commands '()
   "Additional actions to be run in the externals directory")
 
 (setq my-packages (append my-packages '(
@@ -70,16 +70,30 @@
     ("autohotkey-mode" "http://www.robf.de/Hacking/elisp/ahk-mode.el") 
 )))
 
-(setq make-projects (append make-projects (list
-  (concat "cd Pymacs && make" (if (eq system-type 'windows-nt) "&& make install" ""))
-  (concat  "cd rope" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))
-  (concat  "cd ropemacs" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))
-  (concat  "cd ropemode" (if (eq system-type 'windows-nt) "&& python setup.py install" ""))
-  "cd color-theme-6.6.0 && unzip color-theme-6.6.0.zip && rm color-theme-6.6.0.zip && cd .. &&
-    mv color-theme-6.6.0 color-theme-tmp && cd color-theme-tmp && mv color-theme-6.6.0 .. &&
-    cd .. && rmdir color-theme-tmp"
-)))
-(setq emacs-config-root (file-name-directory load-file-name))
+
+(setq make-project-commands (append make-project-commands (list
+   (lambda () (if (not (file-exists-p (concat default-directory "Pymacs/build")))
+    (shell-command-to-string 
+     (concat "cd Pymacs && make" (if (eq system-type 'windows-nt) " && make install" "")))))
+   (lambda () (if (not (file-exists-p "rope/build"))
+     (shell-command-to-string
+      (concat  "cd rope" (if (eq system-type 'windows-nt) "&& python setup.py install" "")))))
+  (lambda () (if (not (file-exists-p "ropemacs/build"))
+    (shell-command-to-string
+     (concat  "cd ropemacs" (if (eq system-type 'windows-nt) "&& python setup.py install" "")))))
+  (lambda () (if (not (file-exists-p "ropemode/build"))
+    (shell-command-to-string
+     (concat  "cd ropemode" (if (eq system-type 'windows-nt) "&& python setup.py install" "")))))
+  ;; this command will only load color-theme on emacs < 24, load-theme supercedes it
+  (lambda () (if (not (functionp 'load-theme)) 
+    (shell-command-to-string (concat
+     "cd color-theme-6.6.0 && unzip color-theme-6.6.0.zip && rm color-theme-6.6.0.zip"
+     " && cd .. && mv color-theme-6.6.0 color-theme-tmp && cd color-theme-tmp"
+     " && mv color-theme-6.6.0 .. && cd .. && rmdir color-theme-tmp"))))
+  )))
+
+;; (setq emacs-config-root (file-name-directory load-file-name))
+(setq emacs-config-root "c:/Users/bellj/.emacs.d/")
 (load (concat emacs-config-root "packages.el"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

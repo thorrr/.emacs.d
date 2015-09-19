@@ -67,7 +67,7 @@
 
 (defun run-local-package-commands (list-of-commands)
   (let ((default-directory (expand-file-name shared-externals)))
-    (mapcar 'shell-command-to-string list-of-commands)))
+    (mapcar 'funcall list-of-commands)))
 
 ;; Install packages from git and hg
 (let ((default-directory (expand-file-name shared-externals)))
@@ -78,9 +78,8 @@
   (mapcar (lambda (e) (wget-clone (car e) (cadr e))) wget-projects)
 )
 
-  
-;; Run commands in the externals directory
-;; (run-local-package-commands make-projects)
+  ;; Run commands in the externals directory
+;; (run-local-package-commands make-project-commands)
 
 ;; Add externals to load path
 (mapcar (lambda (e)
