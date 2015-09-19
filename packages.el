@@ -79,11 +79,7 @@
 )
 
   ;; Run commands in the externals directory
-<<<<<<< HEAD
-;; (run-local-package-commands make-project-commands)
-=======
 (run-local-package-commands make-project-commands) 
->>>>>>> newbranch
 
 ;; Add externals to load path
 (mapcar (lambda (e)
