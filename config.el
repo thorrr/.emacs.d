@@ -129,7 +129,8 @@
 (setq show-paren-style 'expression)
 
 ;; Flymake
-(when (load "flymake" t) (setq flymake-allowed-file-name-masks nil))  ;;otherwise flymake runs for everything
+(eval-after-load "flymake"
+  '(setq flymake-allowed-file-name-masks nil))  ;;otherwise flymake runs for everything
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 (eval-after-load 'flymake '(require 'flymake-cursor))
 (setq flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
