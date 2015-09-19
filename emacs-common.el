@@ -31,6 +31,9 @@
 
 (setq git-projects (append git-projects '(
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
+    ("rope" "https://github.com/python-rope/rope.git")
+    ("ropemacs" "https://github.com/python-rope/ropemacs.git")
+    ("ropemode" "https://github.com/python-rope/ropemode.git")
     ("ensime" "https://github.com/aemoncannon/ensime.git")
     ("emacs-flymake" "https://github.com/illusori/emacs-flymake.git")
     ("emacs-flymake-cursor" "https://github.com/illusori/emacs-flymake-cursor.git")
@@ -54,9 +57,6 @@
         )))
 
 (setq hg-projects (append hg-projects '(
-    ("rope" "https://bitbucket.org/jbell9999/rope")
-    ("ropemacs" "https://bitbucket.org/agr/ropemacs")
-    ("ropemode" "https://bitbucket.org/agr/ropemode")
     ("project-root" "https://bitbucket.org/piranha/project-root")
 )))
 
