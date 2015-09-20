@@ -66,7 +66,6 @@
     ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
     ("ntcmd" "http://www.emacswiki.org/emacs/download/ntcmd.el")
-    ("cygwin-mount" "http://www.emacswiki.org/emacs/download/cygwin-mount.el")
     ("autohotkey-mode" "http://www.robf.de/Hacking/elisp/ahk-mode.el") 
 )))
 
@@ -134,7 +133,6 @@
 (load (concat emacs-config-root "modes/org-mode.el"))
 (load (concat emacs-config-root "modes/markdown.el"))
 (load (concat emacs-config-root "modes/haskell.el"))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  General Interactive Commands

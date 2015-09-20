@@ -162,6 +162,13 @@
 (setq speedbar-use-images nil)
 
   (setq magit-last-seen-setup-instructions "1.4.0")
+(defadvice magit-expand-git-file-name
+  (before magit-expand-git-file-name-cygwin activate)
+  "Handle Cygwin directory names such as /cygdrive/c/*
+by changing them to C:/*"
+  (when (string-match "^/cygdrive/\\([a-z]\\)/\\(.*\\)" filename)
+    (setq filename (concat (match-string 1 filename) ":/"
+                           (match-string 2 filename)))))
 ;; (require 'git-gutter-fringe)
 ;; (global-git-gutter-mode +1)
 ;; (git-gutter:linum-setup)
