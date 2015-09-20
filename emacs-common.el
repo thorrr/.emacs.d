@@ -135,7 +135,6 @@
 (load (concat emacs-config-root "modes/markdown.el"))
 (load (concat emacs-config-root "modes/haskell.el"))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  General Interactive Commands
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
