@@ -9,6 +9,7 @@
   (local-set-key [(f2)] 'ff-find-other-file)
   (local-set-key [C-f3] 'c-fill-paragraph)
   (local-set-key [f3] 'c-comment-line-break-function)
+  (c-add-style "PERSONAL" atg-c-style)
   ;;   (local-set-key [?\M-.] 'gtags-find-tag)
   ;;   (local-set-key [?\C-\M-.] 'gtags-find-file)
   )
@@ -46,7 +47,6 @@
                                    (c++-mode . javadoc)))
     )
   "ATG C Programming Style")
-(c-add-style "PERSONAL" atg-c-style)
 
 
 ;; Customizations for all modes in CC Mode.
