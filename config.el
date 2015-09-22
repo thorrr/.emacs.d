@@ -483,3 +483,27 @@
   ;; give this a sane name
   (rename-buffer "*Bash*" 't)
   ))
+
+
+;; M-d and M-DEL shouldn't save to the kill ring.
+(defun preserve-kill-ring (fn-s arg)
+  (let ((old-kill-ring kill-ring)
+        (old-kill-ring-yank-pointer kill-ring-yank-pointer)
+        (last-command nil))  ;;keep kill-region from appending multiple kills
+    (funcall fn-s arg)
+    (setq kill-ring old-kill-ring)
+    (setq kill-ring-yank-pointer old-kill-ring-yank-pointer)))
+
+(defun subword-backward-delete (arg)
+  (interactive "p")
+  (preserve-kill-ring 'subword-backward-kill arg))
+
+(defun subword-forward-delete (arg)
+  (interactive "p")
+  (preserve-kill-ring 'subword-kill arg))
+
+(global-set-key (kbd "M-d") 'subword-forward-delete)
+(global-set-key (kbd "M-DEL") 'subword-backward-delete)
+(defalias 'paredit-forward-kill-word 'subword-forward-delete)
+(defalias 'paredit-backward-kill-word 'subword-backward-delete)
+

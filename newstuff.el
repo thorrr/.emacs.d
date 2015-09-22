@@ -85,17 +85,6 @@
 	       (insert (ring-ref ring index) comint-input-ring-separator))))))
 
 
-(defun ruthlessly-kill-word (arg)
-  "Delete subwords but don't put them into the kill ring"
-  (interactive "p")
-  (let ((old-kill-ring kill-ring))
-    (subword-backward-kill arg)
-    (setq kill-ring old-kill-ring))) ;;this still isn't right
-;;    (setq kill-ring (cdr kill-ring)))
-;;(global-set-key (kbd "M-DEL") 'ruthlessly-kill-word)
-(global-set-key (kbd "M-DEL") 'subword-backward-kill)
-
-
 (defun my-exchange-point-and-mark ()
   (interactive)
   (exchange-point-and-mark 't))  ;; turn off transient mode when switching
