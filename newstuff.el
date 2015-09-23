@@ -150,7 +150,7 @@
 
 (setq speedbar-use-images nil)
 
-  (setq magit-last-seen-setup-instructions "1.4.0")
+(setq magit-last-seen-setup-instructions "1.4.0")
 (defadvice magit-expand-git-file-name
   (before magit-expand-git-file-name-cygwin activate)
   "Handle Cygwin directory names such as /cygdrive/c/*
