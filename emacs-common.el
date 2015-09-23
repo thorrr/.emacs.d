@@ -25,7 +25,7 @@
     clojure-mode clojure-test-mode multiple-cursors unicode-fonts
     rainbow-delimiters htmlize ido-vertical-mode
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
-    inkpot-theme solarized-theme zenburn-theme
+    inkpot-theme solarized-theme zenburn-theme multi-web-mode
     )
 ))
 

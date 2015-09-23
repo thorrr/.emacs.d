@@ -224,3 +224,11 @@ to specify a custom port"
         (if (and (get-buffer buf) (get-buffer-process buf))
             (switch-to-buffer-other-window buf)
           (async-shell-command (concat "fakecygpty ssh " port-flag flags (when flags " ") hostname) buf)))))
+
+(require 'multi-web-mode)
+(setq mweb-default-major-mode 'html-mode)
+(setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                  (js-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
+                  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
+(setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
+(multi-web-global-mode 1)
