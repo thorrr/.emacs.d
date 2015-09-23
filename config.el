@@ -473,11 +473,13 @@
 
 
 ;; M-d and M-DEL shouldn't save to the kill ring.
-(defun preserve-kill-ring (fn-s arg)
+(defun preserve-kill-ring (fn-s &optional arg)
   (let ((old-kill-ring kill-ring)
         (old-kill-ring-yank-pointer kill-ring-yank-pointer)
         (last-command nil))  ;;keep kill-region from appending multiple kills
-    (funcall fn-s arg)
+    (if arg
+        (funcall fn-s arg)
+      (funcall fn-s))
     (setq kill-ring old-kill-ring)
     (setq kill-ring-yank-pointer old-kill-ring-yank-pointer)))
 
@@ -491,6 +493,16 @@
 
 (global-set-key (kbd "M-d") 'subword-forward-delete)
 (global-set-key (kbd "M-DEL") 'subword-backward-delete)
-(defalias 'paredit-forward-kill-word 'subword-forward-delete)
-(defalias 'paredit-backward-kill-word 'subword-backward-delete)
+;;preserve old definitions of paredit-*-word and override with preserve-kill-ring
+(add-hook 'paredit-mode-hook (lambda ()
+  (if (not (fboundp 'paredit-forward-kill-word-orig))
+      (fset 'paredit-forward-kill-word-orig (symbol-function 'paredit-forward-kill-word)))
+  (if (not (fboundp 'paredit-backward-kill-word-orig))
+      (fset 'paredit-backward-kill-word-orig (symbol-function 'paredit-backward-kill-word)))
+   (defun paredit-forward-kill-word ()
+     (interactive)
+     (preserve-kill-ring 'paredit-forward-kill-word-orig))
+   (defun paredit-backward-kill-word ()
+     (interactive)
+     (preserve-kill-ring 'paredit-backward-kill-word-orig))))
 
