@@ -190,19 +190,6 @@
                       (call-interactively 'rgrep)
                       )))
 
-(defun my-paredit-wrap-around ()(interactive)(save-excursion (forward-word) (backward-word) (paredit-wrap-round)))
-(defun my-paredit-wrap-square ()(interactive)(save-excursion (forward-word) (backward-word) (paredit-wrap-square)))
-(defun my-paredit-wrap-curly ()(interactive)(save-excursion (forward-word) (backward-word) (paredit-wrap-curly)))
-
-;; paredit customizations
-(add-hook 'paredit-mode-hook (lambda ()
-    (define-key paredit-mode-map (kbd "{") 'paredit-open-curly)
-    (define-key paredit-mode-map (kbd "}") 'paredit-close-curly)
-    (local-set-key (kbd "M-(") 'my-paredit-wrap-around)
-    (local-set-key [?\M-\S-\(] 'my-paredit-wrap-square)
-    (local-set-key (kbd "M-C-(") 'my-paredit-wrap-curly)
-    ))
-    
 ;; make M-z evaluate "this" sexp
 (defun slime-evaluate-this-sexp ()
   (interactive)
