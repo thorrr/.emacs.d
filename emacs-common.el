@@ -1,3 +1,6 @@
+(setq gc-cons-threshold-orig gc-cons-threshold)
+(setq gc-cons-threshold 499999999) ;;speed up init by turning off gc
+
 ;;  Path Variables
 (defcustom emacs-savefile-dir "~/.local-emacs/auto-save-list/" 
   "Put all autosave files, save point, and undo-tree backups here")
@@ -25,7 +28,7 @@
     clojure-mode clojure-test-mode multiple-cursors unicode-fonts
     rainbow-delimiters htmlize ido-vertical-mode
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
-    inkpot-theme solarized-theme zenburn-theme multi-web-mode
+    inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
     )
 ))
 
@@ -104,6 +107,7 @@
         (progn
           ;; 4th arg = nil:  actually load
           (load-theme 'zenburn 't nil)
+          ;; (load-theme 'base16-mocha-dark 't nil)
           ;; these themes are switchable but not loaded by default
           ;; (load-theme 'solarized-light 't 'no-enable)
           ;; (load-theme 'solarized-dark 't 'no-enable)
@@ -145,3 +149,5 @@
                              
 (load (concat emacs-config-root "modes/undo-tree.el"))
 (load (concat emacs-config-root "newstuff.el"))
+
+(setq gc-cons-threshold gc-cons-threshold-orig) ;;end temporary rebind of gc-cons-threshold

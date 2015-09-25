@@ -60,7 +60,6 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 
-(global-auto-complete-mode t)
 (setq ac-comphist-file (concat emacs-savefile-dir "ac-comphist.dat"))
 (define-key ac-completing-map "\e" 'ac-stop)
 (setq ac-stop-flymake-on-completing t)
@@ -179,16 +178,6 @@
 (add-hook 'ensime-mode-hook     'hs-minor-mode)
 (add-hook 'ensime-scala-mode-hook 'hs-minor-mode)
 (add-hook 'python-mode-hook 'hs-minor-mode)
-
-;; project-root
-(require 'project-root)
-
-(global-set-key (kbd "C-c g r")
-                (lambda ()
-                  (interactive)
-                  (with-project-root
-                      (call-interactively 'rgrep)
-                      )))
 
 ;; make M-z evaluate "this" sexp
 (defun slime-evaluate-this-sexp ()
