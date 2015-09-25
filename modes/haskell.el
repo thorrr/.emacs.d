@@ -1,11 +1,21 @@
-;; agda (and some haskell) stuff doesn't display correctly without unicode-fonts to dynamically pick correct
-;; fonts for "double-struck capital N', etc.
-(add-hook 'haskell-mode-hook (lambda ()
-  (require 'unicode-fonts)
-  (unicode-fonts-setup)))
+(setq _agda-mode-tried nil)
+(add-to-list 'auto-mode-alist '("\\.agda\\'" . (lambda ()
+   (if (not _agda-mode-tried) (progn
+     ;; agda (and some haskell) stuff doesn't display correctly without unicode-fonts to
+     ;; dynamically pick correct fonts for "double-struck capital N', etc.
+     (require 'unicode-fonts)
+     (unicode-fonts-setup)
 
-;; load agda2-mode if it's on our path
-(ignore-errors
-  (load-file (let ((coding-system-for-read 'utf-8))
-               (shell-command-to-string "agda-mode locate"))))
+     ;;load agda-mode from the installation if it's there
+     (setq _agda-mode-tried 't)
+     (with-demoted-errors
+       ;; load agda2-mode if it's on our path
+       (load-file (let ((coding-system-for-read 'utf-8))
+                    (shell-command-to-string "agda-mode locate")))
+       (require 'agda2-mode)
+       (agda2-mode))
+     )))))
+
+(add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+
 
