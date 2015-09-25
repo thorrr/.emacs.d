@@ -26,7 +26,7 @@
     auto-complete autopair auctex paredit undo-tree ace-jump-mode
     idle-highlight-mode org move-text minimap
     clojure-mode clojure-test-mode multiple-cursors unicode-fonts
-    rainbow-delimiters htmlize ido-vertical-mode
+    rainbow-delimiters htmlize ido-vertical-mode structured-haskell-mode
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
     inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
     )

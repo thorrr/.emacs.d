@@ -1,11 +1,10 @@
 (setq _agda-mode-tried nil)
 (add-to-list 'auto-mode-alist '("\\.agda\\'" . (lambda ()
+   ;; agda (and some haskell) stuff doesn't display correctly without unicode-fonts to
+   ;; dynamically pick correct fonts for "double-struck capital N', etc.
+   (require 'unicode-fonts)
+   (unicode-fonts-setup)
    (if (not _agda-mode-tried) (progn
-     ;; agda (and some haskell) stuff doesn't display correctly without unicode-fonts to
-     ;; dynamically pick correct fonts for "double-struck capital N', etc.
-     (require 'unicode-fonts)
-     (unicode-fonts-setup)
-
      ;;load agda-mode from the installation if it's there
      (setq _agda-mode-tried 't)
      (with-demoted-errors
@@ -17,5 +16,7 @@
      )))))
 
 (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+(require 'shm)
+(add-hook 'haskell-mode-hook 'structured-haskell-mode)
 
 
