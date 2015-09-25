@@ -32,7 +32,7 @@
     )
 ))
 
-(setq git-projects (append git-projects '(
+(setq git-projects (append git-projects `(
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
     ("rope" "https://github.com/python-rope/rope.git")
     ("ropemacs" "https://github.com/python-rope/ropemacs.git")
@@ -51,20 +51,18 @@
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
     ("autohotkey-syntax" "https://github.com/ahkscript/AutoHotkey-Editors.git")
     ("ob-ipython" "https://github.com/thorrr/ob-ipython.git")
+    ,(if (< emacs-major-version 24)
+         '("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git")
+;         '("python-emacs24" "-b emacs-24 https://github.com/fgallina/python.el.git")
+        )
+    ("ac-python-async" "https://github.com/thorrr/ac-python-async.git")
 )))
-
-(setq git-projects (append git-projects
-    (if (< emacs-major-version 24)
-      '(("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git"))
-;      '(("python-emacs24" "-b emacs-24 https://github.com/fgallina/python.el.git"))
-        )))
 
 (setq hg-projects (append hg-projects '(
     ("project-root" "https://bitbucket.org/piranha/project-root")
 )))
 
 (setq wget-projects (append wget-projects '(
-    ("ac-python" "http://chrispoole.com/downloads/ac-python.el")
     ("single-dired" "http://www.emacswiki.org/emacs/download/joseph-single-dired.el")
     ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
