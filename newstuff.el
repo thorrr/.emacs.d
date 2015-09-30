@@ -105,20 +105,32 @@
 (setq yascroll:delay-to-hide nil)
 (global-yascroll-bar-mode)
 
+;; line numbers
+(setq linum-eager nil) ;;else linum tries to synchronously update after every (next-line)
 
-;; let's try line numbers
+;;run linum-update-current when we're idle to cover gaps caused bylinum-eager='nil
+(run-with-idle-timer 2 't 'linum-update-current)
+
 (defun toggle-line-numbers ()
   (interactive)
-  (require 'nlinum)
+  (require 'linum)
   ;; (face-spec-reset-face 'linum)
   ;; (set-face-attribute 'linum nil :inherit nil :background "#4f4f4f"
   ;;                     :foreground "slate gray")
-  (let ((nlinum-format (concat "%" (format "%s" (ceiling (log10 (line-number-at-pos (point-max))))) "d")))
-    (set-fringe-style '(2 . 10)) ;;TODO - save fringe style
-    (if nlinum-mode (nlinum-mode 0)
-      ;;(linum-on)
-      (nlinum-mode)
-      )))
+  (let ((linum-format (concat "%" (format "%s" (ceiling (log10 (line-number-at-pos (point-max))))) "d")))
+    (if linum-mode
+        ;;turn off linum-mode
+        (progn (linum-mode 0) (set-fringe-style nil))
+      (progn
+        ;;turn on linum-mode and setup fringe correctly
+        (if (boundp 'git-gutter:enabled)
+            (if (or global-git-gutter-mode git-gutter:enabled)
+                ;;special fringe style for git-gutter
+                (set-fringe-style '(8 . 10)))
+          ;;fringe style without git-gutter:  thin right border for line numbers
+          (set-fringe-style '(2 . 10)))
+        ;;turn linum-on after fringe is set
+        (linum-on)))))
 (global-set-key (kbd "<f2>") 'toggle-line-numbers)
 
 ;; multiple cursors is fcking awesome
@@ -164,15 +176,11 @@ by changing them to C:/*"
                     (match-string 3 buffer-file-name)) 't)))))
 (add-hook 'git-commit-mode-hook 'un-cygwin-buffer-file-name)
 
-;; (require 'git-gutter-fringe)
-;; (global-git-gutter-mode +1)
-;; (git-gutter:linum-setup)
-;; otherwise the second character bleeds into the first digit of the line number
-;; (setq git-gutter:added-sign "+")
-;; (setq git-gutter:modified-sign " ")
-;; (setq git-gutter:deleted-sign "-")
-;; auto-save-buffer calls write-file which doesn't naturally call the git-gutter refresh fn
-;; (defadvice write-file (after write-file-git-gutter-mode activate) (git-gutter))
+(require 'git-gutter-fringe)
+(global-git-gutter-mode +1)
+
+;;auto-save-buffer calls write-file which doesn't naturally call the git-gutter refresh fn
+(defadvice write-file (after write-file-git-gutter-mode activate) (git-gutter))
 
 (require 'ahk-mode)
 (setq ahk-syntax-directory (concat shared-externals "autohotkey-syntax"))
