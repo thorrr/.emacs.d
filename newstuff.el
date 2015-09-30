@@ -178,7 +178,7 @@ by changing them to C:/*"
 
 (require 'git-gutter-fringe)
 (global-git-gutter-mode +1)
-
+(setq git-gutter:handled-backends '(git svn))
 ;;auto-save-buffer calls write-file which doesn't naturally call the git-gutter refresh fn
 (defadvice write-file (after write-file-git-gutter-mode activate) (git-gutter))
 
