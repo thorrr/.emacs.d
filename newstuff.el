@@ -109,13 +109,16 @@
 ;; let's try line numbers
 (defun toggle-line-numbers ()
   (interactive)
-  (require 'linum)
+  (require 'nlinum)
   ;; (face-spec-reset-face 'linum)
   ;; (set-face-attribute 'linum nil :inherit nil :background "#4f4f4f"
   ;;                     :foreground "slate gray")
-  (let ((linum-format (concat "%" (format "%s" (ceiling (log10 (line-number-at-pos (point-max))))) "d")))
+  (let ((nlinum-format (concat "%" (format "%s" (ceiling (log10 (line-number-at-pos (point-max))))) "d")))
     (set-fringe-style '(2 . 10)) ;;TODO - save fringe style
-    (if linum-mode (linum-mode 0) (linum-on))))
+    (if nlinum-mode (nlinum-mode 0)
+      ;;(linum-on)
+      (nlinum-mode)
+      )))
 (global-set-key (kbd "<f2>") 'toggle-line-numbers)
 
 ;; multiple cursors is fcking awesome
