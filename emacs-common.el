@@ -42,7 +42,6 @@
     ("emacs-flymake-cursor" "https://github.com/illusori/emacs-flymake-cursor.git")
     ("iflipb" "https://github.com/emacsmirror/iflipb.git")
     ("transpose-frame" "https://github.com/emacsmirror/transpose-frame.git")
-    ("visible-mark" "https://github.com/emacsmirror/visible-mark.git")
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
     ("zenburn-emacs23" "https://github.com/dbrock/zenburn-el.git")
     ("yascroll" "https://github.com/m2ym/yascroll-el.git")

@@ -1,20 +1,6 @@
 ;;misc
 (setq delete-by-moving-to-trash t)
 
-;;new visible mark stuff
-(require 'visible-mark)
-(global-visible-mark-mode t)
-(setq visible-mark-max 2)
-
-;; customize visible faces
-(face-spec-reset-face 'visible-mark-face)
-(face-spec-reset-face 'visible-mark-non-trailing-face0)
-(set-face-attribute 'visible-mark-face nil :inherit nil :background "#656555")
-(set-face-attribute 'visible-mark-non-trailing-face0 nil :inherit nil :underline 't  :strike-through nil :background nil
-                    :overline 't :foreground "#76487A")
-
-
-
 ;; glasses mode
 (setq glasses-original-separator "") ;;prevent separators from being accidentally saved
 (setq glasses-separator "ˈ")
