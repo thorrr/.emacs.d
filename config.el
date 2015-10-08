@@ -57,6 +57,9 @@
 (with-current-buffer "*scratch*"
   (setq default-directory "~/"))
 
+(require 'yasnippet)
+(yas-global-mode 1)
+
 (require 'auto-complete)
 (require 'auto-complete-config)
 
@@ -71,11 +74,13 @@
 (setq ac-use-menu-map 't)
 (define-key ac-menu-map (kbd "C-n") 'ac-next)
 (define-key ac-menu-map (kbd "C-p") 'ac-previous)
-(setq ac-auto-start 3) ;;don't automatically start auto-complete until this many characters have been typed
+(setq ac-auto-start 1) ;;don't automatically start auto-complete until this many characters have been typed
 (setq ac-dwim t)
 (setq ac-auto-show-menu 't)  ;;if we want a delay, change this to 0.5, for example
 (global-set-key (kbd "M-?") 'auto-complete)
 (ac-config-default)
+
+(add-to-list 'ac-sources 'ac-source-yasnippet)
 
 ;;keep server file out of our pristine .emacs.d directory
 (if (eq system-type 'windows-nt)
