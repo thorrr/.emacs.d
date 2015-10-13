@@ -71,6 +71,7 @@
 (define-key ac-completing-map (kbd "RET") 'ac-complete)
 (define-key ac-completing-map [return] 'ac-complete)
 
+(global-auto-complete-mode 't)
 (setq ac-use-menu-map 't)
 (define-key ac-menu-map (kbd "C-n") 'ac-next)
 (define-key ac-menu-map (kbd "C-p") 'ac-previous)
