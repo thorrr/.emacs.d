@@ -92,6 +92,7 @@
 (global-yascroll-bar-mode)
 
 ;; line numbers
+(require 'linum)
 (setq linum-eager nil) ;;else linum tries to synchronously update after every (next-line)
 
 ;;run linum-update-current when we're idle to cover gaps caused bylinum-eager='nil

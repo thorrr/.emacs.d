@@ -25,8 +25,8 @@
 (setq my-packages (append my-packages '(
     auto-complete autopair auctex paredit undo-tree ace-jump-mode
     idle-highlight-mode org move-text minimap
-    clojure-mode clojure-test-mode multiple-cursors unicode-fonts
-    rainbow-delimiters htmlize ido-vertical-mode shm nlinum
+    clojure-mode multiple-cursors unicode-fonts fill-column-indicator
+    rainbow-delimiters htmlize ido-vertical-mode shm nlinum deferred
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
     inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
     )
