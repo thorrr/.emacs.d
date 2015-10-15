@@ -200,7 +200,7 @@ by changing them to C:/*"
     (setq sanityinc/fci-mode-suppressed nil)
     (turn-on-fci-mode)))
 (setq fci-handle-truncate-lines nil)
-;; (setq fci-rule-color "gray29")
+(setq fci-rule-color "gray35")
 
 ;; wrapper for ssh on nt using fakecygpty
 (if (eq system-type 'windows-nt)
