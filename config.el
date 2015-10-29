@@ -28,7 +28,8 @@
 
 ;; occur is cool
 (global-set-key (kbd "C-c o") 'my-occur)
-
+;; press C-o to do an occur buffer during an interactive search
+(define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  End Global Keybindings
