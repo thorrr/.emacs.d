@@ -24,7 +24,7 @@
 
 (setq my-packages (append my-packages '(
     auto-complete autopair auctex paredit undo-tree ace-jump-mode
-    idle-highlight-mode org move-text minimap
+    idle-highlight-mode org move-text minimap loccur
     clojure-mode multiple-cursors unicode-fonts fill-column-indicator
     rainbow-delimiters htmlize ido-vertical-mode shm nlinum deferred
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe

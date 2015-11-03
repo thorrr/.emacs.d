@@ -27,8 +27,8 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; occur is cool
-(global-set-key (kbd "C-c o") 'my-occur)
-;; press C-o to do an occur buffer during an interactive search
+;; (global-set-key (kbd "C-c o") 'my-occur)
+;; press C-o to do an occur buffer cduring an interactive search
 (define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
