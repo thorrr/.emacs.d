@@ -220,3 +220,6 @@ to specify a custom port"
                   (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
 (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
 (multi-web-global-mode 1)
+
+(require 'dired-k)
+(add-hook 'dired-initial-position-hook 'dired-k)
