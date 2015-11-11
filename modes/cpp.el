@@ -1,3 +1,5 @@
+(require 'cc-mode)
+
 (setq auto-mode-alist (cons '("\\.h$" . c++-mode) auto-mode-alist))
 
 (defun sm-find-tag ()
