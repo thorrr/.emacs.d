@@ -29,6 +29,7 @@
     rainbow-delimiters htmlize ido-vertical-mode shm nlinum deferred
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
     inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
+    bash-completion
     )
 ))
 

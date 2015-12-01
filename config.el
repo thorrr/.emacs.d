@@ -59,7 +59,7 @@
   (setq default-directory "~/"))
 
 (require 'yasnippet)
-(yas-global-mode 1)
+;;(yas-global-mode 1)
 
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -443,12 +443,40 @@
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
-;;shell improvements
-(if (eq system-type 'windows-nt)
+;;shell improvements for windows
+(if (eq system-type 'windows-nt) (progn
     (defun bash ()
       (interactive)
-      (async-shell-command
-       "fakecygpty.exe bash --login -i -c \"mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; cd ~/; exec /bin/bash\"")))
+      (async-shell-command (concat "fakecygpty.exe bash --login -i -c "
+                                   "\"mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; "
+                                   "cd ~/; exec /bin/bash\"")))
+  
+    (autoload 'bash-completion-dynamic-complete 
+      "bash-completion"
+      "BASH completion hook")
+    (add-hook 'shell-dynamic-complete-functions
+              'bash-completion-dynamic-complete)
+    
+    ;;full command will be fakecygpty bash --noediting
+    (setq bash-completion-prog "fakecygpty")
+    
+    ;;override definition of bash-completion-require-process
+    (require 'cl-lib)
+    (defun bash-completion-require-process-around (orig-fun &rest args)
+      (cl-letf* (;;save definition of start-process
+                 ((symbol-function 'this-fn) (symbol-function 'start-process))
+                 ;;now override it to let us add our own program args
+                 ((symbol-function 'start-process)
+                  (lambda (name buffer program &rest program-args)
+                    ;; use "apply" since the last argument is "spread" as the
+                    ;; remaining arguments.  Otherwise we could call this-fn directy, like
+                    ;; (this-fun name buffer prgram ...)
+                    (apply #'this-fn name buffer program "bash" program-args)
+                    )))
+        ;;now, do (bash-completion-require-process)
+        (apply orig-fun args)))
+    (advice-add 'bash-completion-require-process :around #'bash-completion-require-process-around)
+    )) ;;end windows-nt bash stuff
 
 (add-hook 'shell-mode-hook (lambda ()
   (set (make-local-variable 'comint-scroll-to-bottom-on-input) 't) ;; jump to bottom when you start typing
@@ -463,6 +491,7 @@
     (if (= last-command-event 26) (comint-send-input)) ;; C-z is "26"
     (if (= last-command-event 3) (comint-send-input))  ;; C-c is "3"
     ))
+  
   ;; give this a sane name
   (rename-buffer "*Bash*" 't)
   ))
