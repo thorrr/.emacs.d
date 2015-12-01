@@ -59,7 +59,7 @@
   (setq default-directory "~/"))
 
 (require 'yasnippet)
-;;(yas-global-mode 1)
+(yas-global-mode 1)
 
 (require 'auto-complete)
 (require 'auto-complete-config)
