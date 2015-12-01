@@ -460,7 +460,6 @@
     ;;full command will be fakecygpty bash --noediting
     (setq bash-completion-prog "fakecygpty")
     
-    ;;override definition of bash-completion-require-process
     (require 'cl-lib)
     (defun bash-completion-require-process-around (orig-fun &rest args)
       (cl-letf* (;;save definition of start-process
@@ -471,9 +470,7 @@
                     ;; use "apply" since the last argument is "spread" as the
                     ;; remaining arguments.  Otherwise we could call this-fn directy, like
                     ;; (this-fun name buffer prgram ...)
-                    (apply #'this-fn name buffer program "bash" program-args)
-                    )))
-        ;;now, do (bash-completion-require-process)
+                    (apply #'this-fn name buffer program "bash" program-args))))
         (apply orig-fun args)))
     (advice-add 'bash-completion-require-process :around #'bash-completion-require-process-around)
 
@@ -517,6 +514,12 @@
   
   ;; give this a sane name
   (rename-buffer "*Bash*" 't)
+  ;; unset our directory change shortcuts because it confuses bash-completion
+  (process-send-string (get-buffer-process (current-buffer)) "alias cd=cd\n")
+  (process-send-string (get-buffer-process (current-buffer)) "alias ..=\n")
+  (process-send-string (get-buffer-process (current-buffer)) "alias cd..=cd..\n")
+  ;; completion works better if you explicitly change to your home directory before starting
+  (process-send-string (get-buffer-process (current-buffer)) "cd\n")
   ))
 
 
