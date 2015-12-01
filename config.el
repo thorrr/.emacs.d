@@ -501,7 +501,9 @@
 
 (add-hook 'shell-mode-hook (lambda ()
   (set (make-local-variable 'comint-scroll-to-bottom-on-input) 't) ;; jump to bottom when you start typing
-   ;; fakecygpty makes unprintable characters visible, get rid of them
+  (set-process-query-on-exit-flag (get-buffer-process (current-buffer)) nil) ;; don't ask about live bash's
+
+  ;; fakecygpty makes unprintable characters visible, get rid of them
   (if (eq system-type 'windows-nt)
       (add-hook 'comint-preoutput-filter-functions (lambda (output)
         (replace-regexp-in-string  "\^\[.+\^G" "" output))))
