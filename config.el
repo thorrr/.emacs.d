@@ -490,6 +490,12 @@
         (apply orig-fun args)))
     (advice-add 'completion-in-region--postch :around #'completion-in-region--postch-around)
 
+    ;; turn off the "Bash completion..." message
+    (defun bash-completion-dynamic-complete-0-around (orig-fun &rest args)
+      (cl-letf (((symbol-function 'message) #'format))
+        (apply orig-fun args)))
+    (advice-add 'bash-completion-dynamic-complete-0 :around #'bash-completion-dynamic-complete-0-around)
+
     
     )) ;;end windows-nt bash stuff
 
