@@ -59,7 +59,7 @@
   (setq default-directory "~/"))
 
 (require 'yasnippet)
-(yas-global-mode 1)
+;;(yas-global-mode 1)
 
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -476,6 +476,21 @@
         ;;now, do (bash-completion-require-process)
         (apply orig-fun args)))
     (advice-add 'bash-completion-require-process :around #'bash-completion-require-process-around)
+
+    ;;turn off shell-quote-argument, it's adding unnecessary quotes around the completion candidates
+    (defun bash-completion-escape-candidate-around (orig-fun &rest args)
+      (cl-letf* (((symbol-function 'shell-quote-argument) #'identity))
+        (apply orig-fun args)))
+    (advice-add 'bash-completion-escape-candidate :around #'bash-completion-escape-candidate-around)
+
+    ;;turn off completion when hitting "enter".  Otherwise the completion will needlessly
+    ;;timeout on an empty match
+    (defun completion-in-region--postch-around (orig-fun &rest args)
+      (cl-letf (((symbol-function 'bash-completion-send) #'ignore))
+        (apply orig-fun args)))
+    (advice-add 'completion-in-region--postch :around #'completion-in-region--postch-around)
+
+    
     )) ;;end windows-nt bash stuff
 
 (add-hook 'shell-mode-hook (lambda ()
