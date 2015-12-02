@@ -498,8 +498,14 @@
 
 (add-hook 'shell-mode-hook (lambda ()
   (set (make-local-variable 'comint-scroll-to-bottom-on-input) 't) ;; jump to bottom when you start typing
+  (set (make-local-variable 'comint-scroll-to-bottom-on-output) 't) ;; jump to bottom when there's output
+  (set (make-local-variable 'comint-scroll-show-maximum-output) 't) ;; scroll to show max possible output
   (set-process-query-on-exit-flag (get-buffer-process (current-buffer)) nil) ;; don't ask about live bash's
 
+  ; make completion buffers disappear after n seconds.
+  (add-hook 'completion-setup-hook
+    (lambda () (run-at-time 3 nil
+      (lambda () (delete-windows-on "*Completions*")))))
   ;; fakecygpty makes unprintable characters visible, get rid of them
   (if (eq system-type 'windows-nt)
       (add-hook 'comint-preoutput-filter-functions (lambda (output)
