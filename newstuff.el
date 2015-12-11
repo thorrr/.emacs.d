@@ -196,7 +196,15 @@ by changing them to C:/*"
 (require 'fill-column-indicator)
 
 (setq fci-always-use-textual-rule 't)
-(add-hook 'after-change-major-mode-hook 'fci-mode)  ;; enable globally
+;; turn on only for non-special buffers
+(define-globalized-minor-mode global-fci-mode fci-mode
+  (lambda ()
+    (if (and
+         (not (string-match "^\*.*\*$" (buffer-name)))
+         (not (eq major-mode 'dired-mode)))
+        (fci-mode 1))))
+(global-fci-mode 1)  ;; enable globally
+
 (defvar sanityinc/fci-mode-suppressed nil)
 (defadvice popup-create (before suppress-fci-mode activate)
   "Suspend fci-mode while popups are visible"
