@@ -4,7 +4,7 @@
 (if (eq system-type 'windows-nt) (setq python-shell-prompt-detect-enabled nil))
 (require 'python-goodies)
 (setq python-column-width 100)
-(setq python-inferior-shell-type 'python)
+(setq python-inferior-shell-type 'ipython)
 (setq auto-detect-virtualenv 't)
 (setq pymacs-parent-dir shared-externals)
 

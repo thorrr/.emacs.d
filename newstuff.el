@@ -72,6 +72,17 @@
 ;; reuse a single buffer for dired
 (require 'joseph-single-dired)
 
+;; press C-o to do an occur buffer during an interactive search
+;; (define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
+(define-key isearch-mode-map (kbd "C-o") 'loccur-current)
+(require 'loccur)
+(define-key global-map [(control o)] 'loccur-current)
+;; defines shortcut for the interactive loccur command
+(define-key global-map [(control meta o)] 'loccur)
+;; defines shortcut for the loccur of the previously found word
+(define-key global-map [(control shift o)] 'loccur-previous-match)
+
+
 (require 'minimap)
 (setq minimap-window-location 'right)
 (setq minimap-width-fraction .1)
@@ -94,6 +105,7 @@
 
 ;;run linum-update-current when we're idle to cover gaps caused bylinum-eager='nil
 (run-with-idle-timer 2 't 'linum-update-current)
+
 
 (defun toggle-line-numbers ()
   (interactive)
