@@ -507,6 +507,7 @@
     )) ;;end windows-nt bash stuff
 
 ;;general shell-mode tweaks
+(add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
 (add-hook 'shell-mode-hook (lambda ()
   (set (make-local-variable 'comint-scroll-to-bottom-on-input) 't) ;; jump to bottom when you start typing
   (set (make-local-variable 'comint-scroll-to-bottom-on-output) 't) ;; jump to bottom when there's output
