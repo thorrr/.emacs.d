@@ -493,23 +493,33 @@
         (apply orig-fun args)))
     (advice-add 'bash-completion-dynamic-complete-0 :around #'bash-completion-dynamic-complete-0-around)
 
+    (add-hook 'shell-mode-hook (lambda ()
+      ;; give this a sane name
+      (rename-buffer "*Bash*" 't)
+      ;; unset our directory change shortcuts because it confuses bash-completion
+      (process-send-string (get-buffer-process (current-buffer)) "alias cd=cd\n")
+      (process-send-string (get-buffer-process (current-buffer)) "alias ..=\n")
+      (process-send-string (get-buffer-process (current-buffer)) "alias cd..=cd..\n")
+      ;; completion works better if you explicitly change to your home directory before starting
+      (process-send-string (get-buffer-process (current-buffer)) "cd\n")
+      ))
     
     )) ;;end windows-nt bash stuff
 
+;;general shell-mode tweaks
 (add-hook 'shell-mode-hook (lambda ()
   (set (make-local-variable 'comint-scroll-to-bottom-on-input) 't) ;; jump to bottom when you start typing
   (set (make-local-variable 'comint-scroll-to-bottom-on-output) 't) ;; jump to bottom when there's output
   (set (make-local-variable 'comint-scroll-show-maximum-output) 't) ;; scroll to show max possible output
   (set-process-query-on-exit-flag (get-buffer-process (current-buffer)) nil) ;; don't ask about live bash's
-
-  ; make completion buffers disappear after n seconds.
+; make completion buffers disappear after n seconds.
   (add-hook 'completion-setup-hook
-    (lambda () (run-at-time 3 nil
-      (lambda () (delete-windows-on "*Completions*")))))
+            (lambda () (run-at-time 3 nil
+              (lambda () (delete-windows-on "*Completions*")))))
   ;; fakecygpty makes unprintable characters visible, get rid of them
   (if (eq system-type 'windows-nt)
-      (add-hook 'comint-preoutput-filter-functions (lambda (output)
-        (replace-regexp-in-string  "\^\[.+\^G" "" output))))
+  (add-hook 'comint-preoutput-filter-functions (lambda (output)
+            (replace-regexp-in-string  "\^\[.+\^G" "" output))))
   ;; make C-z background the running process, not Emacs itself.  Send a C-z then RET:
   (local-set-key (kbd "C-z") 'self-insert-command)
   (local-set-key (kbd "C-c") 'self-insert-command)
@@ -518,17 +528,7 @@
     (if (= last-command-event 26) (comint-send-input)) ;; C-z is "26"
     (if (= last-command-event 3) (comint-send-input))  ;; C-c is "3"
     ))
-  
-  ;; give this a sane name
-  (rename-buffer "*Bash*" 't)
-  ;; unset our directory change shortcuts because it confuses bash-completion
-  (process-send-string (get-buffer-process (current-buffer)) "alias cd=cd\n")
-  (process-send-string (get-buffer-process (current-buffer)) "alias ..=\n")
-  (process-send-string (get-buffer-process (current-buffer)) "alias cd..=cd..\n")
-  ;; completion works better if you explicitly change to your home directory before starting
-  (process-send-string (get-buffer-process (current-buffer)) "cd\n")
   ))
-
 
 ;; M-d and M-DEL shouldn't save to the kill ring.
 (defun preserve-kill-ring (fn-s &optional arg)
