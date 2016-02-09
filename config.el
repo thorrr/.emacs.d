@@ -567,3 +567,8 @@
      (interactive)
      (preserve-kill-ring 'paredit-backward-kill-word-orig))))
 
+;; electric-indent-mode is automatic in emacs 24.4+. Swap C-j and RET to get the old behavior
+(if (and (>= emacs-major-version 24)
+         (>= emacs-minor-version 4)) (progn
+  (global-set-key (kbd "<RET>") 'electric-indent-just-newline)
+  (global-set-key (kbd "C-j") 'newline)))
