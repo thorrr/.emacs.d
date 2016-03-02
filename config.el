@@ -445,22 +445,14 @@
 
 ;;shell improvements for windows
 (if (eq system-type 'windows-nt) (progn
-    (defun bash ()
-      (interactive)
-      (async-shell-command (concat "fakecygpty.exe bash --login -i -c "
-                                   "\"mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; "
-                                   "cd ~/; exec /bin/bash\"")))
-  
-    (autoload 'bash-completion-dynamic-complete 
-      "bash-completion"
-      "BASH completion hook")
-    (add-hook 'shell-dynamic-complete-functions
-              'bash-completion-dynamic-complete)
-    
-    ;;full command will be fakecygpty bash --noediting
-    (setq bash-completion-prog "fakecygpty")
-    
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; bash-completion-dynamic-complete plus tweaks
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (autoload 'bash-completion-dynamic-complete "bash-completion" "BASH completion hook")
     (require 'cl-lib)
+
+    ;; make bash-completion-require-process work with fakecygpty
+    (setq bash-completion-prog "fakecygpty") ;;full command will be fakecygpty bash --noediting
     (defun bash-completion-require-process-around (orig-fun &rest args)
       (cl-letf* (;;save definition of start-process
                  ((symbol-function 'this-fn) (symbol-function 'start-process))
@@ -472,28 +464,33 @@
                     ;; (this-fun name buffer prgram ...)
                     (apply #'this-fn name buffer program "bash" program-args))))
         (apply orig-fun args)))
-    (advice-add 'bash-completion-require-process :around #'bash-completion-require-process-around)
 
     ;;turn off shell-quote-argument, it's adding unnecessary quotes around the completion candidates
     (defun bash-completion-escape-candidate-around (orig-fun &rest args)
       (cl-letf* (((symbol-function 'shell-quote-argument) #'identity))
         (apply orig-fun args)))
-    (advice-add 'bash-completion-escape-candidate :around #'bash-completion-escape-candidate-around)
 
     ;;turn off completion when hitting "enter".  Otherwise the completion will needlessly
     ;;timeout on an empty match
     (defun completion-in-region--postch-around (orig-fun &rest args)
       (cl-letf (((symbol-function 'bash-completion-send) #'ignore))
         (apply orig-fun args)))
-    (advice-add 'completion-in-region--postch :around #'completion-in-region--postch-around)
 
     ;; turn off the "Bash completion..." message
     (defun bash-completion-dynamic-complete-0-around (orig-fun &rest args)
       (cl-letf (((symbol-function 'message) #'format))
         (apply orig-fun args)))
-    (advice-add 'bash-completion-dynamic-complete-0 :around #'bash-completion-dynamic-complete-0-around)
 
-    (add-hook 'shell-mode-hook (lambda ()
+    ;; activate all of our advices
+    (advice-add 'bash-completion-require-process :around #'bash-completion-require-process-around)
+    (advice-add 'bash-completion-escape-candidate :around #'bash-completion-escape-candidate-around)
+    (advice-add 'completion-in-region--postch :around #'completion-in-region--postch-around)
+    (advice-add 'bash-completion-dynamic-complete-0 :around #'bash-completion-dynamic-complete-0-around)
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; End bash-completion-dynamic tweaks
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    (defun bash-setup-hook ()
       ;; give this a sane name
       (rename-buffer "*Bash*" 't)
       ;; unset our directory change shortcuts because it confuses bash-completion
@@ -502,8 +499,20 @@
       (process-send-string (get-buffer-process (current-buffer)) "alias cd..=cd..\n")
       ;; completion works better if you explicitly change to your home directory before starting
       (process-send-string (get-buffer-process (current-buffer)) "cd\n")
-      ))
-    
+      )
+
+    ;; finally, the function that actually starts a bash shell
+    (defun bash ()
+      (interactive)
+      (add-hook 'shell-mode-hook 'bash-setup-hook)
+      (add-hook 'shell-dynamic-complete-functions 'bash-completion-dynamic-complete)
+      (async-shell-command (concat "fakecygpty.exe bash --login -i -c "
+                                   "\"mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; "
+                                   "cd ~/; exec /bin/bash\""))
+      ;;turn off bash-completion
+      (remove-hook 'shell-dynamic-complete-functions 'bash-completion-dynamic-complete)
+      ;;turn off bash stuff so cmd still works
+      (remove-hook 'shell-mode-hook 'bash-setup-hook))
     )) ;;end windows-nt bash stuff
 
 ;;general shell-mode tweaks
