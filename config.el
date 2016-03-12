@@ -493,6 +493,8 @@
     (defun bash-setup-hook ()
       ;; give this a sane name
       (rename-buffer "*Bash*" 't)
+      ;; fix colors and diff output
+      (process-send-string (get-buffer-process (current-buffer)) "export TERM=xterm\n")
       ;; unset our directory change shortcuts because it confuses bash-completion
       (process-send-string (get-buffer-process (current-buffer)) "alias cd=cd\n")
       (process-send-string (get-buffer-process (current-buffer)) "alias ..=\n")
