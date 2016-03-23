@@ -135,6 +135,24 @@
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 (eval-after-load 'flymake '(require 'flymake-cursor))
 (setq flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
+;; flymake-cursor - turn off before every command
+(add-hook 'find-file-hook (lambda ()
+  (make-local-variable 'flymake-cursor-is-activated)
+  (setq flymake-cursor-is-activated 't)
+  (add-hook 'pre-command-hook (lambda ()
+    (if (and (boundp 'flymake-cursor-is-activated)
+             flymake-cursor-is-activated)
+        (progn
+          (setq flymake-cursor-is-activated nil)
+          (flymake-cursor-mode -1)))))
+  ;;turn flymake-cursor back on when we're idle
+  (run-with-idle-timer flymake-cursor-error-display-delay 't (lambda ()
+    (if (and (boundp 'flymake-cursor-is-activated)
+             (not flymake-cursor-is-activated))
+        (progn
+          (setq flymake-cursor-is-activated 't)
+          (flymake-cursor-mode +1)
+          (flymake-cursor-show-errors-at-point-pretty-soon)))))))
 ;;get rid of existing overlay properties
 ;; (face-spec-reset-face 'flymake-errline)
 ;; (face-spec-reset-face 'flymake-warnline)
