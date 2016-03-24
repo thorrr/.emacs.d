@@ -188,8 +188,19 @@
 ;; hide/show mode
 (defun sane-hs-toggle-hiding ()
   (interactive)
-  (save-excursion (end-of-line)(hs-toggle-hiding))
-  )
+  (let ((found-hs-overlay nil))
+    (save-excursion
+      (ignore-errors (left-char 1))
+      ;; if there's a hide-show overlay one character to the left, bump point to the line
+      ;; beginning so it doesn't get swept to the end of the block when we toggle hiding
+      (if (ignore-errors (overlay-get (car (overlays-at (point))) 'hs))
+          (setq found-hs-overlay 't)))
+    (if found-hs-overlay (move-beginning-of-line nil))
+    (save-excursion
+      (move-beginning-of-line nil) (end-of-line) (hs-toggle-hiding))
+    ;; now put point back at the end of the line since that's where it started visually
+    (if found-hs-overlay (end-of-line))))
+
 (global-set-key (kbd "C-+") 'sane-hs-toggle-hiding)
 (global-set-key [C-kp-add] 'sane-hs-toggle-hiding)
 
