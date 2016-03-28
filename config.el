@@ -531,8 +531,8 @@
       (process-send-string (get-buffer-process (current-buffer)) "alias cd=cd\n")
       (process-send-string (get-buffer-process (current-buffer)) "alias ..=\n")
       (process-send-string (get-buffer-process (current-buffer)) "alias cd..=cd..\n")
-      ;; completion works better if you explicitly change to your home directory before starting
-      (process-send-string (get-buffer-process (current-buffer)) "cd\n")
+      ;; make bash-completion start in a sane location
+      (setq default-directory (getenv "USERPROFILE"))
       )
 
     ;; finally, the function that actually starts a bash shell
