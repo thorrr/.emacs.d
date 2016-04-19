@@ -567,12 +567,15 @@
   ;; make C-z background the running process, not Emacs itself.  Send a C-z then RET:
   (local-set-key (kbd "C-z") 'self-insert-command)
   (local-set-key (kbd "C-c") 'self-insert-command)
+  (local-set-key (kbd "C-d") 'self-insert-command)
   (local-set-key (kbd "<up>") (lambda () (interactive) (end-of-buffer) (comint-previous-input 1)))
   (local-set-key (kbd "<down>") (lambda () (interactive) (end-of-buffer) (comint-next-input 1)))
   (local-set-key (kbd "M-i") (lambda () (interactive) (end-of-buffer)))
   (add-hook 'post-self-insert-hook (lambda ()
+    ;; make these commands send a RET automatically
     (if (= last-command-event 26) (comint-send-input)) ;; C-z is "26"
     (if (= last-command-event 3) (comint-send-input))  ;; C-c is "3"
+    (if (= last-command-event 4) (comint-send-input))  ;; C-d is "4"
     ))
   ))
 
