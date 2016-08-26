@@ -86,8 +86,8 @@
 (add-to-list 'ac-sources 'ac-source-yasnippet)
 
 ;;keep server file out of our pristine .emacs.d directory
-(if (eq system-type 'windows-nt)
-    (setq server-auth-dir (concat (getenv "APPDATA") "\\.emacs.d\\server")))
+(setq server-auth-dir (expand-file-name "~/.local-emacs/server"))
+(server-start)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Fonts
@@ -464,7 +464,19 @@
 (add-hook 'eshell-mode-hook #'(lambda ()
   (setq-local ac-auto-start 3)
   (define-key eshell-mode-map [tab] 'auto-complete)
-))
+  ))
+
+(defun eshell/emacs (&rest args)
+  "Open a file in emacs. Some habits die hard."
+  (if (null args)
+      ;; If I just ran "emacs", I probably expect to be launching
+      ;; Emacs, which is rather silly since I'm already in Emacs.
+      ;; So just pretend to do what I ask.
+      (bury-buffer)
+    ;; We have to expand the file names or else naming a directory in an
+    ;; argument causes later arguments to be looked for in that directory,
+    ;; not the starting directory
+    (mapc #'find-file (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
 
 ;;paredit for things that want it
 (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
@@ -533,6 +545,9 @@
       (process-send-string (get-buffer-process (current-buffer)) "alias cd..=cd..\n")
       ;; make bash-completion start in a sane location
       (setq default-directory (getenv "USERPROFILE"))
+      ;; add a command "emacs" to edit a file
+      (process-send-string (get-buffer-process (current-buffer)) (concat
+        "alias emacs='" invocation-directory "/emacsclientw.exe -n -q --server-file " server-auth-dir "/server" "'\n"))
       )
 
     ;; finally, the function that actually starts a bash shell

@@ -144,3 +144,9 @@ if __name__ == '__main__':
     (if (eq (buffer-size) 0)
         (insert-test-code-into-buffer this-module-name this-package-name (car (my-python-class implementation-file))))
     ))
+
+(require 'python-yapf)
+(require 'region-bindings-mode)
+(region-bindings-mode-enable)
+(define-key region-bindings-mode-map "f" 'python-yapf-region)  ;; mark something and hit "f" to auto-format it
+(setq python-yapf-style (format  "{based_on_style: pep8, column_limit: %d}" python-column-width))
