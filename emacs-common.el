@@ -30,7 +30,7 @@
     rainbow-delimiters htmlize ido-vertical-mode shm nlinum deferred
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
     inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
-    bash-completion
+    bash-completion ahk-mode
     )
 ))
 
@@ -50,7 +50,6 @@
     ("markdown-mode" "http://jblevins.org/git/markdown-mode.git")
     ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
-    ("autohotkey-syntax" "https://github.com/ahkscript/AutoHotkey-Editors.git")
     ("ob-ipython" "https://github.com/thorrr/ob-ipython.git")
     ,(if (< emacs-major-version 24)
          '("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git")
@@ -70,7 +69,6 @@
     ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
     ("ntcmd" "http://www.emacswiki.org/emacs/download/ntcmd.el")
-    ("autohotkey-mode" "http://www.robf.de/Hacking/elisp/ahk-mode.el") 
 )))
 
 
