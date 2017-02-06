@@ -407,10 +407,11 @@
 (if (eq system-type 'windows-nt) (setenv "CDPATH" nil))
 
 ;; http://www.emacswiki.org/emacs/EshellCompletion
+(require 'cl)
 (defun ac-pcomplete ()
   ;; eshell uses `insert-and-inherit' to insert a \t if no completion
   ;; can be found, but this must not happen as auto-complete source
-  (flet ((insert-and-inherit (&rest args)))
+  (cl-letf (((symbol-function 'insert-and-inherit) (lambda (&rest args))))
     ;; this code is stolen from `pcomplete' in pcomplete.el
     (let* (tramp-mode ;; do not automatically complete remote stuff
            (pcomplete-stub)
