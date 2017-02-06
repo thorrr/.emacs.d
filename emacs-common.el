@@ -30,7 +30,7 @@
     rainbow-delimiters htmlize ido-vertical-mode shm nlinum deferred
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
     inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
-    bash-completion ahk-mode
+    bash-completion ahk-mode ob-ipython
     )
 ))
 
@@ -50,7 +50,6 @@
     ("markdown-mode" "http://jblevins.org/git/markdown-mode.git")
     ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
-    ("ob-ipython" "https://github.com/thorrr/ob-ipython.git")
     ,(if (< emacs-major-version 24)
          '("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git")
 ;         '("python-emacs24" "-b emacs-24 https://github.com/fgallina/python.el.git")
