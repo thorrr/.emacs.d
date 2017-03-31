@@ -34,6 +34,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  End Global Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; use unix line endings on everything
+(setq-default buffer-file-coding-system 'utf-8-unix)
+;; except for .bat and .cmd files
+(add-hook 'ntcmd-mode-hook (lambda () (setq buffer-file-coding-system 'utf-8-dos)))
+
 ;; undo-tree
 (require 'undo-tree)
 (global-undo-tree-mode)
