@@ -4,9 +4,15 @@
 (if (eq system-type 'windows-nt) (setq python-shell-prompt-detect-enabled nil))
 (require 'python-goodies)
 (setq python-column-width 100)
-(setq python-inferior-shell-type 'ipython)
+(setq python-inferior-shell-type 'python)
+(setq python-use-pyflakes 't)
+(setq python-use-pep8 't)
+(setq python-use-pylint 't)
 (setq auto-detect-virtualenv 't)
 (setq pymacs-parent-dir shared-externals)
+
+;; TODO - get this working with 'native' mode, which sounds cool:
+(setq python-shell-completion-native-enable nil)
 
 (defcustom my-python-test-template
   "from test.package import AtgTestCase
