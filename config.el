@@ -1,3 +1,5 @@
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -637,7 +639,24 @@
      (preserve-kill-ring 'paredit-backward-kill-word-orig))))
 
 ;; electric-indent-mode is automatic in emacs 24.4+. Swap C-j and RET to get the old behavior
-(if (and (>= emacs-major-version 24)
-         (>= emacs-minor-version 4)) (progn
-  (global-set-key (kbd "<RET>") 'electric-indent-just-newline)
-  (global-set-key (kbd "C-j") 'newline)))
+;; use a minor mode so that we always override major modes
+(defvar my-keys-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "<RET>") 'electric-newline-and-maybe-indent)
+    (define-key map (kbd "C-j") 'newline)
+    map)
+  "my-keys-minor-mode keymap.")
+
+(define-minor-mode my-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  :init-value t
+  :lighter " my-keys")
+
+(my-keys-minor-mode 1)
+
+;; for safety, disable this in the minibuffer and recentf
+(defun my-keys-minor-mode-turn-off ()
+  (my-keys-minor-mode 0))
+
+(add-hook 'minibuffer-setup-hook 'my-keys-minor-mode-turn-off)
+(add-hook 'recentf-dialog-mode-hook 'my-keys-minor-mode-turn-off)
