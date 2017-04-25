@@ -72,6 +72,8 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 
+(setq tab-always-indent 't)  ;; indent, don't tab or autocomplete.  Turns off default TAB->complete
+
 (setq ac-comphist-file (concat emacs-savefile-dir "ac-comphist.dat"))
 (define-key ac-completing-map "\e" 'ac-stop)
 (setq ac-stop-flymake-on-completing t)
