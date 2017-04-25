@@ -86,6 +86,7 @@
 (define-key ac-menu-map (kbd "C-p") 'ac-previous)
 (setq ac-auto-start 1) ;;don't automatically start auto-complete until this many characters have been typed
 (setq ac-delay .3) ;; crucial to fix typing latency gaps
+(setq ac-quick-help-delay 0.2) ;; pop up help stuff a little faster than default
 (setq ac-dwim t)
 (setq ac-auto-show-menu 't)  ;;if we want a delay, change this to 0.5, for example
 (global-set-key (kbd "M-?") 'auto-complete)
