@@ -10,6 +10,7 @@
 (setq python-use-pylint 't)
 (setq auto-detect-virtualenv 't)
 (setq pymacs-parent-dir shared-externals)
+(add-to-list 'python-indent-trigger-commands 'smart-auto-complete)
 
 ;; doesn't seem to work, completion code triggers indentation errors
 (setq python-shell-completion-native-enable nil)

@@ -72,8 +72,6 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 
-(setq tab-always-indent 't)  ;; indent, don't tab or autocomplete.  Turns off default TAB->complete
-
 (setq ac-comphist-file (concat emacs-savefile-dir "ac-comphist.dat"))
 (define-key ac-completing-map "\e" 'ac-stop)
 (setq ac-stop-flymake-on-completing t)
@@ -91,6 +89,25 @@
 (setq ac-dwim t)
 (setq ac-auto-show-menu 't)  ;;if we want a delay, change this to 0.5, for example
 (global-set-key (kbd "M-?") 'auto-complete)
+
+(setq tab-always-indent 't)  ;; indent, don't tab or autocomplete.  Turns off default TAB->complete
+(global-set-key (kbd "TAB") 'smart-auto-complete)
+
+(defun smart-auto-complete ()
+  "indent if we're in whitespace at the beginning of the line, else start auto-complete"
+  (interactive)
+  (let ((current-point (point))
+        (bol nil)
+        (first-non-whitespace nil))
+    (save-excursion
+      (move-beginning-of-line nil)
+      (setq bol (point))
+      (re-search-forward "[^ ]")
+      (setq first-non-whitespace (point)))
+    (if (and (>= current-point bol) (<= current-point first-non-whitespace))
+        (funcall indent-line-function)
+      (auto-complete))))
+
 (ac-config-default)
 
 (add-to-list 'ac-sources 'ac-source-yasnippet)
