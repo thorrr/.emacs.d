@@ -9,6 +9,7 @@
 (setq python-use-pep8 't)
 (setq python-use-pylint 't)
 (setq auto-detect-virtualenv 't)
+(setq auto-python-just-source-file 't)
 (setq pymacs-parent-dir shared-externals)
 (add-to-list 'python-indent-trigger-commands 'smart-auto-complete)
 
