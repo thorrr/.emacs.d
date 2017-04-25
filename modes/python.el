@@ -11,7 +11,7 @@
 (setq auto-detect-virtualenv 't)
 (setq pymacs-parent-dir shared-externals)
 
-;; TODO - get this working with 'native' mode, which sounds cool:
+;; doesn't seem to work, completion code triggers indentation errors
 (setq python-shell-completion-native-enable nil)
 
 (defcustom my-python-test-template
