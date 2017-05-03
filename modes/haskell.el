@@ -16,7 +16,14 @@
      )))))
 
 (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
+
+;; kind of like paredit mode
 (require 'shm)
-(add-hook 'haskell-mode-hook 'structured-haskell-mode)
+(add-hook 'haskell-mode-hook 'structured-haskell-mode) ;; first do 'stack install structured-haskell-mode'
 
-
+(require 'ghc)  ;; before this you must do 'stack install ghc-mod --no-system-ghc'
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+(if (eq system-type 'windows-nt) (progn ;; add ghc-mod and ghc-modi to path
+  (setq exec-path (append exec-path (list (concat (getenv "APPDATA") "\\local\\bin"))))))
