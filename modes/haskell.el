@@ -21,6 +21,8 @@
 (require 'shm)
 (add-hook 'haskell-mode-hook 'structured-haskell-mode) ;; first do 'stack install structured-haskell-mode'
 
+;; (add-hook 'haskell-mode-hook 'intero-mode)  ;; uses ghc under the hood
+
 (require 'ghc)  ;; before this you must do 'stack install ghc-mod --no-system-ghc'
 (autoload 'ghc-init "ghc" nil t)
 (autoload 'ghc-debug "ghc" nil t)
