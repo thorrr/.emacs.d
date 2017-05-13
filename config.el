@@ -103,7 +103,7 @@
     (save-excursion
       (move-beginning-of-line nil)
       (setq bol (point))
-      (re-search-forward "[^ ]")
+      (re-search-forward "[^ ]" nil 't)
       (setq first-non-whitespace (point)))
     (if (and (>= current-point bol) (<= current-point first-non-whitespace))
         (funcall indent-line-function)
