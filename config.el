@@ -407,6 +407,9 @@
 ;;   make sure eshell is cleanly machine local
 (setq eshell-directory-name (concat emacs-savefile-dir  "eshell/"))
 (setq eshell-aliases-file (concat emacs-savefile-dir  "eshell/alias"))
+(add-hook 'eshell-mode-hook (lambda ()
+    (local-set-key (kbd "M-i") (lambda () (interactive) (end-of-buffer)))
+    ))
 ;;   add this line to the bottom of .bash_aliases to parse your bash
 ;;   aliases into an eshell "alias" file:
 ;;   alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" > ~/.local-emacs/auto-save-list/eshell/alias
