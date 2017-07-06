@@ -17,6 +17,10 @@
 ;; doesn't seem to work, completion code triggers indentation errors
 (setq python-shell-completion-native-enable nil)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Old deprecated stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defcustom my-python-test-template
   "from test.package import AtgTestCase
 import doctest
