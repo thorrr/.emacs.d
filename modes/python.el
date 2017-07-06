@@ -2,7 +2,6 @@
 ;; Python main setup file
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (if (eq system-type 'windows-nt) (setq python-shell-prompt-detect-enabled nil))
-(require 'python-goodies)
 (setq python-column-width 100)
 (setq python-inferior-shell-type 'python)
 (setq python-use-pyflakes 't)
@@ -11,6 +10,8 @@
 (setq auto-detect-virtualenv 't)
 (setq auto-python-just-source-file 't)
 (setq pymacs-parent-dir shared-externals)
+(require 'python-goodies)
+
 (add-to-list 'python-indent-trigger-commands 'smart-auto-complete)
 
 ;; doesn't seem to work, completion code triggers indentation errors
