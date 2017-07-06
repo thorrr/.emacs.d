@@ -17,6 +17,48 @@
 ;; doesn't seem to work, completion code triggers indentation errors
 (setq python-shell-completion-native-enable nil)
 
+;; py-yapf - autoformatting
+(require 'py-yapf)
+(setq py-yapf-options
+  `("--style" ,(concat "{"
+      ;;;;                 
+      "based_on_style: pep8, "
+      "indent_width: 4, "
+      (format "column_limit: %d, " python-column-width)
+      ;;;;
+      "}")))
+
+(defun py-yapf-region (&optional start-pos end-pos)
+  (interactive)
+  (let* ((start (line-number-at-pos
+                 (if start-pos start-pos (region-beginning))))
+         (end (line-number-at-pos (if end-pos end-pos (region-end))))
+         (start-end-string (format "%d-%d" start end))
+         (py-yapf-options (append py-yapf-options (list "-l" start-end-string))))
+    (py-yapf-buffer)))
+
+(defun py-yapf-smart ()
+  (interactive)
+  (if mark-active
+      (py-yapf-region (region-beginning) (region-end))
+    ;; else yapf just the current line
+    (py-yapf-region (point) (point))
+    )
+)
+
+;;;; mark something and hit "f" to auto-format it
+;;;; bug - this is activated in all types of buffers, not just python
+;; (require 'region-bindings-mode)
+;; (region-bindings-mode-enable)
+;; (define-key region-bindings-mode-map "f" 'py-yapf-region)
+
+;; use M-q to fill paragraph then yapf
+(add-hook 'python-mode-hook (lambda ()
+  (define-key python-mode-map (kbd "M-q")
+    (lambda (&optional JUSTIFY REGION) (interactive)
+      (fill-paragraph JUSTIFY REGION)
+      (py-yapf-smart)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Old deprecated stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -158,8 +200,3 @@ if __name__ == '__main__':
         (insert-test-code-into-buffer this-module-name this-package-name (car (my-python-class implementation-file))))
     ))
 
-(require 'python-yapf)
-(require 'region-bindings-mode)
-(region-bindings-mode-enable)
-(define-key region-bindings-mode-map "f" 'python-yapf-region)  ;; mark something and hit "f" to auto-format it
-(setq python-yapf-style (format  "{based_on_style: pep8, column_limit: %d}" python-column-width))
