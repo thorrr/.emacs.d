@@ -56,7 +56,7 @@
 (add-hook 'python-mode-hook (lambda ()
   (define-key python-mode-map (kbd "M-q")
     (lambda (&optional JUSTIFY REGION) (interactive)
-      (fill-paragraph JUSTIFY REGION)
+;;      (fill-paragraph JUSTIFY REGION)
       (py-yapf-smart)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
