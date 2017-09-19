@@ -36,7 +36,10 @@
          (end (line-number-at-pos (if end-pos end-pos (region-end))))
          (start-end-string (format "%d-%d" start end))
          (py-yapf-options (append py-yapf-options (list "-l" start-end-string))))
-    (py-yapf-buffer)))
+    ;; wrap the call to py-yapf-buffer with a nil "message" function so it doesn't
+    ;; annoyingly print "Buffer is already yapfed"
+    (cl-letf (((symbol-function 'message) (lambda (fs &rest args))))
+      (py-yapf-buffer))))
 
 
 ;; yapf doesn't fix inline comments with bad spacing so run this afterwards
