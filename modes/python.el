@@ -53,9 +53,15 @@
          (end (line-number-at-pos (if end-pos end-pos (_thin-region-end))))
          (start-end-string (format "%d-%d" start end))
          (py-yapf-options (append py-yapf-options (list "-l" start-end-string))))
-    ;; wrap the call to py-yapf-buffer with a nil "message" function so it doesn't
-    ;; annoyingly print "Buffer is already yapfed"
-    (cl-letf (((symbol-function 'message) (lambda (fs &rest args))))
+    ;; wrap the call to py-yapf-buffer with a nil "message" function and a nil
+    ;; "write-region" function so it doesn't annoyingly print "Buffer is already yapfed"
+    ;; and "Wrote /tmp/asdf.yapf".  Setting the "visit" argument to an arbitrary symbol in
+    ;; "write-region" turns off the "wrote" message.
+    (cl-letf (((symbol-function 'write-region-original) (symbol-function 'write-region))
+              ((symbol-function 'message) (lambda (fs &rest args)))
+              ((symbol-function 'write-region) (lambda
+                 (start end filename &optional append visit lockname mustbenew)
+                 (write-region-original start end filename append 'nomessage lockname mustbenew))))
       (py-yapf-buffer))))
 
 
