@@ -123,7 +123,8 @@
 (defun python-yapf-and-fill-paragraph (&optional JUSTIFY REGION)
   (interactive)
   (fill-paragraph JUSTIFY REGION) ;; this seems to be wonky
-  (py-yapf-smart))
+  (py-yapf-smart)
+  (deactivate-mark))
 
 (add-hook 'python-mode-hook (lambda ()
   (define-key python-mode-map (kbd "M-q") 'python-yapf-and-fill-paragraph)
