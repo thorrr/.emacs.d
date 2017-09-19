@@ -29,11 +29,28 @@
       ;;;;
       "}")))
 
+
+(defun _thin-region-beginning ()
+  "If a region borders a newline don't include that line in the region"
+  (save-excursion
+    (goto-char (region-beginning))
+    (if (eolp)
+        (1+ (region-beginning))
+      (region-beginning))))
+
+(defun _thin-region-end ()
+  "If a region borders a newline don't include that line in the region"
+  (save-excursion
+    (goto-char (region-end))
+    (if (bolp)
+        (1- (region-end))
+      (region-end))))
+
 (defun py-yapf-region (&optional start-pos end-pos)
   (interactive)
   (let* ((start (line-number-at-pos
-                 (if start-pos start-pos (region-beginning))))
-         (end (line-number-at-pos (if end-pos end-pos (region-end))))
+                 (if start-pos start-pos (_thin-region-beginning))))
+         (end (line-number-at-pos (if end-pos end-pos (_thin-region-end))))
          (start-end-string (format "%d-%d" start end))
          (py-yapf-options (append py-yapf-options (list "-l" start-end-string))))
     ;; wrap the call to py-yapf-buffer with a nil "message" function so it doesn't
@@ -76,8 +93,8 @@
 (defun python-fix-inline-comments (&optional start-pos end-pos)
   (interactive)
   (let* ((start (line-number-at-pos
-                 (if start-pos start-pos (region-beginning))))
-         (region-end-line (line-number-at-pos (if end-pos end-pos (region-end))))
+                 (if start-pos start-pos (_thin-region-beginning))))
+         (region-end-line (line-number-at-pos (if end-pos end-pos (_thin-region-end))))
          (buffer-end-line (save-excursion (line-number-at-pos (goto-char (point-max)))))
          (end (min region-end-line buffer-end-line))
          (_ nil)   ;; for dotimes macro
@@ -91,8 +108,8 @@
 (defun py-yapf-smart ()
   "run yapf then fix-inline-comment on the marked region"
   (interactive)
-  (let ((start (if mark-active (region-beginning) (point)))
-        (end (if mark-active (region-end) (point))))
+  (let ((start (if mark-active (_thin-region-beginning) (point)))
+        (end (if mark-active (_thin-region-end) (point))))
     (py-yapf-region start end)
     (python-fix-inline-comments start end)))
 
