@@ -25,6 +25,7 @@
       "based_on_style: pep8, "
       "indent_width: 4, "
       (format "column_limit: %d, " python-column-width)
+      "SPLIT_PENALTY_FOR_ADDED_LINE_SPLIT: 99"
       ;;;;
       "}")))
 
@@ -37,27 +38,80 @@
          (py-yapf-options (append py-yapf-options (list "-l" start-end-string))))
     (py-yapf-buffer)))
 
-(defun py-yapf-smart ()
+
+;; yapf doesn't fix inline comments with bad spacing so run this afterwards
+(defun python-fix-inline-comment ()
   (interactive)
-  (if mark-active
-      (py-yapf-region (region-beginning) (region-end))
-    ;; else yapf just the current line
-    (py-yapf-region (point) (point))
-    )
-)
+  (save-excursion
+    (beginning-of-line)
+    (let ((opening-quote-on-line-p
+           (lambda ()
+             (or (looking-at ".*\"") (looking-at ".*'"))))
+          (line-end (save-excursion (end-of-line) (point))))
+      (while (funcall opening-quote-on-line-p) (progn
+        ;;first, move cursor past any triple quotes that start on this line
+        (if (looking-at ".*?\"\"\"") (progn
+          (re-search-forward ".*?\"\"\"" line-end)
+          (re-search-forward ".*?\"\"\"" line-end 'eol)))
+        (if (looking-at ".*?'''") (progn
+          (re-search-forward ".*?'''" line-end)
+          (re-search-forward ".*?'''" line-end 'eol)))
+        ;;now move past standalone single quotes or double quotes
+        (if (looking-at ".*?'") (progn
+          (re-search-forward ".*?'" line-end)
+          (re-search-forward ".*?'" line-end 'eol)))
+        (if (looking-at ".*?\"") (progn
+          (re-search-forward ".*?\"" line-end)
+          (re-search-forward ".*?\"" line-end 'eol)))
+        ))
+      ;; we've skipped all literal strings.  now look for the first # with something visible after it
+      (if (re-search-forward "#" line-end 'eol)
+          (if (looking-at "[[:graph:]]")
+              (insert " ")))
+      )))
+
+(defun python-fix-inline-comments (&optional start-pos end-pos)
+  (interactive)
+  (let* ((start (line-number-at-pos
+                 (if start-pos start-pos (region-beginning))))
+         (region-end-line (line-number-at-pos (if end-pos end-pos (region-end))))
+         (buffer-end-line (save-excursion (line-number-at-pos (goto-char (point-max)))))
+         (end (min region-end-line buffer-end-line))
+         (_ nil)   ;; for dotimes macro
+         (__ nil)) ;; for dotimes macro
+    (save-excursion
+      (goto-line start)
+      (dotimes (_ (1+ (- end start)) __)
+        (python-fix-inline-comment)
+        (forward-line)))))
+
+(defun py-yapf-smart ()
+  "run yapf then fix-inline-comment on the marked region"
+  (interactive)
+  (let ((start (if mark-active (region-beginning) (point)))
+        (end (if mark-active (region-end) (point))))
+    (py-yapf-region start end)
+    (python-fix-inline-comments start end)))
+
+;; use M-q to both yapf and fill-paragraph
+(defun python-yapf-and-fill-paragraph (&optional JUSTIFY REGION)
+  (interactive)
+  (fill-paragraph JUSTIFY REGION) ;; this seems to be wonky
+  (py-yapf-smart))
+
+(add-hook 'python-mode-hook (lambda ()
+  (define-key python-mode-map (kbd "M-q") 'python-yapf-and-fill-paragraph)
+))
 
 ;;;; mark something and hit "f" to auto-format it
 ;;;; bug - this is activated in all types of buffers, not just python
-;; (require 'region-bindings-mode)
-;; (region-bindings-mode-enable)
-;; (define-key region-bindings-mode-map "f" 'py-yapf-region)
-
-;; use M-q to fill paragraph then yapf
 (add-hook 'python-mode-hook (lambda ()
-  (define-key python-mode-map (kbd "M-q")
-    (lambda (&optional JUSTIFY REGION) (interactive)
-;;      (fill-paragraph JUSTIFY REGION)
-      (py-yapf-smart)))))
+  (require 'region-bindings-mode)
+  (region-bindings-mode-enable)
+  (define-key region-bindings-mode-map "f" (lambda () (interactive)
+    (if (eq major-mode 'python-mode) (py-yapf-smart)
+      (self-insert-command 1))))
+))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Old deprecated stuff
