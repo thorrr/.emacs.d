@@ -9,7 +9,7 @@
 ))
 
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 
 (defun elisp-find-definition (name)  ;;from http://lists.gnu.org/archive/html/help-gnu-emacs/2009-09/msg00669.html
   "Jump to the definition of the function (or variable) at point."
