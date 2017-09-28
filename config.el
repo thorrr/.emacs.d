@@ -92,7 +92,7 @@
 (global-set-key (kbd "M-?") 'auto-complete)
 
 (setq tab-always-indent 't)  ;; indent, don't tab or autocomplete.  Turns off default TAB->complete
-(global-set-key (kbd "TAB") 'smart-auto-complete)
+;; (global-set-key (kbd "TAB") 'smart-auto-complete)
 
 (defun smart-auto-complete ()
   "indent if we're in whitespace at the beginning of the line, else start auto-complete"
