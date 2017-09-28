@@ -188,17 +188,19 @@ by changing them to C:/*"
       (switch-to-buffer buf)))
 
 ;; fill column indicator mode - pretty good so far
-(require 'fill-column-indicator)
-
-(setq fci-always-use-textual-rule 't)
-;; turn on only for non-special buffers
-(define-globalized-minor-mode global-fci-mode fci-mode
-  (lambda ()
-    (if (and
-         (not (string-match "^\*.*\*$" (buffer-name)))
-         (not (eq major-mode 'dired-mode)))
-        (fci-mode 1))))
-(global-fci-mode 1)  ;; enable globally
+(if (>= emacs-major-version 25) (progn
+  (require 'fill-column-indicator)
+  
+  (setq fci-always-use-textual-rule 't)
+  ;; turn on only for non-special buffers
+  (define-globalized-minor-mode global-fci-mode fci-mode
+    (lambda ()
+      (if (and
+           (not (string-match "^\*.*\*$" (buffer-name)))
+           (not (eq major-mode 'dired-mode)))
+          (fci-mode 1))))
+  (global-fci-mode 1)   ;; enable globally
+))
 
 (defvar sanityinc/fci-mode-suppressed nil)
 (defadvice popup-create (before suppress-fci-mode activate)
