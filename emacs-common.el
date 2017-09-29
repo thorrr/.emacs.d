@@ -6,7 +6,8 @@
 (defcustom emacs-savefile-dir "~/.local-emacs/auto-save-list/" 
   "Put all autosave files, save point, and undo-tree backups here")
 
-(defcustom shared-externals "~/.local-emacs/externals/"
+(defcustom shared-externals
+  (format "~/.local-emacs/externals-emacs-%d/" emacs-major-version)
   "Download all emacs packages here.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
