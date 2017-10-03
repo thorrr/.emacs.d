@@ -257,3 +257,4 @@ to specify a custom port"
             (assoc "sshx" tramp-methods)))
          (setq tramp-default-method "cygssh"))))
   
+(setq tramp-backup-directory-alist backup-directory-alist)
