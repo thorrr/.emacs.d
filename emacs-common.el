@@ -124,6 +124,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
 (load (concat emacs-config-root "config.el"))
+(load (concat emacs-config-root "global-keybindings.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Language Setup

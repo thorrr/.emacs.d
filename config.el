@@ -7,26 +7,6 @@
 ;;
 (when (fboundp 'windmove-default-keybindings)
        (windmove-default-keybindings))
-(global-set-key "\M-g" 'goto-line)
-(global-set-key (kbd "M-n") 'duplicate-line)
-(global-set-key (kbd "M-'") 'quote-wrap-forward-word)
-(global-set-key [C-prior] 'rotate-frame-anticlockwise)
-(global-set-key [C-next] 'rotate-frame-clockwise)
-(require 'move-text)
-(global-set-key [M-up] 'move-text-up)
-(global-set-key [M-down] 'move-text-down)
-(global-set-key "\M-j" 'join-next-line)
-(global-set-key [f5] 'write-last-macro-to-messages)
-(global-set-key [f12] 'toggle-camelcase-at-point)
-(global-set-key (kbd "M-h") 'my-iflipb-next-buffer)
-(global-set-key (kbd "M-H") 'my-iflipb-previous-buffer)
-(global-set-key (kbd "<C-tab>") 'my-iflipb-next-buffer)
-(global-set-key (kbd "<C-S-tab>") 'my-iflipb-previous-buffer)
-;; use hippie-expand instead of dabbrev
-(global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-M-/") 'undo-tree-visualize)
-; replace buffer-menu with ibuffer
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; occur is cool
 ;; (global-set-key (kbd "C-c o") 'my-occur)
