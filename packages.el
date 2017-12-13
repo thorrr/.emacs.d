@@ -23,7 +23,10 @@
 (setq package-user-dir shared-externals)
 (package-initialize)
 (when (not package-archive-contents)
-  (package-refresh-contents))
+  (let ((prc-run? (ignore-errors (package-refresh-contents))))
+    (if (and (eq system-type 'windows-nt) (not prc-run?))
+        (let ((package-check-signature nil))
+          (package-refresh-contents)))))
 ;; install new packages
 (dolist (p my-packages)
   (when (not (package-installed-p p))
