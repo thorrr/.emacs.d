@@ -150,6 +150,7 @@
 ;;(add-hook 'speedbar-mode-hook (lambda () (save-current-buffer (set-buffer "*SPEEDBAR*") (visual-line-mode)))) ;;word wrapping for deep directories
 (setq sr-speedbar-right-side nil)
 (setq speedbar-use-images nil)
+(setq speedbar-show-unknown-files 't)
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (defadvice magit-expand-git-file-name
