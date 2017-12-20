@@ -77,8 +77,8 @@
 (define-key global-map [(control shift o)] 'loccur-previous-match)
 ;; press C-o to do an occur buffer during an interactive search
 (define-key isearch-mode-map (kbd "C-o") 'loccur-current)
-(define-key isearch-mode-map (kbd "C-g") (lambda () (interactive) (loccur-current) (keyboard-quit)))
-(define-key loccur-mode-map (kbd "C-g") (lambda () (interactive) (loccur-current) (keyboard-quit)))
+(define-key isearch-mode-map (kbd "C-g") (lambda () (interactive) (if loccur-mode (loccur-current)) (keyboard-quit)))
+(define-key loccur-mode-map (kbd "C-g") (lambda () (interactive) (if loccur-mode (loccur-current)) (keyboard-quit)))
 
 (require 'minimap)
 (setq minimap-window-location 'right)
