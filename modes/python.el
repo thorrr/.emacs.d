@@ -1,6 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python main setup file
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq python-major-version 3)
 (if (eq system-type 'windows-nt) (setq python-shell-prompt-detect-enabled nil))
 (setq python-column-width 100)
 (setq python-inferior-shell-type 'python)
