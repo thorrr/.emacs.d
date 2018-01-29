@@ -256,3 +256,9 @@ to specify a custom port"
          (setq tramp-default-method "cygssh"))))
   
 (setq tramp-backup-directory-alist backup-directory-alist)
+
+
+;; start javascript stuff here
+(speedbar-add-supported-extension ".js")
+(add-to-list 'speedbar-fetch-etags-parse-list
+             '("\\.js" . speedbar-parse-c-or-c++tag))
