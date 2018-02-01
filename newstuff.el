@@ -214,6 +214,29 @@ by changing them to C:/*"
 (setq fci-handle-truncate-lines nil)
 (setq fci-rule-color "gray35")
 
+;; turn off fci-mode when buffer is too narrow
+(defvar i42/fci-mode-suppressed nil)
+(make-variable-buffer-local 'i42/fci-mode-suppressed)
+
+(defun fci-width-workaround (frame)
+  (let ((fci-enabled (symbol-value 'fci-mode))
+        (fci-column (if fci-rule-column fci-rule-column fill-column)))
+    (if i42/fci-mode-suppressed
+        (when (and (eq fci-enabled nil)
+                   (< fci-column
+                      (+ (frame-width frame) (window-hscroll))))
+          (setq i42/fci-mode-suppressed nil)
+          (turn-on-fci-mode)
+          )
+      ;; i42/fci-mode-suppressed == nil
+      (when (and fci-enabled
+                 (>= fci-column
+                     (+ (frame-width frame) (window-hscroll))))
+        (setq i42/fci-mode-suppressed t)
+        (turn-off-fci-mode)))))
+(add-hook 'window-size-change-functions 'fci-width-workaround)
+
+
 ;; wrapper for ssh on nt using fakecygpty
 (if (eq system-type 'windows-nt)
     (defun ssh (hostname port &optional flags)
