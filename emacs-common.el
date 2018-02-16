@@ -33,7 +33,7 @@
     inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
     bash-completion ahk-mode ob-ipython git-timemachine ghc ;;intero
     py-yapf magit yaml-mode emmet-mode load-relative
-    emmet-mode js2-mode js2-refactor
+    emmet-mode js2-mode js2-refactor rjsx-mode
     projectile flx-ido ag
     )
 ))
