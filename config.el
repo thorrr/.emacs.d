@@ -649,3 +649,12 @@
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
 (projectile-mode)
+
+;; web-mode and emmet
+(require 'emmet-mode)
+(require 'web-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+(add-hook 'sgml-mode-hook 'web-mode)
+(add-hook 'css-mode-hook  'web-mode)
+
