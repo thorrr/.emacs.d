@@ -27,3 +27,10 @@
 (speedbar-add-supported-extension ".js")
 (add-to-list 'speedbar-fetch-etags-parse-list
              '("\\.js" . speedbar-parse-c-or-c++tag))
+
+
+;; ac-js2 seems to work decently well
+(require 'ac-js2)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+(add-hook 'js2-mode-hook 'auto-complete-mode)
+(setq ac-js2-evaluate-calls 't)

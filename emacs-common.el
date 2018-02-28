@@ -54,6 +54,7 @@
     ("markdown-mode" "http://jblevins.org/git/markdown-mode.git")
     ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
+    ("ac-js2" "https://github.com/ScottyB/ac-js2.git")
     ,(if (< emacs-major-version 24)
          '("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git")
 ;         '("python-emacs24" "-b emacs-24 https://github.com/fgallina/python.el.git")
