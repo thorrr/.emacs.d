@@ -21,3 +21,9 @@
 
 (require 'rjsx-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
+
+
+(require 'speedbar)
+(speedbar-add-supported-extension ".js")
+(add-to-list 'speedbar-fetch-etags-parse-list
+             '("\\.js" . speedbar-parse-c-or-c++tag))
