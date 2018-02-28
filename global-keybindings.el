@@ -34,10 +34,18 @@
 (define-key keymaps-mode-map (kbd "C-M-/") 'undo-tree-visualize)
 ;; replace buffer-menu with ibuffer
 (define-key keymaps-mode-map (kbd "C-x C-b") 'ibuffer)
-;; add a more convenient "brace" character than RAlt+( on Linux
-(if (not (eq system-type 'windows-nt)) (progn
-  (define-key keymaps-mode-map (kbd "C-(") "{")
-  (define-key keymaps-mode-map (kbd "C-)") "}")))
+
+;; add a more convenient "brace" character than RAlt+( on Linux attempt to properly rebind
+;; C-( and C-) to make braces but keep brace overrides.  This is not turn-offable via our
+;; keymaps-mode.  This should bind "deeper" than the following method which just maps C-(
+;; to the "{" macro
+(define-key input-decode-map [?\C-\(] (kbd "{"))
+(define-key input-decode-map [?\C-\)] (kbd "}"))
+
+;; (if (not (eq system-type 'windows-nt))
+;;     (progn
+;;       (define-key keymaps-mode-map (kbd "C-(") "{")
+;;       (define-key keymaps-mode-map (kbd "C-)") "}")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End add keymaps
