@@ -29,9 +29,9 @@
     idle-highlight-mode org move-text minimap loccur dired-k
     clojure-mode multiple-cursors unicode-fonts fill-column-indicator
     rainbow-delimiters htmlize ido-vertical-mode shm nlinum deferred
-    scala-mode haskell-mode slime yasnippet yasnippet-snippets paredit git-gutter-fringe
-    inkpot-theme solarized-theme zenburn-theme multi-web-mode base16-theme
-    bash-completion ahk-mode ob-ipython git-timemachine ghc ;;intero
+    scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
+    solarized-theme zenburn-theme multi-web-mode base16-theme
+    bash-completion ahk-mode git-timemachine ghc ;;intero
     py-yapf magit yaml-mode emmet-mode load-relative
     emmet-mode js2-mode js2-refactor rjsx-mode
     projectile flx-ido ag
