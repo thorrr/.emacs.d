@@ -42,3 +42,4 @@
                  (t
                   (message "Symbol not bound: %S" symbol)))))
   (t (message "No symbol at point"))))
+
