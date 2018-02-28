@@ -34,7 +34,7 @@
     bash-completion ahk-mode git-timemachine ghc ;;intero
     py-yapf magit yaml-mode emmet-mode load-relative
     emmet-mode js2-mode js2-refactor rjsx-mode
-    projectile flx-ido ag
+    projectile flx-ido ag xref-js2 smartparens
     )
 ))
 
@@ -60,7 +60,6 @@
         )
     ("ac-python-async" "https://github.com/thorrr/ac-python-async.git")
     ("python-yapf" "https://github.com/galeo/python-yapf.el.git")
-    ("parinfer-mode" "https://github.com/edpaget/parinfer-mode.git")
 )))
 
 (setq hg-projects (append hg-projects '(
