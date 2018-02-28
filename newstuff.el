@@ -283,8 +283,7 @@ to specify a custom port"
   
 (setq tramp-backup-directory-alist backup-directory-alist)
 
-
-;; start javascript stuff here
-(speedbar-add-supported-extension ".js")
-(add-to-list 'speedbar-fetch-etags-parse-list
-             '("\\.js" . speedbar-parse-c-or-c++tag))
+(require 'smartparens-config)
+(add-hook 'js-mode-hook #'smartparens-mode)
+(add-hook 'python-mode-hook #'smartparens-mode)
+(sp-use-paredit-bindings)
