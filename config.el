@@ -648,7 +648,7 @@
 ;; electric-indent-mode is automatic in emacs 24.4+.
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
-(projectile-mode)
+(projectile-global-mode)
 
 ;; web-mode and emmet
 (require 'emmet-mode)
