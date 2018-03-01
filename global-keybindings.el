@@ -35,6 +35,9 @@
 ;; replace buffer-menu with ibuffer
 (define-key keymaps-mode-map (kbd "C-x C-b") 'ibuffer)
 
+(define-key keymaps-mode-map (kbd "C-=") 'er/expand-region)
+(define-key keymaps-mode-map (kbd "C-+") 'er/contract-region)
+
 ;; add a more convenient "brace" character than RAlt+( on Linux attempt to properly rebind
 ;; C-( and C-) to make braces but keep brace overrides.  This is not turn-offable via our
 ;; keymaps-mode.  This should bind "deeper" than the following method which just maps C-(

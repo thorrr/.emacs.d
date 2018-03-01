@@ -304,3 +304,4 @@ to specify a custom port"
 ;;     (add-hook 'common-lisp-mode-hook #'parinfer-mode)
 ;;     (add-hook 'scheme-mode-hook #'parinfer-mode)
 ;;     (add-hook 'lisp-mode-hook #'parinfer-mode)))
+(require 'expand-region)  ;; shortcuts stored in global-keymaps-mode.el
