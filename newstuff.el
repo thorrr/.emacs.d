@@ -294,7 +294,7 @@ to specify a custom port"
       '(defaults       ; should be included.
          ;;          pretty-parens  ; different paren styles for different modes.
          ;; evil           ; If you use Evil.
-         lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
+         ;; lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
          paredit        ; Introduce some paredit commands.
          smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
          smart-yank     ; Yank behavior depend on mode.
@@ -304,4 +304,7 @@ to specify a custom port"
 ;;     (add-hook 'common-lisp-mode-hook #'parinfer-mode)
 ;;     (add-hook 'scheme-mode-hook #'parinfer-mode)
 ;;     (add-hook 'lisp-mode-hook #'parinfer-mode)))
+(setq parinfer-auto-switch-indent-mode 't)
+(setq parinfer-auto-switch-indent-mode-when-closing 't)
+
 (require 'expand-region)  ;; shortcuts stored in global-keymaps-mode.el
