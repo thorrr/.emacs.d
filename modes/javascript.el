@@ -34,3 +34,6 @@
 (add-hook 'js2-mode-hook 'ac-js2-mode)
 (add-hook 'js2-mode-hook 'auto-complete-mode)
 (setq ac-js2-evaluate-calls 't)
+
+;; refactor prefix
+(js2r-add-keybindings-with-prefix "C-=")
