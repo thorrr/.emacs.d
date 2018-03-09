@@ -37,3 +37,6 @@
 
 ;; refactor prefix
 (js2r-add-keybindings-with-prefix "C-=")
+
+;; pug templates are awesome
+(require 'pug-mode)
