@@ -40,3 +40,4 @@
 
 ;; pug templates are awesome
 (require 'pug-mode)
+(setq pug-tab-width 2)
