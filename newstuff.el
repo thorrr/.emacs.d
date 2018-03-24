@@ -269,18 +269,41 @@ to specify a custom port"
 ;; tramp customizations 
 (setq tramp-persistency-file-name "~/.local-emacs/tramp")
 (if (eq system-type 'windows-nt)
-    (eval-after-load "tramp"
-      '(progn
-         (add-to-list 'tramp-methods
-           (mapcar
-            (lambda (x)
-              (cond
-               ((equal x "sshx") "cygssh")
-               ((eq (car x) 'tramp-login-program) (list 'tramp-login-program "fakecygpty ssh"))
-               (t x)))
-            (assoc "sshx" tramp-methods)))
-         (setq tramp-default-method "cygssh"))))
-  
+    (progn
+      ;; add a function that asks for a password
+      (defun ssh-add-process-filter (process string)
+        (save-match-data
+          (if (string-match ":\\s *\\'" string)
+              (process-send-string process (concat (read-passwd string) "\n"))
+            (message "%s" string))))
+      (defun ssh-add (key-file)
+        "Run ssh-add to add a key to the running SSH agent. Let
+        Emacs prompt for the passphrase."
+        (interactive "fAdd key: \n")
+        (let ((process-connection-type t)
+              process)
+          (unwind-protect
+              (progn
+                (setq process (start-process "ssh-add" nil
+                                             "ssh-add" (expand-file-name key-file)))
+                (set-process-filter process 'ssh-add-process-filter)
+                (while (accept-process-output process)))
+            (if (eq (process-status process) 'run)
+                (kill-process process)))))
+
+      ;; must use fakecygpty so ssh process doesn't hang
+      (eval-after-load "tramp"
+        '(progn
+           (add-to-list 'tramp-methods
+                        (mapcar
+                         (lambda (x)
+                           (cond
+                            ((equal x "sshx") "cygssh")
+                            ((eq (car x) 'tramp-login-program) (list 'tramp-login-program "fakecygpty ssh"))
+                            (t x)))
+                         (assoc "sshx" tramp-methods)))
+           (setq tramp-default-method "cygssh")))))
+
 (setq tramp-backup-directory-alist backup-directory-alist)
 
 (require 'smartparens-config)
