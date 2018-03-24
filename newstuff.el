@@ -331,3 +331,16 @@ to specify a custom port"
 (setq parinfer-auto-switch-indent-mode-when-closing 't)
 
 (require 'expand-region)  ;; shortcuts stored in global-keymaps-mode.el
+
+
+(require 'keychain-environment)
+(defun shims-first-in-path (orig-fun &rest args)
+  "move /shims to beginning of path temporarily"
+  (let ((old-path (getenv "PATH")))
+    (unwind-protect
+        (progn
+          (setenv "PATH" (concat (getenv "CAROBY_DIR") "\\packages\\cygwin\\shims" path-separator old-path))
+          (apply orig-fun args))
+      ;; cleanup
+      (setenv "PATH" old-path))))
+(advice-add 'keychain-refresh-environment :around #'shims-first-in-path)
