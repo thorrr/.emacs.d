@@ -306,6 +306,11 @@ to specify a custom port"
 
 (setq tramp-backup-directory-alist backup-directory-alist)
 
+;; ffap will aggressively try and open files if there's a url.  Don't let it.
+(setq ffap-machine-p-known 'accept) ; no pinging
+(setq ffap-url-regexp nil)         ; disable URL features in ffap
+
+
 (require 'smartparens-config)
 (add-hook 'js-mode-hook #'smartparens-mode)
 (add-hook 'python-mode-hook #'smartparens-mode)
