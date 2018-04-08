@@ -230,9 +230,7 @@ by changing them to C:/*"
                        (< fci-column
                           (+ (window-width) (window-hscroll))))
               (setq i42/fci-mode-suppressed nil)
-              (turn-on-fci-mode)
-              )
-          ;; i42/fci-mode-suppressed == nil
+              (turn-on-fci-mode))
           (when (and fci-enabled fci-column
                      (>= fci-column
                          (+ (window-width) (window-hscroll))))
