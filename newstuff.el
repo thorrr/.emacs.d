@@ -225,7 +225,7 @@ by changing them to C:/*"
     (dolist (window current-window-list)
       (with-selected-window window
         (if i42/fci-mode-suppressed
-            (when (and (eq fci-enabled nil)
+            (when (and (not fci-enabled)
                        fci-column
                        (< fci-column
                           (+ (window-width) (window-hscroll))))
