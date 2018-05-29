@@ -22,11 +22,14 @@
 (require 'py-yapf)
 (setq py-yapf-options
   `("--style" ,(concat "{"
-      ;;;;                 
+      ;;;; construct a python dict literal for the command line
       "based_on_style: pep8, "
       "indent_width: 4, "
       (format "column_limit: %d, " python-column-width)
-      "SPLIT_PENALTY_FOR_ADDED_LINE_SPLIT: 99"
+      "dedent_closing_brackets: False, "
+      "coalesce_brackets: False, "
+      "split_before_first_argument: True, "
+      "split_penalty_import_names: 300, "
       ;;;;
       "}")))
 
