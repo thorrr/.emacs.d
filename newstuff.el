@@ -335,6 +335,15 @@ to specify a custom port"
 (setq parinfer-auto-switch-indent-mode-when-closing 't)
 
 (require 'expand-region)  ;; shortcuts stored in global-keymaps-mode.el
+(defun isearch-with-region ()
+  "Use region as the isearch text."
+  (when mark-active
+    (let ((region (funcall region-extract-function nil)))
+      (deactivate-mark)
+      (isearch-push-state)
+      (isearch-yank-string region))))
+
+(add-hook 'isearch-mode-hook #'isearch-with-region)
 
 
 (require 'keychain-environment)
