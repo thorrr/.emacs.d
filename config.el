@@ -57,13 +57,31 @@
 (setq ac-stop-flymake-on-completing t)
 
 ;;fixes for autopair mode which obliterates the mapping for both kbd "RET" and [return]
-(define-key ac-completing-map (kbd "RET") 'ac-complete)
-(define-key ac-completing-map [return] 'ac-complete)
+;; (define-key ac-completing-map (kbd "RET") 'ac-complete)
+;; (define-key ac-completing-map [return] 'ac-complete)
+(define-key ac-completing-map (kbd "RET") 'ac-select-current)
+(define-key ac-completing-map [return] 'ac-select-current)
 
 (global-auto-complete-mode)
 (setq ac-use-menu-map 't)
 (define-key ac-menu-map (kbd "C-n") 'ac-next)
 (define-key ac-menu-map (kbd "C-p") 'ac-previous)
+(defun ac-select-current ()
+  (interactive)
+  (if (or (eq last-command 'ac-previous)
+          (eq last-command 'ac-next)
+          (eq last-command 'ac-expand)
+          (eq last-command 'ac-expand-previous)
+          (eq last-command 'ac-expand-common)
+          (eq last-command 'ac-complete))
+      ;; disable all "RET" functions
+      (cl-letf (((symbol-function 'newline) (lambda (&optional arg interactive) (interactive "*P\np")))
+                ((symbol-function 'newline-and-indent) (lambda () (interactive "*"))))
+        (ac-complete))))
+
+(define-key ac-menu-map (kbd "RET") 'ac-select-current)
+(define-key ac-menu-map [return] 'ac-select-current)
+
 (setq ac-auto-start 1) ;;don't automatically start auto-complete until this many characters have been typed
 (setq ac-delay .3) ;; crucial to fix typing latency gaps
 (setq ac-quick-help-delay 0.2) ;; pop up help stuff a little faster than default
