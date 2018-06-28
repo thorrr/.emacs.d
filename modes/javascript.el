@@ -15,6 +15,7 @@
 ;; unbind it.
 ;; (define-key js-mode-map (kbd "M-.") nil)
 (define-key js-mode-map (kbd "M-q") 'indent-region)
+(define-key js-mode-map (kbd "C-<right>") 'sp-slurp-hybrid-sexp)
 
 (add-hook 'js2-mode-hook (lambda ()
   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
