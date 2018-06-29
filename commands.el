@@ -1,20 +1,3 @@
-(defun push-current-location ()
-  (if (not (boundp 'my-locations)) (setq my-locations '() ))
-  (push (list (point-marker) (selected-frame) (selected-window)) my-locations))
-
-(defun pop-current-location ()
-  (interactive)
-  (if my-locations 
-      (let* ((last-location (pop my-locations))
-             (last-marker (nth 0 last-location))
-             (last-frame (nth 1 last-location))
-             (last-window (nth 2 last-location))
-             )
-        (raise-frame last-frame)
-        (select-window last-window)
-        (switch-to-buffer (marker-buffer last-marker))
-        (goto-char (marker-position last-marker)))))
-
 ;; IntelliJ-like duplicate-line function
 (defun duplicate-line (arg)
   "Duplicate current line, leaving point in lower line."
