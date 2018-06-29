@@ -5,7 +5,7 @@
 
 (add-hook 'emacs-lisp-mode-hook (lambda ()
   (define-key emacs-lisp-mode-map (kbd "M-.") 'elisp-find-definition)
-  (define-key emacs-lisp-mode-map (kbd "M-,") 'pop-current-location)
+  (define-key emacs-lisp-mode-map (kbd "M-,") 'xref-pop-marker-stack)
 ))
 
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
@@ -19,7 +19,7 @@
            (push-tag-mark))
           (t (ring-insert find-tag-marker-ring (point-marker)))))
   (interactive (list (thing-at-point 'symbol)))
-  (push-current-location)  ;;my addition
+  (xref-push-marker-stack)  ;;my addition
   (cond (name
          (let ((symbol (intern-soft name))
                (search (lambda (fun sym)
