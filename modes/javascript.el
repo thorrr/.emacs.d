@@ -34,6 +34,11 @@
 (require 'ac-js2)
 (add-hook 'js2-mode-hook 'ac-js2-mode)
 (add-hook 'js2-mode-hook 'auto-complete-mode)
+;; ac-js2-jump-to-definition is broken
+(eval-after-load "ac-js2" (lambda ()
+  (define-key ac-js2-mode-map (kbd "M-.") 'js2-jump-to-definition)
+  (define-key ac-js2-mode-map (kbd "M-,") 'xref-pop-marker-stack)))
+
 (setq ac-js2-evaluate-calls 't)
 
 ;; refactor prefix
