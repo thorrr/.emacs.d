@@ -161,6 +161,14 @@ by changing them to C:/*"
     (setq filename (concat (match-string 1 filename) ":/"
                            (match-string 2 filename)))))
 
+(defun magit-kill-buffers (param)
+  "Restore window configuration and kill all Magit buffers."
+  (let ((buffers (magit-mode-get-buffers)))
+    (magit-restore-window-configuration)
+    (mapc #'kill-buffer buffers)))
+
+(setq magit-bury-buffer-function #'magit-kill-buffers)
+
 (defun un-cygwin-buffer-file-name ()
   (when (string-match "^\\([a-z]\\):/cygdrive/\\([a-z]\\)/\\(.*\\)" buffer-file-name)
     ;; assertion:  filename should look like "c:/cygwin/c/Users..." i.e. the drive is repeated
