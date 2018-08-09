@@ -38,6 +38,8 @@
     parinfer skewer-mode keychain-environment
     )
 ))
+;; (new in emacs25) tell package.el which packages we've manually selected
+(setq package-selected-packages my-packages)
 
 (setq git-projects (append git-projects `(
     ("Pymacs" "https://github.com/pinard/Pymacs.git")
