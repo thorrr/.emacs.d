@@ -30,7 +30,7 @@
     clojure-mode multiple-cursors unicode-fonts fill-column-indicator
     rainbow-delimiters htmlize ido-vertical-mode shm nlinum deferred
     scala-mode haskell-mode slime yasnippet paredit git-gutter-fringe
-    solarized-theme zenburn-theme multi-web-mode base16-theme
+    solarized-theme zenburn-theme base16-theme
     bash-completion ahk-mode git-timemachine ghc ;;intero
     py-yapf magit yaml-mode emmet-mode load-relative
     emmet-mode js2-mode js2-refactor rjsx-mode
