@@ -667,6 +667,7 @@
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
 (projectile-global-mode)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 ;; web-mode and emmet
 (require 'emmet-mode)
