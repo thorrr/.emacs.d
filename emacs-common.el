@@ -35,7 +35,7 @@
     py-yapf magit yaml-mode emmet-mode load-relative
     emmet-mode js2-mode js2-refactor rjsx-mode
     projectile flx-ido ag xref-js2 smartparens expand-region pug-mode
-    parinfer skewer-mode keychain-environment
+    parinfer skewer-mode keychain-environment dumb-jump
     )
 ))
 ;; (new in emacs25) tell package.el which packages we've manually selected

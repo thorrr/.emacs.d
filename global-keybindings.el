@@ -51,6 +51,11 @@
 ;;       (define-key keymaps-mode-map (kbd "C-(") "{")
 ;;       (define-key keymaps-mode-map (kbd "C-)") "}")))
 
+
+;; dumb-jump is awesome
+(define-key keymaps-mode-map (kbd "M-.") 'dumb-jump-go)
+(define-key keymaps-mode-map (kbd "M-,") 'dumb-jump-back)
+(define-key keymaps-mode-map (kbd "C-M-.") 'dumb-jump-quick-look)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End add keymaps
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
