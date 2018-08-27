@@ -39,6 +39,16 @@
                                                             ;; the hotkeys are triggered
                                                             ;; on the first press
 
+;; dumb-jump is awesome
+(define-key keymaps-mode-map (kbd "M-.") (lambda () (interactive)
+  (if (boundp 'dumb-jump-go-override)
+      (funcall-interactively dumb-jump-go-override) (dumb-jump-go))))
+(define-key keymaps-mode-map (kbd "M-,") (lambda () (interactive)
+  (if (boundp 'dumb-jump-back-override)
+      (funcall-interactively dumb-jump-back-override) (dumb-jump-back))))
+(define-key keymaps-mode-map (kbd "C-M-.") 'dumb-jump-quick-look)
+
+
 ;; add a more convenient "brace" character than RAlt+( on Linux attempt to properly rebind
 ;; C-( and C-) to make braces but keep brace overrides.  This is not turn-offable via our
 ;; keymaps-mode.  This should bind "deeper" than the following method which just maps C-(
@@ -52,10 +62,6 @@
 ;;       (define-key keymaps-mode-map (kbd "C-)") "}")))
 
 
-;; dumb-jump is awesome
-(define-key keymaps-mode-map (kbd "M-.") 'dumb-jump-go)
-(define-key keymaps-mode-map (kbd "M-,") 'dumb-jump-back)
-(define-key keymaps-mode-map (kbd "C-M-.") 'dumb-jump-quick-look)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; End add keymaps
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

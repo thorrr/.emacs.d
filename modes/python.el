@@ -144,6 +144,12 @@
       (self-insert-command 1))))
 ))
 
+;; override our global keymap's M-. and M-,
+(add-hook 'python-mode-hook (lambda ()
+  (setq-local dumb-jump-go-override (lambda () (interactive) (python-goodies/rope-goto-definition)))
+  (setq-local dumb-jump-back-override (lambda () (interactive) (python-goodies/rope-go-backward)))
+))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Old deprecated stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
