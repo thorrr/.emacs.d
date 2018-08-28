@@ -2,11 +2,14 @@
   (setq-local fill-column 90)
 ))
 
-
+;; override our global keymap's M-. and M-,
 (add-hook 'emacs-lisp-mode-hook (lambda ()
-  (define-key emacs-lisp-mode-map (kbd "M-.") 'elisp-find-definition)
-  (define-key emacs-lisp-mode-map (kbd "M-,") 'xref-pop-marker-stack)
+  (setq-local dumb-jump-go-override
+              (lambda () (call-interactively 'elisp-find-definition)))
+  (setq-local dumb-jump-back-override
+              (lambda () (interactive) (xref-pop-marker-stack)))
 ))
+
 
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)

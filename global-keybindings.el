@@ -41,6 +41,7 @@
 
 ;; dumb-jump is awesome
 (define-key keymaps-mode-map (kbd "M-.") (lambda () (interactive)
+  ;; override dumb-jump with your mode's own jump function
   (if (boundp 'dumb-jump-go-override)
       (funcall-interactively dumb-jump-go-override) (dumb-jump-go))))
 (define-key keymaps-mode-map (kbd "M-,") (lambda () (interactive)
