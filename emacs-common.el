@@ -36,6 +36,7 @@
     emmet-mode js2-mode js2-refactor rjsx-mode
     projectile flx-ido ag xref-js2 smartparens expand-region pug-mode
     parinfer skewer-mode keychain-environment dumb-jump
+    flymake-phpcs php-mode php-refactor-mode phpcbf
     )
 ))
 ;; (new in emacs25) tell package.el which packages we've manually selected
@@ -145,6 +146,7 @@
 (load (concat emacs-config-root "modes/markdown.el"))
 (load (concat emacs-config-root "modes/haskell.el"))
 (load (concat emacs-config-root "modes/javascript.el"))
+(load (concat emacs-config-root "modes/php.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  General Interactive Commands
