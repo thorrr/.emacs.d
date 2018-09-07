@@ -36,7 +36,7 @@
     emmet-mode js2-mode js2-refactor rjsx-mode
     projectile flx-ido ag xref-js2 smartparens expand-region pug-mode
     parinfer skewer-mode keychain-environment dumb-jump
-    flymake-phpcs php-mode php-refactor-mode phpcbf
+    flymake-phpcs php-mode php-refactor-mode phpcbf yasnippet-snippets
     )
 ))
 ;; (new in emacs25) tell package.el which packages we've manually selected
