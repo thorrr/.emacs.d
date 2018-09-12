@@ -4,6 +4,6 @@
 (require 'flymake-phpcs)
 (add-hook 'php-mode-hook 'flymake-phpcs-load)
 
-(php-set-style "psr2")
+(add-hook 'php-mode-hook (lambda () (php-set-style "psr2")))
 (require 'phpcbf)
 (setq phpcbf-standard "PSR2")
