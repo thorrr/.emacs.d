@@ -35,8 +35,8 @@
     py-yapf magit yaml-mode emmet-mode load-relative
     emmet-mode js2-mode js2-refactor rjsx-mode
     projectile flx-ido ag xref-js2 smartparens expand-region pug-mode
-    parinfer skewer-mode keychain-environment dumb-jump
-    flymake-phpcs php-mode php-refactor-mode phpcbf yasnippet-snippets
+    parinfer skewer-mode keychain-environment dumb-jump yasnippet-snippets
+    flymake-phpcs php-mode php-refactor-mode phpcbf php-auto-yasnippets
     )
 ))
 ;; (new in emacs25) tell package.el which packages we've manually selected
