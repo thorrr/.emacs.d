@@ -109,23 +109,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; all face customizations must come after load-theme
-(if window-system 
-    (if (>= emacs-major-version 24)
-        (progn
-          ;; 4th arg = nil:  actually load
-          (load-theme 'zenburn 't nil)
-          ;; (load-theme 'base16-mocha-dark 't nil)
-          ;; these themes are switchable but not loaded by default
-          ;; (load-theme 'solarized-light 't 'no-enable)
-          ;; (load-theme 'solarized-dark 't 'no-enable)
-          ;; (load-theme 'inkpot 't 'no-enable)
-          )
-      (progn
-        (require 'color-theme)
-        (add-to-list 'load-path (concat shared-externals "zenburn-emacs23"))
-        (require 'zenburn)
-        (color-theme-zenburn)
-        )))
+(if (>= emacs-major-version 24)
+    (progn
+      ;; 4th arg = nil:  actually load
+      (load-theme 'zenburn 't nil)
+      ;; (load-theme 'base16-mocha-dark 't nil)
+      ;; these themes are switchable but not loaded by default
+      ;; (load-theme 'solarized-light 't 'no-enable)
+      ;; (load-theme 'solarized-dark 't 'no-enable)
+      ;; (load-theme 'inkpot 't 'no-enable)
+      )
+  (progn
+    (require 'color-theme)
+    (add-to-list 'load-path (concat shared-externals "zenburn-emacs23"))
+    (require 'zenburn)
+    (color-theme-zenburn)
+    ))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
