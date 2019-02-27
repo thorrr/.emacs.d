@@ -679,3 +679,8 @@
 (add-hook 'sgml-mode-hook 'web-mode)
 (add-hook 'css-mode-hook  'web-mode)
 
+;; cleanup session files
+(defun emacs-session-filename (session-id)
+  "Construct a filename to save the session in based on
+SESSION-ID"
+  (expand-file-name session-id emacs-savefile-dir))
