@@ -30,9 +30,11 @@
 (add-hook 'temp-buffer-setup-hook (lambda ()
   (prefer-coding-system 'utf-8)))
 ;;this won't work until 24.3
-(if (and (= emacs-major-version 24) (>= emacs-minor-version 3)) ;; undo-tree history is crashing emacs25
-    (setq undo-tree-auto-save-history 't)
-  (setq undo-tree-auto-save-history nil))
+(setq undo-tree-auto-save-history 't)
+(setq undo-limit 78643200)
+(setq undo-outer-limit 104857600)
+(setq undo-strong-limit 157286400)
+(setq undo-tree-enable-undo-in-region nil)
 (add-hook 'write-file-hooks 'undo-tree-save-history-hook)
 (add-hook 'find-file-hook 'undo-tree-load-history-hook)
 
@@ -300,27 +302,25 @@
 
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
-(if (not (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) (progn
-  (defun revert-buffer-keep-history (&optional IGNORE-AUTO NOCONFIRM PRESERVE-MODES)
-    (interactive)
-    ;; from http://stackoverflow.com/q/4924389
-    ;; tell Emacs the modtime is fine, so we can edit the buffer
-    (clear-visited-file-modtime)
-    
-    ;; insert the current contents of the file on disk
-    (widen)
-    (delete-region (point-min) (point-max))
-    (insert-file-contents (buffer-file-name))
-    
-    ;; mark the buffer as not modified
-    (not-modified)
-    (set-visited-file-modtime))
+(defun revert-buffer-keep-history (&optional IGNORE-AUTO NOCONFIRM PRESERVE-MODES)
+  (interactive)
+  ;; from http://stackoverflow.com/q/4924389
+  ;; tell Emacs the modtime is fine, so we can edit the buffer
+  (clear-visited-file-modtime)
   
-  (setq revert-buffer-function 'revert-buffer-keep-history)
-  (defun ask-user-about-supersession-threat (fn)
+  ;; insert the current contents of the file on disk
+  (widen)
+  (delete-region (point-min) (point-max))
+  (insert-file-contents (buffer-file-name))
+  
+  ;; mark the buffer as not modified
+  (not-modified)
+  (set-visited-file-modtime))
+
+(setq revert-buffer-function 'revert-buffer-keep-history)
+(defun ask-user-about-supersession-threat (fn)
     "blatantly ignore files that changed on disk"
     )
-))
 
 ;; hippie expand is dabbrev expand on steroids
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
@@ -666,6 +666,8 @@
 ;; electric-indent-mode is automatic in emacs 24.4+.
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
+;; due to f586312, must be set before call to projectile-global-mode
+(setq projectile-known-projects-file (concat emacs-savefile-dir "projectile-bookmarks.eld"))
 (projectile-global-mode)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 

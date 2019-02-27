@@ -37,6 +37,7 @@
     projectile flx-ido ag xref-js2 smartparens expand-region pug-mode
     parinfer skewer-mode keychain-environment dumb-jump yasnippet-snippets
     flymake-phpcs php-mode php-refactor-mode phpcbf php-auto-yasnippets phi-search
+    go-mode use-package flycheck go-autocomplete go-stacktracer go-add-tags go-eldoc go-gopath go-direx
     )
 ))
 ;; (new in emacs25) tell package.el which packages we've manually selected
@@ -146,6 +147,7 @@
 (load (concat emacs-config-root "modes/haskell.el"))
 (load (concat emacs-config-root "modes/javascript.el"))
 (load (concat emacs-config-root "modes/php.el"))
+(load (concat emacs-config-root "modes/golang.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  General Interactive Commands
