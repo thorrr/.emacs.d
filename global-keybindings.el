@@ -24,7 +24,7 @@
 (define-key keymaps-mode-map "\M-j" 'join-next-line)
 (define-key keymaps-mode-map [f5] 'write-last-macro-to-messages)
 (define-key keymaps-mode-map [f8] 'sr-speedbar-toggle)
-(define-key keymaps-mode-map [S-f12] 'toggle-camelcase-at-point)
+(define-key keymaps-mode-map [S-f11] 'toggle-camelcase-at-point)
 (define-key keymaps-mode-map (kbd "M-h") 'my-iflipb-next-buffer)
 (define-key keymaps-mode-map (kbd "M-H") 'my-iflipb-previous-buffer)
 (define-key keymaps-mode-map (kbd "<C-tab>") 'my-iflipb-next-buffer)

@@ -214,7 +214,7 @@
 (setq recentf-auto-cleanup 'never)
 (setq recentf-max-saved-items 100)
 (setq recentf-max-menu-items 60)
-(global-set-key [(meta f12)] 'recentf-open-files)
+(global-set-key [(meta f11)] 'recentf-open-files)
 
 
 ;; hide/show mode
