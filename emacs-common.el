@@ -78,6 +78,7 @@
     ("color-theme-6.6.0" "http://download.savannah.gnu.org/releases/color-theme/color-theme-6.6.0.zip")
     ("sr-speedbar" "http://www.emacswiki.org/emacs/download/sr-speedbar.el")
     ("ntcmd" "http://www.emacswiki.org/emacs/download/ntcmd.el")
+    ("unbound" "https://raw.githubusercontent.com/emacsmirror/emacswiki.org/6caf12817e13db1fb10f6fc6836325777dddb8a1/unbound.el")
 )))
 
 

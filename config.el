@@ -684,3 +684,6 @@
   "Construct a filename to save the session in based on
 SESSION-ID"
   (expand-file-name session-id emacs-savefile-dir))
+
+;; helper to find unbound keys
+(require 'unbound)
