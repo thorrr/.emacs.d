@@ -411,3 +411,8 @@ configuration when invoked to evaluate a line."
 (add-hook 'sh-mode-hook
           '(lambda()
              (local-set-key (kbd "C-M-<return>") 'eir-eval-in-shell2)))
+
+(require 'smart-dash)
+(add-hook 'python-mode-hook
+          (lambda ()
+            (smart-dash-mode)))

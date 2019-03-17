@@ -38,6 +38,7 @@
     parinfer skewer-mode keychain-environment dumb-jump yasnippet-snippets
     flymake-phpcs php-mode php-refactor-mode phpcbf php-auto-yasnippets phi-search
     go-mode use-package flycheck go-autocomplete go-stacktracer go-add-tags go-eldoc go-gopath go-direx
+    eval-in-repl smart-dash 
     )
 ))
 ;; (new in emacs25) tell package.el which packages we've manually selected
