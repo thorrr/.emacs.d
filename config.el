@@ -270,35 +270,52 @@
 
 ;;buffer flipping
 (require 'iflipb)
-(setq iflipb-wrap-around t)
-;; auto off function iflipb'ing
+;; turn off iflip coming all the way around (the default)
+(setq iflipb-wrap-around nil)
+;; set a timer so that pausing also resets the flip
 (setq my-iflipb-timeout 0.8)
+
+;; don't flip to buffers that are showing
+(defun buffer-showing? (b)
+  (let ((showing-buffer-names
+         (mapcar (lambda (w) (buffer-name (window-buffer w)))
+                 (window-list (car (visible-frame-list)))))) ;;assuming single frame...
+    ;; remove current buffer - it's eligible to be switched
+    (setq showing-buffer-names
+          (delq (buffer-name (current-buffer)) showing-buffer-names))
+    (memq b showing-buffer-names)))
+
+;; Customize this var to ignore buffers that are showing.
+;; This var is smart - if it's a list it filters using every elt
+(setq iflipb-always-ignore-buffers
+      (list
+       ;; default value
+       (car (get 'iflipb-always-ignore-buffers 'standard-value))
+       ;; also use our filtering function
+       (symbol-function 'buffer-showing?)))
+
 (setq my-iflipb-timer-object nil)
-(defun my-iflipb-timer ()
+(defun my-iflipb-timer-cancel ()
   (cancel-timer my-iflipb-timer-object)
   (setq my-iflipb-timer-object nil))
 
-(defun my-iflipb-next-buffer (arg)
-  (interactive "P")
-  (iflipb-next-buffer arg)
-  ;;reset timer if it's running
+(defun my-iflipb-timer-restart (arg)
   (if my-iflipb-timer-object
+      ;; kill the running timer
       (cancel-timer my-iflipb-timer-object))
-  (setq my-iflipb-timer-object (run-with-idle-timer my-iflipb-timeout nil 'my-iflipb-timer)))
+  (setq my-iflipb-timer-object
+        (run-with-idle-timer my-iflipb-timeout nil 'my-iflipb-timer-cancel)))
 
-(defun my-iflipb-previous-buffer ()
-  (interactive)
-  (iflipb-previous-buffer)
-  ;;reset timer if it's running
-  (if my-iflipb-timer-object
-      (cancel-timer my-iflipb-timer-object))
-  (setq my-iflipb-timer-object (run-with-idle-timer my-iflipb-timeout nil 'my-iflipb-timer)))
+(defun my-iflipb-timer-expired ()
+  (not my-iflipb-timer-object))
 
-(defun iflipb-first-iflipb-buffer-switch-command ()
-  "Override existing function - add check for my-iflipb-timer-object"
-  (not (and (or (eq last-command 'my-iflipb-next-buffer)
-                (eq last-command 'my-iflipb-previous-buffer))
-            my-iflipb-timer-object)))
+;; pretend this is the first flip if timer is expired even if this predicate is nil
+(advice-add 'iflipb-first-iflipb-buffer-switch-command
+            :after-until 'my-iflipb-timer-expired)
+;; reset timer after each flip
+(advice-add 'iflipb-next-buffer :after 'my-iflipb-timer-restart)
+(advice-add 'iflipb-previous-buffer :after 'my-iflipb-timer-restart)
+
 
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
