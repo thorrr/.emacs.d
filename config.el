@@ -704,3 +704,5 @@ SESSION-ID"
 
 ;; helper to find unbound keys
 (require 'unbound)
+
+(winner-mode 1)
