@@ -106,5 +106,6 @@
   "Turn off keymaps-mode."
   (keymaps-mode -1))
 (add-hook 'minibuffer-setup-hook #'turn-off-keymaps-mode)
+(add-hook 'magit-mode-setup-hook #'turn-off-keymaps-mode)
 
 (provide 'keymaps-mode)
