@@ -112,7 +112,9 @@
 
 ;;keep server file out of our pristine .emacs.d directory
 (setq server-auth-dir (expand-file-name "~/.local-emacs/server"))
-(server-start)
+(require 'server)
+(or (server-running-p)
+    (server-start))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Fonts
