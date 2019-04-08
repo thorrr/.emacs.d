@@ -101,7 +101,8 @@
       (setq first-non-whitespace (point)))
     (if (and (>= current-point bol) (<= current-point first-non-whitespace))
         (funcall indent-line-function)
-      (auto-complete))))
+      (cond ((bound-and-true-p auto-complete-mode) (auto-complete))
+            ((bound-and-true-p company-mode) (company-manual-begin))))))
 
 (ac-config-default)
 
