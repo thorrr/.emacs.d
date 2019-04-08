@@ -104,6 +104,7 @@
 (run-with-idle-timer 2 't 'linum-update-current)
 
 
+
 (defun toggle-line-numbers ()
   (interactive)
   (require 'linum)
@@ -358,61 +359,5 @@ to specify a custom port"
       (setenv "PATH" old-path))))
 (advice-add 'keychain-refresh-environment :around #'shims-first-in-path)
 
-
-;; eval in repl could be good
-;; require the main file containing common functions
-(require 'eval-in-repl)
-
-;; Uncomment if no need to jump after evaluating current line
-;; (setq eir-jump-after-eval nil)
-
-;; Uncomment if you want to always split the script window into two.
-;; This will just split the current script window into two without
-;; disturbing other windows.
-;; (setq eir-always-split-script-window t)
-
-;; Uncomment if you always prefer the two-window layout.
-;; (setq eir-delete-other-windows t)
-
-;; Place REPL on the left of the script window when splitting.
-(setq eir-repl-placement 'right)
-
-
-;;; ielm support (for emacs lisp)
-(require 'eval-in-repl-ielm)
-;; Evaluate expression in the current buffer.
-(setq eir-ielm-eval-in-current-buffer t)
-;; for .el files
-(define-key emacs-lisp-mode-map (kbd "<C-return>") 'eir-eval-in-ielm)
-;; for *scratch*
-(define-key lisp-interaction-mode-map (kbd "<C-return>") 'eir-eval-in-ielm)
-
-;;; Python support
-(require 'python) ; if not done elsewhere
-(require 'eval-in-repl-python)
-(add-hook 'python-mode-hook
-          '(lambda ()
-             (local-set-key (kbd "<C-return>") 'eir-eval-in-python)))
-
-;; Shell support
-(require 'eval-in-repl-shell)
-(add-hook 'sh-mode-hook
-          '(lambda()
-             (local-set-key (kbd "C-<return>") 'eir-eval-in-shell)))
-;; Version with opposite behavior to eir-jump-after-eval configuration
-(defun eir-eval-in-shell2 ()
-  "eval-in-repl for shell script (opposite behavior)
-
-This version has the opposite behavior to the eir-jump-after-eval
-configuration when invoked to evaluate a line."
-  (interactive)
-  (let ((eir-jump-after-eval (not eir-jump-after-eval)))
-       (eir-eval-in-shell)))
-(add-hook 'sh-mode-hook
-          '(lambda()
-             (local-set-key (kbd "C-M-<return>") 'eir-eval-in-shell2)))
-
-(require 'smart-dash)
-(add-hook 'python-mode-hook
-          (lambda ()
-            (smart-dash-mode)))
+(require 'origami)
+(define-key origami-mode-map (kbd "C-o") 'loccur-current)

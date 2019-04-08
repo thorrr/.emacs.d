@@ -1,5 +1,3 @@
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Global Keybindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29,7 +27,6 @@
 ;;undo-tree-save-history fn doesn't like being interruped to ask about encodings
 (add-hook 'temp-buffer-setup-hook (lambda ()
   (prefer-coding-system 'utf-8)))
-;;this won't work until 24.3
 (setq undo-tree-auto-save-history 't)
 (setq undo-limit 78643200)
 (setq undo-outer-limit 104857600)
@@ -316,7 +313,6 @@
 (advice-add 'iflipb-next-buffer :after 'my-iflipb-timer-restart)
 (advice-add 'iflipb-previous-buffer :after 'my-iflipb-timer-restart)
 
-
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
 (defun revert-buffer-keep-history (&optional IGNORE-AUTO NOCONFIRM PRESERVE-MODES)
@@ -333,11 +329,10 @@
   ;; mark the buffer as not modified
   (not-modified)
   (set-visited-file-modtime))
-
 (setq revert-buffer-function 'revert-buffer-keep-history)
 (defun ask-user-about-supersession-threat (fn)
-    "blatantly ignore files that changed on disk"
-    )
+  "blatantly ignore files that changed on disk"
+  )
 
 ;; hippie expand is dabbrev expand on steroids
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
@@ -673,7 +668,7 @@
 ;; electric-indent-mode is automatic in emacs 24.4+.
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
-;; due to f586312, must be set before call to projectile-global-mode
+;; due to f586312, must be before projectile-global-mode
 (setq projectile-known-projects-file (concat emacs-savefile-dir "projectile-bookmarks.eld"))
 (projectile-global-mode)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
@@ -686,13 +681,14 @@
 (add-hook 'sgml-mode-hook 'web-mode)
 (add-hook 'css-mode-hook  'web-mode)
 
-;; cleanup session files
 (defun emacs-session-filename (session-id)
-  "Construct a filename to save the session in based on
-SESSION-ID"
+  "Construct a filename to save the session in based on SESSION-ID.
+This function overrides the one on `x-win' to use `no-littering'
+directories."
   (expand-file-name session-id emacs-savefile-dir))
 
 ;; helper to find unbound keys
 (require 'unbound)
 
+;; enable "undo" of window shape changes
 (winner-mode 1)
