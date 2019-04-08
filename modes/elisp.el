@@ -7,7 +7,7 @@
   (setq-local dumb-jump-go-override
               (lambda () (call-interactively 'elisp-find-definition)))
   (setq-local dumb-jump-back-override
-              (lambda () (interactive) (xref-pop-marker-stack)))
+              (lambda () (xref-pop-marker-stack)))
 ))
 
 
@@ -46,3 +46,9 @@
                   (message "Symbol not bound: %S" symbol)))))
   (t (message "No symbol at point"))))
 
+
+;; turn on autocomplete, turn company off
+(add-hook 'emacs-lisp-mode-hook (lambda ()
+  (company-mode -1)
+  (auto-complete-mode 't)
+))
