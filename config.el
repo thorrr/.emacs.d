@@ -657,16 +657,6 @@
     (setq kill-ring old-kill-ring)
     (setq kill-ring-yank-pointer old-kill-ring-yank-pointer)))
 
-(defun subword-backward-delete (arg)
-  (interactive "p")
-  (preserve-kill-ring 'subword-backward-kill arg))
-
-(defun subword-forward-delete (arg)
-  (interactive "p")
-  (preserve-kill-ring 'subword-kill arg))
-
-(global-set-key (kbd "M-d") 'subword-forward-delete)
-(global-set-key (kbd "M-DEL") 'subword-backward-delete)
 ;;preserve old definitions of paredit-*-word and override with preserve-kill-ring
 (add-hook 'paredit-mode-hook (lambda ()
   (if (not (fboundp 'paredit-forward-kill-word-orig))

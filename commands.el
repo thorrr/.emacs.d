@@ -218,3 +218,16 @@
       ;; Clear buffer-modified flag caused by set-visited-file-name
       (set-buffer-modified-p nil))
   (message "Renamed to %s." new-name)))
+
+  ;; turn off transient mode when switching
+(defun my-exchange-point-and-mark ()
+  (interactive)
+  (exchange-point-and-mark 't))
+
+(defun subword-backward-delete (arg)
+  (interactive "p")
+  (preserve-kill-ring 'subword-backward-kill arg))
+
+(defun subword-forward-delete (arg)
+  (interactive "p")
+  (preserve-kill-ring 'subword-kill arg))
