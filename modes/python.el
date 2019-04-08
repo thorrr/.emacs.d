@@ -146,6 +146,6 @@
 
 ;; override our global keymap's M-. and M-,
 (add-hook 'python-mode-hook (lambda ()
-  (setq-local dumb-jump-go-override (lambda () (interactive) (python-goodies/rope-goto-definition)))
-  (setq-local dumb-jump-back-override (lambda () (interactive) (python-goodies/rope-go-backward)))
+  (setq-local dumb-jump-go-override (lambda () (call-interactively 'python-goodies/rope-goto-definition)))
+  (setq-local dumb-jump-back-override (lambda () (call-interactively 'python-goodies/rope-go-backward)))
 ))
