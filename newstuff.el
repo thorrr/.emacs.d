@@ -13,8 +13,6 @@
 (add-hook 'ess-mode-hook (lambda () (glasses-mode)))
 (add-hook 'inferior-ess-mode-hook (lambda () (glasses-mode)))
 
-(global-set-key (kbd "C-c q") 'auto-fill-mode)
-
 ;; (require 'autopair)
 ;; (setq autopair-autowrap t)
 ;;(autopair-global-mode) ;; enable autopair in all buffers
@@ -64,17 +62,11 @@
 	       (insert (ring-ref ring index) comint-input-ring-separator))))))
 
 
-(defun my-exchange-point-and-mark ()
-  (interactive)
-  (exchange-point-and-mark 't))  ;; turn off transient mode when switching
-(global-set-key (kbd "C-x C-x") 'my-exchange-point-and-mark)
 
 ;; reuse a single buffer for dired
 (require 'joseph-single-dired)
 
 (require 'loccur)
-;; defines shortcut for the loccur of the previously found word
-(define-key global-map [(control shift o)] 'loccur-previous-match)
 ;; press C-o to do an occur buffer during an interactive search
 (define-key isearch-mode-map (kbd "C-o") 'loccur-current)
 (define-key isearch-mode-map (kbd "C-g") (lambda () (interactive) (if loccur-mode (loccur-current)) (keyboard-quit)))
@@ -87,7 +79,6 @@
 (setq minimap-update-delay 1.0)
 (setq minimap-dedicated-window 't)
 (defun minimap-sync-overlays () ) ;; override because this function is broken in minimap
-(global-set-key (kbd "C-c m") 'minimap-toggle)
 
 ;;fringe experiments
 (toggle-scroll-bar -1)
@@ -125,15 +116,11 @@
           (set-fringe-style '(2 . 10)))
         ;;turn linum-on after fringe is set
         (linum-on)))))
-(global-set-key (kbd "<f2>") 'toggle-line-numbers)
 
 ;; multiple cursors is fcking awesome
 (require 'multiple-cursors)
 (setq mc/list-file (concat emacs-savefile-dir ".mc-lists.el"))
-(global-set-key (kbd "M-S-<down>") 'mc/mark-next-like-this)
-(global-set-key (kbd "M-S-<up>") 'mc/mark-previous-like-this)
-(global-set-key (kbd "M-S-<next>") 'mc/mark-all-like-this)
-(global-set-key (kbd "M-S-<prior>") 'mc/mark-all-like-this)
+
 ;;turn off prompt for autopair function
 ;; (nconc mc/cmds-to-run-for-all `(autopair-insert-opening autopair-skip-close-maybe autopair-insert-or-skip-quote))
 

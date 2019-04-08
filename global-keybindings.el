@@ -40,15 +40,41 @@
                                                             ;; on the first press
 
 ;; dumb-jump is awesome
-(define-key keymaps-mode-map (kbd "M-.") (lambda () (interactive)
-  ;; override dumb-jump with your mode's own jump function
+(defun dumb-jump-go-or-override ()
+  ;; allow overriding dumb-jump with your mode's own jump function
+  (interactive)
   (if (boundp 'dumb-jump-go-override)
-      (funcall-interactively dumb-jump-go-override) (dumb-jump-go))))
-(define-key keymaps-mode-map (kbd "M-,") (lambda () (interactive)
+      (funcall dumb-jump-go-override) (dumb-jump-go)))
+
+(defun dumb-jump-back-or-override ()
+  (interactive)
   (if (boundp 'dumb-jump-back-override)
-      (funcall-interactively dumb-jump-back-override) (dumb-jump-back))))
+      (funcall dumb-jump-back-override) (dumb-jump-back)))
+
+(define-key keymaps-mode-map (kbd "M-.") 'dumb-jump-go-or-override)
+(define-key keymaps-mode-map (kbd "M-,") 'dumb-jump-back-or-override)
 (define-key keymaps-mode-map (kbd "C-M-.") 'dumb-jump-quick-look)
 
+;; ace jump stuff
+(define-key keymaps-mode-map (kbd "C-c SPC") 'ace-jump-mode)
+(define-key keymaps-mode-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+(define-key keymaps-mode-map [(meta s)] 'ace-jump-mode)
+
+(define-key keymaps-mode-map (kbd "C-c q") 'auto-fill-mode)
+(define-key keymaps-mode-map (kbd "C-x C-x") 'my-exchange-point-and-mark)
+(define-key keymaps-mode-map (kbd "C-c m") 'minimap-toggle)
+(define-key keymaps-mode-map (kbd "<f2>") 'toggle-line-numbers)
+(define-key keymaps-mode-map (kbd "M-S-<down>") 'mc/mark-next-like-this)
+(define-key keymaps-mode-map (kbd "M-S-<up>") 'mc/mark-previous-like-this)
+(define-key keymaps-mode-map (kbd "M-S-<next>") 'mc/mark-all-like-this)
+(define-key keymaps-mode-map (kbd "M-S-<prior>") 'mc/mark-all-like-this)
+(define-key keymaps-mode-map (kbd "M-?") 'auto-complete)
+(define-key keymaps-mode-map (kbd "TAB") 'smart-auto-complete)
+(define-key keymaps-mode-map [(meta f11)] 'recentf-open-files)
+(define-key keymaps-mode-map (kbd "C-+") 'sane-hs-toggle-hiding)
+(define-key keymaps-mode-map [C-kp-add] 'sane-hs-toggle-hiding)
+(define-key keymaps-mode-map (kbd "M-d") 'subword-forward-delete)
+(define-key keymaps-mode-map (kbd "M-DEL") 'subword-backward-delete)
 
 ;; add a more convenient "brace" character than RAlt+( on Linux attempt to properly rebind
 ;; C-( and C-) to make braces but keep brace overrides.  This is not turn-offable via our
@@ -80,6 +106,5 @@
   "Turn off keymaps-mode."
   (keymaps-mode -1))
 (add-hook 'minibuffer-setup-hook #'turn-off-keymaps-mode)
-(add-hook 'magit-mode-setup-hook #'turn-off-keymaps-mode)
 
 (provide 'keymaps-mode)

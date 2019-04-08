@@ -7,7 +7,6 @@
        (windmove-default-keybindings))
 
 ;; occur is cool
-;; (global-set-key (kbd "C-c o") 'my-occur)
 ;; press C-o to do an occur buffer cduring an interactive search
 (define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
 
@@ -86,10 +85,8 @@
 (setq ac-quick-help-delay 0.2) ;; pop up help stuff a little faster than default
 (setq ac-dwim t)
 (setq ac-auto-show-menu 't)  ;;if we want a delay, change this to 0.5, for example
-(global-set-key (kbd "M-?") 'auto-complete)
 
 (setq tab-always-indent 't)  ;; indent, don't tab or autocomplete.  Turns off default TAB->complete
-;; (global-set-key (kbd "TAB") 'smart-auto-complete)
 
 (defun smart-auto-complete ()
   "indent if we're in whitespace at the beginning of the line, else start auto-complete"
@@ -213,7 +210,6 @@
 (setq recentf-auto-cleanup 'never)
 (setq recentf-max-saved-items 100)
 (setq recentf-max-menu-items 60)
-(global-set-key [(meta f11)] 'recentf-open-files)
 
 
 ;; hide/show mode
@@ -231,9 +227,6 @@
       (move-beginning-of-line nil) (end-of-line) (hs-toggle-hiding))
     ;; now put point back at the end of the line since that's where it started visually
     (if found-hs-overlay (end-of-line))))
-
-(global-set-key (kbd "C-+") 'sane-hs-toggle-hiding)
-(global-set-key [C-kp-add] 'sane-hs-toggle-hiding)
 
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
@@ -399,11 +392,8 @@
 
 ;;ace jump mode
 (require 'ace-jump-mode)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 (eval-after-load "ace-jump-mode"
   '(ace-jump-mode-enable-mark-sync))
-(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
-(define-key global-map [(meta s)] 'ace-jump-mode)
 (setq ace-jump-mode-case-fold t) ;; case insensitive
 (setq ace-jump-mode-move-keys
       (loop for i from ?a to ?z collect i)) ;;only lowercase jump characters
