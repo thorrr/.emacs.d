@@ -354,4 +354,3 @@ to specify a custom port"
 (advice-add 'keychain-refresh-environment :around #'shims-first-in-path)
 
 (require 'origami)
-(define-key origami-mode-map (kbd "C-o") 'loccur-current)
