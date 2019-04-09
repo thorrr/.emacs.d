@@ -102,7 +102,7 @@
     (if (and (>= current-point bol) (<= current-point first-non-whitespace))
         (funcall indent-line-function)
       (cond ((bound-and-true-p auto-complete-mode) (auto-complete))
-            ((bound-and-true-p company-mode) (company-smart-complete))))))
+            ((bound-and-true-p company-mode) (company-indent-or-complete-common))))))
 
 (ac-config-default)
 
