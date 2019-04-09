@@ -102,11 +102,42 @@
     (if (and (>= current-point bol) (<= current-point first-non-whitespace))
         (funcall indent-line-function)
       (cond ((bound-and-true-p auto-complete-mode) (auto-complete))
-            ((bound-and-true-p company-mode) (company-manual-begin))))))
+            ((bound-and-true-p company-mode) (company-smart-complete))))))
 
 (ac-config-default)
 
 (add-to-list 'ac-sources 'ac-source-yasnippet)
+
+;; company mode customizations
+
+(defun company-visible-and-explicit-action-p ()
+  (and (company-tooltip-visible-p)
+       (company-explicit-action-p)))
+
+(defun company-smart-complete ()
+  "complete with tab if we've specifically selected a completion.
+Otherwise select next."
+  (interactive)
+  (if (or (eq last-command 'company-select-next)
+          (eq last-command 'company-select-previous))
+      (company-complete)
+    (company-select-next-if-tooltip-visible-or-complete-selection)))
+
+(defun company-ac-setup ()
+  "Sets up `company-mode' to behave similarly to `auto-complete-mode'."
+  (setq company-require-match nil)
+  (setq company-auto-complete #'company-visible-and-explicit-action-p)
+  (setq company-frontends '(company-echo-metadata-frontend
+                            company-pseudo-tooltip-unless-just-one-frontend-with-delay
+                            company-preview-frontend))
+  (define-key company-active-map [tab] 'company-smart-complete)
+  (define-key company-active-map (kbd "TAB") 'company-smart-complete)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
+  (define-key company-active-map (kbd "<backtab>") 'company-select-previous))
+
+(add-hook 'company-mode-hook 'company-ac-setup)
 
 ;;keep server file out of our pristine .emacs.d directory
 (setq server-auth-dir (expand-file-name "~/.local-emacs/server"))
