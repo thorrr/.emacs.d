@@ -3,7 +3,6 @@
 
 (use-package go-mode
   :config
-  (add-hook 'go-mode-hook 'flycheck-mode)
   (add-hook 'go-mode-hook 'dumb-jump-mode)
   (add-hook 'go-mode-hook
             (lambda ()
@@ -12,6 +11,8 @@
               (keymaps-mode 0)
               (golang-minor-mode)
               (company-mode-on)
+              (flymake-mode -1)
+              (flycheck-mode 1)
               (auto-complete-mode -1)))
   (setq go-packages-function 'go-packages-go-list))
 
