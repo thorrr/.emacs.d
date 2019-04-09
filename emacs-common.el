@@ -60,7 +60,7 @@
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
     ("zenburn-emacs23" "https://github.com/dbrock/zenburn-el.git")
     ("yascroll" "https://github.com/m2ym/yascroll-el.git")
-    ("markdown-mode" "http://jblevins.org/git/markdown-mode.git")
+    ("markdown-mode" "git://jblevins.org/git/markdown-mode.git")
     ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
     ("ac-js2" "https://github.com/ScottyB/ac-js2.git")
