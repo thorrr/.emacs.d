@@ -9,6 +9,7 @@
   (add-hook 'go-mode-hook
             (lambda ()
               (setq tab-width 4)
+              (setq fill-column 100)
               (keymaps-mode 0)
               (golang-minor-mode)
               (company-mode-on)
