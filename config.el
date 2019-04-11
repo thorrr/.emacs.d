@@ -271,6 +271,7 @@ Otherwise select next."
 (add-hook 'ensime-mode-hook     'hs-minor-mode)
 (add-hook 'ensime-scala-mode-hook 'hs-minor-mode)
 (add-hook 'python-mode-hook 'hs-minor-mode)
+(add-hook 'go-mode-hook         'hs-minor-mode)
 
 ;; make M-z evaluate "this" sexp
 (defun slime-evaluate-this-sexp ()
