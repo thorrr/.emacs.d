@@ -13,6 +13,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Package Setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defcustom my-packages '()
   "List of packages for the local machine")
 (defcustom git-projects '()
@@ -58,17 +59,12 @@
     ("iflipb" "https://github.com/emacsmirror/iflipb.git")
     ("transpose-frame" "https://github.com/emacsmirror/transpose-frame.git")
     ("region-bindings-mode" "https://github.com/fgallina/region-bindings-mode.git")
-    ("zenburn-emacs23" "https://github.com/dbrock/zenburn-el.git")
     ("yascroll" "https://github.com/m2ym/yascroll-el.git")
     ("markdown-mode" "git://jblevins.org/git/markdown-mode.git")
     ("auto-save-buffer" "https://github.com/thorrr/auto-save-buffer.git")
     ("python-goodies" "https://github.com/thorrr/python-goodies.git")
     ("ac-js2" "https://github.com/ScottyB/ac-js2.git")
     ("undo-tree" "https://github.com/emacsmirror/undo-tree.git")
-    ,(if (< emacs-major-version 24)
-         '("python-emacs23" "-b emacs23 https://github.com/fgallina/python.el.git")
-;         '("python-emacs24" "-b emacs-24 https://github.com/fgallina/python.el.git")
-        )
     ("ac-python-async" "https://github.com/thorrr/ac-python-async.git")
     ("python-yapf" "https://github.com/galeo/python-yapf.el.git")
 )))
@@ -115,22 +111,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; all face customizations must come after load-theme
-(if (>= emacs-major-version 24)
-    (progn
-      ;; 4th arg = nil:  actually load
-      (load-theme 'zenburn 't nil)
-      ;; (load-theme 'base16-mocha-dark 't nil)
-      ;; these themes are switchable but not loaded by default
-      ;; (load-theme 'solarized-light 't 'no-enable)
-      ;; (load-theme 'solarized-dark 't 'no-enable)
-      ;; (load-theme 'inkpot 't 'no-enable)
-      )
-  (progn
-    (require 'color-theme)
-    (add-to-list 'load-path (concat shared-externals "zenburn-emacs23"))
-    (require 'zenburn)
-    (color-theme-zenburn)
-    ))
+(load-theme 'zenburn 't nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

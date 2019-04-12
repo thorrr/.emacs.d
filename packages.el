@@ -3,23 +3,11 @@
 (unless (file-exists-p shared-externals)
   (make-directory shared-externals 't))
 
-;; If we're on version 23, download the latest package.el and load it
-(if (< emacs-major-version 24)
-    (let* ((default-directory (expand-file-name shared-externals))
-           (package-file (concat default-directory "pkg-el23")))
-      (unless (file-exists-p package-file)
-        (shell-command-to-string "wget http://bit.ly/pkg-el23"))
-      (load package-file)))
-
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
-;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 
 ;; change default elpa directory and load packages
 (setq package-user-dir shared-externals)

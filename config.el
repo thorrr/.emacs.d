@@ -395,8 +395,8 @@ Otherwise select next."
 (ido-vertical-mode 't)
 (setq ido-max-prospects 4)
 
-;;the following tweak doesn't work on old emacs versions
-(if (>= emacs-major-version 24) (setq ido-completion-buffer nil))
+
+(setq ido-completion-buffer nil)
 (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
 (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
 
