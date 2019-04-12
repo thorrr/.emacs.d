@@ -149,3 +149,5 @@
   (setq-local dumb-jump-go-override (lambda () (call-interactively 'python-goodies/rope-goto-definition)))
   (setq-local dumb-jump-back-override (lambda () (call-interactively 'python-goodies/rope-go-backward)))
 ))
+
+;; turn off pylint warnings
