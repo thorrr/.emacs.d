@@ -1,32 +1,3 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;
-;; rope stuff
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(el-get-bundle ac-python-async
-  :url "https://github.com/thorrr/ac-python-async.git")
-
-(use-package ac-python-async
-  :ensure nil  ;; use el-get package
-)
-
-(el-get-bundle pymacs
-  :url "https://github.com/pinard/Pymacs.git"
-  (shell-command-to-string 
-   (concat "cd " package-user-dir "pymacs && make"
-           (if (eq system-type 'windows-nt) " && make install" ""))))
-(use-package pymacs
-  :ensure nil  ;; use el-get package
-  :custom
-  (pymacs-parent-dir shared-externals))
-
-;; these don't use (require '<package>) - they're python code specially hooked by pymacs
-(el-get-bundle rope
-  :url "https://github.com/python-rope/rope.git")
-(el-get-bundle ropemacs
-  :url "https://github.com/python-rope/ropemacs.git")
-(el-get-bundle ropemode
-  :url "https://github.com/python-rope/ropemode.git")
-
 (el-get-bundle python-goodies
   :url "https://github.com/thorrr/python-goodies.git")
 (use-package python-goodies
