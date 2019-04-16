@@ -1,9 +1,17 @@
-(require 'flymake-php)
-(add-hook 'php-mode-hook 'flymake-php-load)
+(use-package php-mode
+  :disabled
+  :config
+  (php-set-style "psr2")
+)
+(use-package flymake-php
+  :init
+  (add-hook 'php-mode-hook 'flymake-php-load))
 
-(require 'flymake-phpcs)
-(add-hook 'php-mode-hook 'flymake-phpcs-load)
+(use-package flymake-phpcs
+  :init
+  (add-hook 'php-mode-hook 'flymake-phpcs-load))
 
-(add-hook 'php-mode-hook (lambda () (php-set-style "psr2")))
-(require 'phpcbf)
-(setq phpcbf-standard "PSR2")
+(use-package phpcbf
+  :custom
+  (phpcbf-standard "PSR2"))
+

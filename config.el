@@ -1,8 +1,14 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  Global Keybindings
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; shift arrow buffer navigation
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Builtin configuration
 ;;
+;; Customizations of the base emacs installation go here.  Put mode-specific customiztion
+;; in modes/<mode>.el
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; sanitize user customized var
+(setq emacs-savefile-dir (expand-file-name emacs-savefile-dir))
+
+;; shift arrow buffer navigation
 (when (fboundp 'windmove-default-keybindings)
        (windmove-default-keybindings))
 
@@ -10,30 +16,8 @@
 ;; press C-o to do an occur buffer cduring an interactive search
 (define-key isearch-mode-map (kbd "C-o") 'run-occur-during-interactive-search)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  End Global Keybindings
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; use unix line endings on everything
 (setq-default buffer-file-coding-system 'utf-8-unix)
-;; except for .bat and .cmd files
-(add-hook 'ntcmd-mode-hook (lambda () (setq buffer-file-coding-system 'utf-8-dos)))
-
-;; undo-tree
-(require 'undo-tree)
-(global-undo-tree-mode)
-(setq undo-tree-history-directory-alist `((".*" . ,emacs-savefile-dir)))
-;;undo-tree-save-history fn doesn't like being interruped to ask about encodings
-(add-hook 'temp-buffer-setup-hook (lambda ()
-  (prefer-coding-system 'utf-8)))
-(setq undo-tree-auto-save-history 't)
-(setq undo-limit 78643200)
-(setq undo-outer-limit 104857600)
-(setq undo-strong-limit 157286400)
-(setq undo-tree-enable-undo-in-region nil)
-(add-hook 'write-file-hooks 'undo-tree-save-history-hook)
-(add-hook 'find-file-hook 'undo-tree-load-history-hook)
-
 ;; "y or n" instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -44,106 +28,13 @@
 (with-current-buffer "*scratch*"
   (setq default-directory "~/"))
 
-(require 'yasnippet)
-;;(yas-global-mode 1)
-
-(require 'auto-complete)
-(require 'auto-complete-config)
-
-(setq ac-comphist-file (concat emacs-savefile-dir "ac-comphist.dat"))
-(define-key ac-completing-map "\e" 'ac-stop)
-(setq ac-stop-flymake-on-completing t)
-
-;;fixes for autopair mode which obliterates the mapping for both kbd "RET" and [return]
-;; (define-key ac-completing-map (kbd "RET") 'ac-complete)
-;; (define-key ac-completing-map [return] 'ac-complete)
-(define-key ac-completing-map (kbd "RET") 'ac-select-current)
-(define-key ac-completing-map [return] 'ac-select-current)
-
-(global-auto-complete-mode)
-(setq ac-use-menu-map 't)
-(define-key ac-menu-map (kbd "C-n") 'ac-next)
-(define-key ac-menu-map (kbd "C-p") 'ac-previous)
-(defun ac-select-current ()
-  (interactive)
-  (if (or (eq last-command 'ac-previous)
-          (eq last-command 'ac-next)
-          (eq last-command 'ac-expand)
-          (eq last-command 'ac-expand-previous)
-          (eq last-command 'ac-expand-common)
-          (eq last-command 'ac-complete))
-      ;; disable all "RET" functions
-      (cl-letf (((symbol-function 'newline) (lambda (&optional arg interactive) (interactive "*P\np")))
-                ((symbol-function 'newline-and-indent) (lambda () (interactive "*"))))
-        (ac-complete))))
-
-(define-key ac-menu-map (kbd "RET") 'ac-select-current)
-(define-key ac-menu-map [return] 'ac-select-current)
-
-(setq ac-auto-start 1) ;;don't automatically start auto-complete until this many characters have been typed
-(setq ac-delay .3) ;; crucial to fix typing latency gaps
-(setq ac-quick-help-delay 0.2) ;; pop up help stuff a little faster than default
-(setq ac-dwim t)
-(setq ac-auto-show-menu 't)  ;;if we want a delay, change this to 0.5, for example
-
-(setq tab-always-indent 't)  ;; indent, don't tab or autocomplete.  Turns off default TAB->complete
-
-(defun smart-auto-complete ()
-  "indent if we're in whitespace at the beginning of the line, else start auto-complete"
-  (interactive)
-  (let ((current-point (point))
-        (bol nil)
-        (first-non-whitespace nil))
-    (save-excursion
-      (move-beginning-of-line nil)
-      (setq bol (point))
-      (re-search-forward "[^ ]" nil 't)
-      (setq first-non-whitespace (point)))
-    (if (and (>= current-point bol) (<= current-point first-non-whitespace))
-        (funcall indent-line-function)
-      (cond ((bound-and-true-p auto-complete-mode) (auto-complete))
-            ((bound-and-true-p company-mode) (company-indent-or-complete-common))))))
-
-(ac-config-default)
-
-(add-to-list 'ac-sources 'ac-source-yasnippet)
-
-;; company mode customizations
-
-(defun company-visible-and-explicit-action-p ()
-  (and (company-tooltip-visible-p)
-       (company-explicit-action-p)))
-
-(defun company-smart-complete ()
-  "complete with tab if we've specifically selected a completion.
-Otherwise select next."
-  (interactive)
-  (if (or (eq last-command 'company-select-next)
-          (eq last-command 'company-select-previous))
-      (company-complete)
-    (company-select-next-if-tooltip-visible-or-complete-selection)))
-
-(defun company-ac-setup ()
-  "Sets up `company-mode' to behave similarly to `auto-complete-mode'."
-  (setq company-require-match nil)
-  (setq company-auto-complete #'company-visible-and-explicit-action-p)
-  (setq company-frontends '(company-echo-metadata-frontend
-                            company-pseudo-tooltip-unless-just-one-frontend-with-delay
-                            company-preview-frontend))
-  (define-key company-active-map [tab] 'company-smart-complete)
-  (define-key company-active-map (kbd "TAB") 'company-smart-complete)
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
-  (define-key company-active-map (kbd "<backtab>") 'company-select-previous))
-
-(add-hook 'company-mode-hook 'company-ac-setup)
+(setq tab-always-indent 't) ;; indent, don't tab or autocomplete.  Turns off default TAB->complete
 
 ;;keep server file out of our pristine .emacs.d directory
-(setq server-auth-dir (expand-file-name "~/.local-emacs/server"))
-(require 'server)
-(or (server-running-p)
-    (server-start))
+;; (setq server-auth-dir (expand-file-name "~/.local-emacs/server"))
+;; (require 'server)
+;; (or (server-running-p)
+;;     (server-start))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Fonts
@@ -166,14 +57,11 @@ Otherwise select next."
 ;; unicode-fonts means we display weird unicode chars that aren't in the default font.  crucial.
 (setq pcache-directory "~/.local-emacs/var/pcache")
 (make-directory pcache-directory 't)
-;; unicode-fonts is crucial, but slow at startup so moved to haskell-mode-hook
-;; (require 'unicode-fonts)
-;; (unicode-fonts-setup)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; End Fonts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;misc
 (global-subword-mode)
 (setq column-number-mode t)
 (require 'uniquify) ;;globally unique buffer names
@@ -186,31 +74,6 @@ Otherwise select next."
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression)
 
-;; Flymake
-(setq flymake-allowed-file-name-masks nil)  ;;otherwise flymake runs for everything
-(add-hook 'find-file-hook 'flymake-find-file-hook)
-(eval-after-load 'flymake '(require 'flymake-cursor))
-(setq flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
-
-;; flymake-cursor - turn off before every command to fix fast scrolling
-(add-hook 'find-file-hook (lambda ()
-  (make-local-variable 'flymake-cursor-is-activated)
-  (setq flymake-cursor-is-activated 't)
-  (add-hook 'pre-command-hook (lambda ()
-    (if (and (boundp 'flymake-cursor-is-activated)
-             flymake-cursor-is-activated)
-        (progn
-          (setq flymake-cursor-is-activated nil)
-          (flymake-cursor-mode -1)))))
-  ;;turn flymake-cursor back on when we're idle
-  (run-with-idle-timer flymake-cursor-error-display-delay 't (lambda ()
-    (if (and (boundp 'flymake-cursor-is-activated)
-             (not flymake-cursor-is-activated)
-             flymake-mode) ;; this logic will break if flymake-cursor-mode is deactivated independently
-        (progn
-          (setq flymake-cursor-is-activated 't)
-          (flymake-cursor-mode +1)
-          (flymake-cursor-show-errors-at-point-pretty-soon)))))))
 
 
 ;;get rid of existing overlay properties
@@ -245,21 +108,6 @@ Otherwise select next."
 
 
 ;; hide/show mode
-(defun sane-hs-toggle-hiding ()
-  (interactive)
-  (let ((found-hs-overlay nil))
-    (save-excursion
-      (ignore-errors (left-char 1))
-      ;; if there's a hide-show overlay one character to the left, bump point to the line
-      ;; beginning so it doesn't get swept to the end of the block when we toggle hiding
-      (if (ignore-errors (overlay-get (car (overlays-at (point))) 'hs))
-          (setq found-hs-overlay 't)))
-    (if found-hs-overlay (move-beginning-of-line nil))
-    (save-excursion
-      (move-beginning-of-line nil) (end-of-line) (hs-toggle-hiding))
-    ;; now put point back at the end of the line since that's where it started visually
-    (if found-hs-overlay (end-of-line))))
-
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
 (add-hook 'java-mode-hook       'hs-minor-mode)
@@ -273,73 +121,6 @@ Otherwise select next."
 (add-hook 'python-mode-hook 'hs-minor-mode)
 (add-hook 'go-mode-hook         'hs-minor-mode)
 
-;; make M-z evaluate "this" sexp
-(defun slime-evaluate-this-sexp ()
-  (interactive)
-  (save-excursion
-    (paredit-forward-up)
-    (slime-eval-last-expression)
-    )
-  )
-
-
-;; make M-Z evaluate EOL sexp
-(defun slime-evaluate-EOL-sexp ()
-  (interactive)
-  (save-excursion
-    (paredit-forward-up)
-    (move-end-of-line nil)
-    (slime-eval-last-expression)
-    )
-  )
-
-;;buffer flipping
-(require 'iflipb)
-;; turn off iflip coming all the way around (the default)
-(setq iflipb-wrap-around nil)
-;; set a timer so that pausing also resets the flip
-(setq my-iflipb-timeout 0.8)
-
-;; don't flip to buffers that are showing
-(defun buffer-showing? (b)
-  (let ((showing-buffer-names
-         (mapcar (lambda (w) (buffer-name (window-buffer w)))
-                 (window-list (car (visible-frame-list)))))) ;;assuming single frame...
-    ;; remove current buffer - it's eligible to be switched
-    (setq showing-buffer-names
-          (delq (buffer-name (current-buffer)) showing-buffer-names))
-    (memq b showing-buffer-names)))
-
-;; Customize this var to ignore buffers that are showing.
-;; This var is smart - if it's a list it filters using every elt
-(setq iflipb-always-ignore-buffers
-      (list
-       ;; default value
-       (car (get 'iflipb-always-ignore-buffers 'standard-value))
-       ;; also use our filtering function
-       (symbol-function 'buffer-showing?)))
-
-(setq my-iflipb-timer-object nil)
-(defun my-iflipb-timer-cancel ()
-  (cancel-timer my-iflipb-timer-object)
-  (setq my-iflipb-timer-object nil))
-
-(defun my-iflipb-timer-restart (arg)
-  (if my-iflipb-timer-object
-      ;; kill the running timer
-      (cancel-timer my-iflipb-timer-object))
-  (setq my-iflipb-timer-object
-        (run-with-idle-timer my-iflipb-timeout nil 'my-iflipb-timer-cancel)))
-
-(defun my-iflipb-timer-expired ()
-  (not my-iflipb-timer-object))
-
-;; pretend this is the first flip if timer is expired even if this predicate is nil
-(advice-add 'iflipb-first-iflipb-buffer-switch-command
-            :after-until 'my-iflipb-timer-expired)
-;; reset timer after each flip
-(advice-add 'iflipb-next-buffer :after 'my-iflipb-timer-restart)
-(advice-add 'iflipb-previous-buffer :after 'my-iflipb-timer-restart)
 
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
@@ -363,73 +144,20 @@ Otherwise select next."
   )
 
 ;; hippie expand is dabbrev expand on steroids
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
-
-;; ido-mode
-(ido-mode t)
-(setq ido-enable-prefix nil
-      ido-enable-flex-matching t
-      ido-create-new-buffer 'always
-      ido-use-filename-at-point 'guess
-      ido-max-prospects 10
-      ido-save-directory-list-file (concat emacs-savefile-dir "ido.hist")
-      ido-default-file-method 'selected-window)
-
-;; auto-completion in minibuffer
-(icomplete-mode +1)
-(setq ido-create-new-buffer 'always)
-(set-default 'imenu-auto-rescan t)
-
-;; Display ido results vertically, rather than horizontally
-(require 'ido-vertical-mode)
-(setq ido-vertical-show-count 't)
-(ido-vertical-mode 't)
-(setq ido-max-prospects 4)
-
-
-(setq ido-completion-buffer nil)
-(defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
-(add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
-
-;; don't want to open stuff automatically
-(setq ido-confirm-unique-completion 't)
-(add-hook 'ido-setup-hook
-	  (lambda ()
-              ;;need these for vertical results mode
-	      (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
-	      (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
-	      (define-key ido-completion-map (kbd "C-p") 'ido-prev-match)
-	      (define-key ido-completion-map (kbd "<up>") 'ido-prev-match)
-              ;;map m-bsp to just bsp because that's how it acts in ido mode
-	      (define-key ido-completion-map (kbd "M-<del>") 'ido-delete-backward-word-updir)
-	      (define-key ido-completion-map (kbd "M-<backspace>") 'ido-delete-backward-word-updir)
-              ;;get rid of annoying "kill file" function
-	      (define-key ido-completion-map (kbd "C-k") nil)
-              ;;C-a goes to the front of the directory tree (home directory)
-	      (define-key ido-completion-map (kbd "C-a") (lambda () (interactive)
-                    (ido-set-current-home)
-                    (setq refresh t) (setq ido-exit 'refresh) (exit-minibuffer)))
-	      ))
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-all-abbrevs
+        try-expand-list
+        try-expand-line
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol))
 
 ;; rotate windows within a frame
 (require 'transpose-frame)
-
-;;ace jump mode
-(require 'ace-jump-mode)
-(eval-after-load "ace-jump-mode"
-  '(ace-jump-mode-enable-mark-sync))
-(setq ace-jump-mode-case-fold t) ;; case insensitive
-(setq ace-jump-mode-move-keys
-      (loop for i from ?a to ?z collect i)) ;;only lowercase jump characters
 
 ;; eshell customizations
 ;;   fix colors
@@ -448,31 +176,6 @@ Otherwise select next."
 ;;   add this line to the bottom of .bash_aliases to parse your bash
 ;;   aliases into an eshell "alias" file:
 ;;   alias | sed -E "s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;" > ~/.local-emacs/auto-save-list/eshell/alias
-
-;; save point location
-(require 'saveplace)
-(setq-default save-place t)
-(setq save-place-file (concat emacs-savefile-dir "saved-places"))
-
-;; Save all backup files in this directory (no ~files lying around) 
-(unless (file-exists-p emacs-savefile-dir)
-  (make-directory emacs-savefile-dir 't))
-(setq auto-save-list-file-prefix (concat emacs-savefile-dir ".saves-"))
-(setq backup-directory-alist `((".*" . ,emacs-savefile-dir)))
-(setq auto-save-file-name-transforms
-          `((".*" ,emacs-savefile-dir t)))
-
-;; Enable versioning with default values
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   make-backup-files t
-   version-control t)       ; use versioned backups
-
-(require 'ntcmd)
-(add-to-list 'auto-mode-alist '("\\.bat\\'" . ntcmd-mode))
 
 ;; fix eshell problems on windows
 (if (eq system-type 'windows-nt) (setenv "CDPATH" nil))
@@ -550,8 +253,27 @@ Otherwise select next."
     ;; not the starting directory
     (mapc #'find-file (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
 
-;;paredit for things that want it
-(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+;; save point location
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (concat emacs-savefile-dir "saved-places"))
+
+;; Save all backup files in this directory (no ~files lying around) 
+(unless (file-exists-p emacs-savefile-dir)
+  (make-directory emacs-savefile-dir 't))
+(setq auto-save-list-file-prefix (concat emacs-savefile-dir ".saves-"))
+(setq backup-directory-alist `((".*" . ,emacs-savefile-dir)))
+(setq auto-save-file-name-transforms
+          `((".*" ,emacs-savefile-dir t)))
+
+;; Enable versioning with default values
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   make-backup-files t
+   version-control t)       ; use versioned backups
 
 ;;el-doc for lisp languages
 (add-hook 'lisp-interaction-mode-hook 'eldoc-mode)
@@ -562,6 +284,7 @@ Otherwise select next."
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; bash-completion-dynamic-complete plus tweaks
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    (use-package bash-completion)                               
     (autoload 'bash-completion-dynamic-complete "bash-completion" "BASH completion hook")
     (require 'cl-lib)
 
@@ -677,43 +400,113 @@ Otherwise select next."
     (setq kill-ring old-kill-ring)
     (setq kill-ring-yank-pointer old-kill-ring-yank-pointer)))
 
-;;preserve old definitions of paredit-*-word and override with preserve-kill-ring
-(add-hook 'paredit-mode-hook (lambda ()
-  (if (not (fboundp 'paredit-forward-kill-word-orig))
-      (fset 'paredit-forward-kill-word-orig (symbol-function 'paredit-forward-kill-word)))
-  (if (not (fboundp 'paredit-backward-kill-word-orig))
-      (fset 'paredit-backward-kill-word-orig (symbol-function 'paredit-backward-kill-word)))
-   (defun paredit-forward-kill-word ()
-     (interactive)
-     (preserve-kill-ring 'paredit-forward-kill-word-orig))
-   (defun paredit-backward-kill-word ()
-     (interactive)
-     (preserve-kill-ring 'paredit-backward-kill-word-orig))))
+
 
 ;; electric-indent-mode is automatic in emacs 24.4+.
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
-;; due to f586312, must be before projectile-global-mode
-(setq projectile-known-projects-file (concat emacs-savefile-dir "projectile-bookmarks.eld"))
-(projectile-global-mode)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
-;; web-mode and emmet
-(require 'emmet-mode)
-;; (require 'web-mode)
-(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-(add-hook 'sgml-mode-hook 'web-mode)
-(add-hook 'css-mode-hook  'web-mode)
-
+;; TODO - use advice syntax
 (defun emacs-session-filename (session-id)
   "Construct a filename to save the session in based on SESSION-ID.
 This function overrides the one on `x-win' to use `no-littering'
 directories."
   (expand-file-name session-id emacs-savefile-dir))
 
-;; helper to find unbound keys
-(require 'unbound)
-
 ;; enable "undo" of window shape changes
 (winner-mode 1)
+
+;;misc
+(setq delete-by-moving-to-trash t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; New stuff
+;;
+;;   Try out new stuff below here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; glasses mode
+(require 'glasses)
+(setq glasses-original-separator "") ;;prevent separators from being accidentally saved
+(setq glasses-separator "ˈ")
+(setq glasses-separator "")
+(setq glasses-separate-parentheses-p nil)
+(setq glasses-face 'bold)
+(setq glasses-face 'bold-italic)
+(add-hook 'python-mode-hook (lambda () (glasses-mode)))
+(add-hook 'inferior-python-mode-hook (lambda () (glasses-mode)))
+(add-hook 'ess-mode-hook (lambda () (glasses-mode)))
+(add-hook 'inferior-ess-mode-hook (lambda () (glasses-mode)))
+
+;;Comint tweak
+(setq-default comint-input-ring-size 5000)
+
+(setq-default indent-tabs-mode nil)
+
+;; wrapper for ssh on nt using fakecygpty
+(if (eq system-type 'windows-nt)
+    (defun ssh (hostname port &optional flags)
+      "Start an SSH session in a shell window. 
+  C-u <port number> M-x ssh
+to specify a custom port"
+      (interactive "MSSH to host: \nP")
+      (let* ((buf (concat "*SSH:" hostname "*"))
+             (port (if port port 22))
+             (port-flag (concat "-p " (format "%d " port))))
+        (if (and (get-buffer buf) (get-buffer-process buf))
+            (switch-to-buffer-other-window buf)
+          (async-shell-command (concat "fakecygpty ssh " port-flag flags (when flags " ") hostname) buf)))))
+
+;; tramp customizations 
+(setq tramp-persistency-file-name "~/.local-emacs/tramp")
+(if (eq system-type 'windows-nt)
+    (progn
+      ;; add a function that asks for a password
+      (defun ssh-add-process-filter (process string)
+        (save-match-data
+          (if (string-match ":\\s *\\'" string)
+              (process-send-string process (concat (read-passwd string) "\n"))
+            (message "%s" string))))
+      (defun ssh-add (key-file)
+        "Run ssh-add to add a key to the running SSH agent. Let
+        Emacs prompt for the passphrase."
+        (interactive "fAdd key: \n")
+        (let ((process-connection-type t)
+              process)
+          (unwind-protect
+              (progn
+                (setq process (start-process "ssh-add" nil
+                                             "ssh-add" (expand-file-name key-file)))
+                (set-process-filter process 'ssh-add-process-filter)
+                (while (accept-process-output process)))
+            (if (eq (process-status process) 'run)
+                (kill-process process)))))
+
+      ;; must use fakecygpty so ssh process doesn't hang
+      (eval-after-load "tramp"
+        '(progn
+           (add-to-list 'tramp-methods
+                        (mapcar
+                         (lambda (x)
+                           (cond
+                            ((equal x "sshx") "cygssh")
+                            ((eq (car x) 'tramp-login-program) (list 'tramp-login-program "fakecygpty ssh"))
+                            (t x)))
+                         (assoc "sshx" tramp-methods)))
+           (setq tramp-default-method "cygssh")))))
+
+(setq tramp-backup-directory-alist backup-directory-alist)
+
+;; ffap will aggressively try and open files if there's a url.  Don't let it.
+(setq ffap-machine-p-known 'accept) ; no pinging
+(setq ffap-url-regexp nil)         ; disable URL features in ffap
+
+;; customize isearch behavior
+(defun isearch-with-region ()
+  "Use region as the isearch text."
+  (when mark-active
+    (let ((region (funcall region-extract-function nil)))
+      (deactivate-mark)
+      (isearch-push-state)
+      (isearch-yank-string region))))
+
+(add-hook 'isearch-mode-hook #'isearch-with-region)

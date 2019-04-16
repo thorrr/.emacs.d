@@ -231,3 +231,54 @@
 (defun subword-forward-delete (arg)
   (interactive "p")
   (preserve-kill-ring 'subword-kill arg))
+
+(defun smart-auto-complete ()
+  "indent if we're in whitespace at the beginning of the line, else start auto-complete"
+  (interactive)
+  (let ((current-point (point))
+        (bol nil)
+        (first-non-whitespace nil))
+    (save-excursion
+      (move-beginning-of-line nil)
+      (setq bol (point))
+      (re-search-forward "[^ ]" nil 't)
+      (setq first-non-whitespace (point)))
+    (if (and (>= current-point bol) (<= current-point first-non-whitespace))
+        (funcall indent-line-function)
+      (cond ((bound-and-true-p auto-complete-mode) (auto-complete))
+            ((bound-and-true-p company-mode) (company-indent-or-complete-common))))))
+
+(defun sane-hs-toggle-hiding ()
+  (interactive)
+  (let ((found-hs-overlay nil))
+    (save-excursion
+      (ignore-errors (left-char 1))
+      ;; if there's a hide-show overlay one character to the left, bump point to the line
+      ;; beginning so it doesn't get swept to the end of the block when we toggle hiding
+      (if (ignore-errors (overlay-get (car (overlays-at (point))) 'hs))
+          (setq found-hs-overlay 't)))
+    (if found-hs-overlay (move-beginning-of-line nil))
+    (save-excursion
+      (move-beginning-of-line nil) (end-of-line) (hs-toggle-hiding))
+    ;; now put point back at the end of the line since that's where it started visually
+    (if found-hs-overlay (end-of-line))))
+
+;; incomplete - add a hook to spit it into the current buffer, not the comint buffer
+(defun comint-insert-history ()
+  (interactive)
+  (cond ((or (null comint-input-ring) (ring-empty-p comint-input-ring)) nil)
+	(t (let* ((ring comint-input-ring)
+                  (index (ring-length ring)))
+	     (while (> index 0)
+	       (setq index (1- index))
+	       (insert (ring-ref ring index) comint-input-ring-separator))))))
+
+(defun narrow-to-region-indirect (start end)
+  "Restrict editing in this buffer to the current region, indirectly."
+  (interactive "r")
+  (deactivate-mark)
+  (let ((buf (clone-indirect-buffer nil nil)))
+    (with-current-buffer buf
+      (narrow-to-region start end))
+      (switch-to-buffer buf)))
+

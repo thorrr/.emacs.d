@@ -1,7 +1,12 @@
-(autoload 'clojure-mode "clojure-mode" "A major mode for Clojure" t)
-(add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
+(use-package clojure-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
+  ;; keep in sync with 'master' on github
+  :pin melpa)
 
-(add-hook 'clojure-mode-hook #'paredit-mode)
 
-;; this version roughly tracks "master"
-(add-to-list 'package-pinned-packages '(cider . "melpa") 't)
+
+
+
+
+

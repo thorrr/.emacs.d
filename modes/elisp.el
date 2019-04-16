@@ -10,8 +10,12 @@
               (lambda () (xref-pop-marker-stack)))
 ))
 
+(use-package paredit
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+  )
 
-(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+;; (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 
 (defun elisp-find-definition (name)  ;;from http://lists.gnu.org/archive/html/help-gnu-emacs/2009-09/msg00669.html
