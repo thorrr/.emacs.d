@@ -253,11 +253,6 @@
     ;; not the starting directory
     (mapc #'find-file (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
 
-;; save point location
-(require 'saveplace)
-(setq-default save-place t)
-(setq save-place-file (concat emacs-savefile-dir "saved-places"))
-
 ;; Save all backup files in this directory (no ~files lying around) 
 (unless (file-exists-p emacs-savefile-dir)
   (make-directory emacs-savefile-dir 't))
@@ -265,6 +260,12 @@
 (setq backup-directory-alist `((".*" . ,emacs-savefile-dir)))
 (setq auto-save-file-name-transforms
           `((".*" ,emacs-savefile-dir t)))
+
+;; save point location
+(if (fboundp 'save-place-mode)
+  (save-place-mode +1)
+  (setq-default save-place t)
+  (setq save-place-file (concat emacs-savefile-dir "saved-places")))
 
 ;; Enable versioning with default values
 (setq
