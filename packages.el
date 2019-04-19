@@ -489,6 +489,7 @@
   (speedbar-show-unknown-files 't))
 
 (use-package magit
+  :commands (magit-status)
   :custom
   (magit-last-seen-setup-instructions "1.4.0")
   (magit-bury-buffer-function #'magit-kill-buffers)
