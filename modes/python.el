@@ -15,8 +15,6 @@
 (setq python-use-pylint 't)
 (setq auto-detect-virtualenv 't)
 (setq auto-python-just-source-file 't)
-(require 'python-goodies)
-
 
 (add-to-list 'python-indent-trigger-commands 'smart-auto-complete)
 
