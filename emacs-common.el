@@ -1,5 +1,8 @@
-(setq gc-cons-threshold-orig gc-cons-threshold)
-(setq gc-cons-threshold 499999999) ;;speed up init by turning off gc
+(setq gc-cons-threshold 64000000)  ;; speed up init by turning off gc
+(add-hook 'after-init-hook #'(lambda ()
+                               ;; restore after startup
+                               (setq gc-cons-threshold 800000)))
+
 (setq debug-on-error 't)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -52,5 +55,4 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq gc-cons-threshold gc-cons-threshold-orig) ;;end temporary rebind of gc-cons-threshold
 (setq debug-on-error nil)
