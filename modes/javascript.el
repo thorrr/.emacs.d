@@ -1,7 +1,6 @@
 (use-package js2-mode
   :commands js2-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  :mode "\\.js\\'"
   :bind (:map js2-mode-map
          ("C-k" . js2r-kill)
          ;; this makes js2-mode work with the indent-region from rjsx-mode
@@ -24,8 +23,7 @@
 
 (use-package js2-refactor
   :commands js2-refactor-mode
-  :init
-  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+  :hook (js2-refactor-mode . js2-mode)
   :config
   (js2r-add-keybindings-with-prefix "C-c C-r"))
 
@@ -35,8 +33,7 @@
 
 (use-package rjsx-mode
   :commands rjsx-mode
-  :init
-  (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)))
+  :mode "components\\/.*\\.js\\'")
 
 ;; ac-js2 seems to work decently well
 (use-package ac-js2
