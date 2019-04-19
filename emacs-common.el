@@ -3,6 +3,12 @@
                                ;; restore after startup
                                (setq gc-cons-threshold 800000)))
 
+;; we don't need this set during loading of .el files
+(defvar file-name-handler-alist-real file-name-handler-alist)
+(setq file-name-handler-alist nil)
+(add-hook 'emacs-startup-hook #'(lambda ()
+                                  (setq file-name-handler-alist file-name-handler-alist-real)))
+
 (setq debug-on-error 't)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
