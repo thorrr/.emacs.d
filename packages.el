@@ -116,9 +116,12 @@
   :bind ("C-M-/" . undo-tree-visualize))
 
 (use-package yasnippet
+  :defer 3 ;; too many hooks to list in :commands
   :config (yas-global-mode 1))
-(use-package yasnippet-snippets)
-(use-package php-auto-yasnippets)
+(use-package yasnippet-snippets
+  :after yasnippet)
+(use-package php-auto-yasnippets
+  :after yasnippet)
 
 (defun ac-select-current ()
   (interactive)
