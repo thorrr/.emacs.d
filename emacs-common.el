@@ -30,16 +30,16 @@
     (setq emacs-config-root (expand-file-name "~/.emacs.d/")))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO - make the order not matter
-;; load external packages first
+;; load external packages first.  This has to be first so use-package is defined for
+;; everyone.
 (load (concat emacs-config-root "packages.el"))
 ;; all face customizations must come after load-theme
 (load-theme 'zenburn 't nil)
 
 (load (concat emacs-config-root "config.el"))
-(load (concat emacs-config-root "global-keybindings.el"))
 ;; All interactive commands
 (load (concat emacs-config-root "commands.el"))
+(load (concat emacs-config-root "global-keybindings.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Language Setup
