@@ -99,12 +99,20 @@
 ;;                     )
 
 ;; recentf
-(require 'recentf)
-(setq recentf-save-file (concat emacs-savefile-dir ".recentf"))
-(recentf-mode 1)
-(setq recentf-auto-cleanup 'never)
-(setq recentf-max-saved-items 100)
-(setq recentf-max-menu-items 60)
+(use-package recentf
+  :ensure nil ;; it's a builtin
+  :commands recentf-open-files
+  :custom
+  (recentf-save-file (concat emacs-savefile-dir ".recentf"))
+  (recentf-auto-cleanup 'never)
+  (recentf-max-saved-items 100)
+  (recentf-max-menu-items 60)
+  :config
+  (recentf-mode 1))
+;; (require 'recentf)
+
+
+
 
 
 ;; hide/show mode
