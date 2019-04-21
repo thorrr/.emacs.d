@@ -335,6 +335,7 @@
       (preserve-kill-ring 'paredit-backward-kill-word-orig)))))
 
 (use-package flymake
+  :ensure nil ;; use builtin version
   :custom
   (flymake-allowed-file-name-masks nil)  ;;otherwise flymake runs for everything
   (flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
@@ -342,7 +343,7 @@
   (find-file . flymake-find-file-hook))
 
 (use-package flymake-cursor
-  :requires flymake
+  :after (flymake) ;; don't use ensure because now we're using builtin flymake
   :hook
   ;; flymake-cursor - turn off before every command to fix fast scrolling
   (find-file . (lambda ()
