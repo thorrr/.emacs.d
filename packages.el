@@ -488,6 +488,9 @@
   :custom
   (magit-last-seen-setup-instructions "1.4.0")
   (magit-bury-buffer-function #'magit-kill-buffers)
+  (transient-levels-file (concat emacs-savefile-dir "transient/levels.el"))
+  (transient-values-file (concat emacs-savefile-dir "transient/values.el"))
+  (transient-history-file (concat emacs-savefile-dir "transient/history.el"))
   :config
   (defadvice magit-expand-git-file-name
       (before magit-expand-git-file-name-cygwin activate)
