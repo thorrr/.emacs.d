@@ -630,5 +630,7 @@
 
 (use-package dumb-jump)
 
-(use-package flycheck)
+(use-package flycheck
+  :commands flycheck-mode)
+
 (use-package zenburn-theme)
