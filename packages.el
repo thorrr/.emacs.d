@@ -334,24 +334,15 @@
       (interactive)
       (preserve-kill-ring 'paredit-backward-kill-word-orig)))))
 
-;; Flymake
-(el-get-bundle emacs-flymake
-  :url "https://github.com/illusori/emacs-flymake.git")
-
 (use-package flymake
-  :ensure nil ;; use el-get version
   :custom
   (flymake-allowed-file-name-masks nil)  ;;otherwise flymake runs for everything
   (flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
   :hook
   (find-file . flymake-find-file-hook))
 
-(el-get-bundle emacs-flymake-cursor
-  :url "https://github.com/illusori/emacs-flymake-cursor.git")
 (use-package flymake-cursor
-  :ensure nil ;; use el-get version
   :requires flymake
-
   :hook
   ;; flymake-cursor - turn off before every command to fix fast scrolling
   (find-file . (lambda ()
