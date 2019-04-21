@@ -1,4 +1,5 @@
 (use-package go-mode
+  :mode "\\.go\\'"
   :after (company flycheck auto-complete)
   :config
   (add-hook 'go-mode-hook 'dumb-jump-mode)
@@ -15,11 +16,12 @@
   (setq go-packages-function 'go-packages-go-list))
 
 (use-package company-ycmd
-  :after (:all company)
+  :after (company)
   :config
   (company-ycmd-setup))
 
 (use-package flycheck-ycmd
+  :after (flycheck)
   :config
   (flycheck-ycmd-setup))
 
