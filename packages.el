@@ -77,6 +77,7 @@
 
   :config
   (require 'auto-complete-config)
+  (add-to-list 'ac-modes 'eshell-mode)
 
   :custom
   (ac-comphist-file (concat emacs-savefile-dir "ac-comphist.dat"))
@@ -555,6 +556,9 @@
 
 (el-get-bundle transpose-frame
   :url "https://github.com/emacsmirror/transpose-frame.git")
+(use-package transpose-frame
+  :ensure nil ;; use el-get version
+  )
 
 (el-get-bundle undo-tree-0.6.6
   :url "https://github.com/emacsmirror/undo-tree.git")

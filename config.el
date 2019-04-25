@@ -148,9 +148,6 @@
         try-complete-lisp-symbol-partially
         try-complete-lisp-symbol))
 
-;; rotate windows within a frame
-(require 'transpose-frame)
-
 ;; eshell customizations
 ;;   fix colors
 (require 'ansi-color)
@@ -226,7 +223,6 @@
 
 (add-hook 'eshell-mode-hook #'(lambda () (setq ac-sources '(ac-source-pcomplete))))
 
-(add-to-list 'ac-modes 'eshell-mode)
 ;; make auto-complete start sooner in eshell
 (add-hook 'eshell-mode-hook #'(lambda ()
   (setq-local ac-auto-start 3)
