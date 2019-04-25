@@ -194,8 +194,12 @@
   :hook
   (find-file . flymake-find-file-hook))
 
+(el-get-bundle flymake-cursor
+  ;; this fork has emacs 26+ compatibility
+  :url "https://github.com/akash-akya/emacs-flymake-cursor.git")
 (use-package flymake-cursor
-  :after (flymake) ;; don't use ensure because now we're using builtin flymake
+  :ensure nil ;; use el-get-bundle version
+  :after (flymake)
   :hook
   ;; flymake-cursor - turn off before every command to fix fast scrolling
   (find-file . (lambda ()
