@@ -74,22 +74,6 @@
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression)
 
-
-
-;;get rid of existing overlay properties
-;; (face-spec-reset-face 'flymake-errline)
-;; (face-spec-reset-face 'flymake-warnline)
-;; (face-spec-reset-face 'flymake-infoline)
-;; ;; customize the flymake overlay.
-;; (set-face-attribute 'flymake-errline nil :inherit nil :background "HotPink4")
-;; (set-face-attribute 'flymake-warnline nil :inherit nil :background "#3D4D3B")
-;; (set-face-attribute 'flymake-infoline nil :inherit nil :background "grey30")
-;; (add-hook 'flymake-mode-hook (lambda () 
-;;                                (local-set-key (kbd "M-P") 'flymake-goto-prev-error)
-;;                                (local-set-key (kbd "M-N") 'flymake-goto-next-error)
-;;                                ))
-
-
 ;; ;; show-paren customizations
 ;; (face-spec-reset-face 'show-paren-match)
 ;; (set-face-attribute 'show-paren-match nil
