@@ -125,19 +125,22 @@
 (use-package php-auto-yasnippets
   :after yasnippet)
 
-(defun ac-select-current ()
-  (interactive)
-  (if (or (eq last-command 'ac-previous)
-          (eq last-command 'ac-next)
-          (eq last-command 'ac-expand)
-          (eq last-command 'ac-expand-previous)
-          (eq last-command 'ac-expand-common)
-          (eq last-command 'ac-complete))
-      ;; disable all "RET" functions
-      (cl-letf (((symbol-function 'newline) (lambda (&optional arg interactive) (interactive "*P\np")))
-                ((symbol-function 'newline-and-indent) (lambda () (interactive "*"))))
-        (ac-complete))))
 (use-package auto-complete
+  :init
+  ;; must be defined before :bind section
+  (defun ac-select-current ()
+    (interactive)
+    (if (or (eq last-command 'ac-previous)
+            (eq last-command 'ac-next)
+            (eq last-command 'ac-expand)
+            (eq last-command 'ac-expand-previous)
+            (eq last-command 'ac-expand-common)
+            (eq last-command 'ac-complete))
+        ;; disable all "RET" functions
+        (cl-letf (((symbol-function 'newline) (lambda (&optional arg interactive) (interactive "*P\np")))
+                  ((symbol-function 'newline-and-indent) (lambda () (interactive "*"))))
+          (ac-complete))))
+
   :config
   (require 'auto-complete-config)
 
@@ -154,6 +157,7 @@
   (ac-config-default)
   (add-to-list 'ac-sources 'ac-source-yasnippet)
 
+
   :bind (:map ac-completing-map
               ("\e" . ac-stop)
               ("RET" . ac-select-current)
@@ -164,27 +168,31 @@
               ("RET" . ac-select-current)
               ([return] . ac-select-current)))
 
-;; company mode
-(defun company-visible-and-explicit-action-p ()
-  (and (company-tooltip-visible-p)
-       (company-explicit-action-p)))
-(defun company-smart-complete ()
-  "complete with tab if we've specifically selected a completion.
-  Otherwise select next."
-  (interactive)
-  (if (or (eq last-command 'company-select-next)
-          (eq last-command 'company-select-previous))
-      (company-complete)
-    (company-select-next-if-tooltip-visible-or-complete-selection)))
 (use-package company
+  :init
+  ;; these must be in :init because they're used in :bind
+  (defun company-visible-and-explicit-action-p ()
+    (and (company-tooltip-visible-p)
+         (company-explicit-action-p)))
+  (defun company-smart-complete ()
+    "complete with tab if we've specifically selected a completion.
+     Otherwise select next."
+    (interactive)
+    (if (or (eq last-command 'company-select-next)
+            (eq last-command 'company-select-previous))
+        (company-complete)
+      (company-select-next-if-tooltip-visible-or-complete-selection)))
+
   :custom
   ;; the following variables + keybindings make company-mode behave similarly to
   ;; auto-complete-mode
+
   (company-require-match nil)
   (company-auto-complete #'company-visible-and-explicit-action-p)
   (company-frontends '(company-echo-metadata-frontend
                        company-pseudo-tooltip-unless-just-one-frontend-with-delay
                        company-preview-frontend))
+
   :bind (:map company-active-map
          ([tab] . company-smart-complete)
          ("TAB" . company-smart-complete)
@@ -196,10 +204,6 @@
 ;;buffer flipping
 (el-get-bundle iflipb
   :url "https://github.com/emacsmirror/iflipb.git")
-
-;; the iflipb customizations are too complicated to thread through the use-package
-;; constructs so wrap it in a big init function
-
 
 (use-package iflipb
   :ensure nil ;; use el-get version
@@ -369,15 +373,16 @@
           (flymake-cursor-mode +1)
           (flymake-cursor-show-errors-at-point-pretty-soon))))))))
 
-;; due to f586312, must be before projectile-global-mode
-(setq projectile-known-projects-file (concat emacs-savefile-dir "projectile-bookmarks.eld"))
 (use-package projectile
+  :init
+  ;; due to f586312, must be before projectile-global-mode
+  (setq projectile-known-projects-file (concat emacs-savefile-dir "projectile-bookmarks.eld"))
+
   :config
   (projectile-global-mode)
   (use-package ag)
   :bind-keymap
   ("C-c p" . projectile-command-map))
-
 
 ;; real-auto-save allows mode-specific auto saving
 (el-get-bundle auto-save-buffer
