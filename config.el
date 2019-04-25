@@ -111,24 +111,8 @@
   (recentf-mode 1))
 ;; (require 'recentf)
 
-
-
-
-
 ;; hide/show mode
-(add-hook 'c-mode-common-hook   'hs-minor-mode)
-(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
-(add-hook 'java-mode-hook       'hs-minor-mode)
-(add-hook 'lisp-mode-hook       'hs-minor-mode)
-(add-hook 'perl-mode-hook       'hs-minor-mode)
-(add-hook 'sh-mode-hook         'hs-minor-mode)
-(add-hook 'ess-mode-hook        'hs-minor-mode)
-(add-hook 'scala-mode-hook      'hs-minor-mode)
-(add-hook 'ensime-mode-hook     'hs-minor-mode)
-(add-hook 'ensime-scala-mode-hook 'hs-minor-mode)
-(add-hook 'python-mode-hook 'hs-minor-mode)
-(add-hook 'go-mode-hook         'hs-minor-mode)
-
+(add-hook 'prog-mode-hook (lambda () (hs-minor-mode)))
 
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
