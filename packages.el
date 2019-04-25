@@ -416,6 +416,7 @@
 
 (use-package loccur
   ;; press C-o to do an occur buffer during an interactive search
+  :commands (run-occur-during-interactive-search)
   :bind (:map loccur-mode-map
         ("C-g" . (lambda ()
                    (interactive)

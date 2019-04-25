@@ -108,7 +108,6 @@
   (mapcar (lambda (e) (git-update (car e) (cadr e))) git-projects)
   (mapcar (lambda (e) (hg-update (car e) (cadr e))) hg-projects))
 
-(require 'loccur)
 ;; (defun my-occur (&optional regexp)
 ;;   "Switch to the *Occur* buffer or run `occur'."
 ;;   (interactive)
@@ -118,11 +117,12 @@
 
 (defun run-occur-during-interactive-search ()
   (interactive)
-   (let ((case-fold-search isearch-case-fold-search))
-      (loccur (if isearch-regexp isearch-string
-                (regexp-quote isearch-string)))
-      ;;(switch-to-buffer-other-window "*Occur*")
-      ))
+  (require 'loccur)
+  (let ((case-fold-search isearch-case-fold-search))
+    (loccur (if isearch-regexp isearch-string
+              (regexp-quote isearch-string)))
+    ;;(switch-to-buffer-other-window "*Occur*")
+    ))
 
 (defun write-last-macro-to-messages ()
   "Write the last macro to *Messages*."
