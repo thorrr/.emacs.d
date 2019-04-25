@@ -30,9 +30,6 @@
 ;; load external packages first.  This has to be first so use-package is defined for
 ;; everyone.
 (load (concat emacs-config-root "packages.el"))
-;; all face customizations must come after load-theme
-(load-theme 'zenburn 't nil)
-
 (load (concat emacs-config-root "config.el"))
 ;; All interactive commands
 (load (concat emacs-config-root "commands.el"))
