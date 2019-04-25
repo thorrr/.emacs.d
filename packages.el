@@ -427,6 +427,8 @@
    ;; override because this function is broken in minimap
   (defun minimap-sync-overlays () ))
 
+(use-package move-text)
+
 (use-package multiple-cursors
   :custom
   (mc/list-file (concat emacs-savefile-dir ".mc-lists.el"))

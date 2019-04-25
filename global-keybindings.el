@@ -18,7 +18,6 @@
 (define-key keymaps-mode-map (kbd "M-'") 'quote-wrap-forward-word)
 (define-key keymaps-mode-map [C-prior] 'rotate-frame-anticlockwise)
 (define-key keymaps-mode-map [C-next] 'rotate-frame-clockwise)
-(use-package move-text)
 ;;(define-key keymaps-mode-map [M-up] 'move-text-up)
 ;;(define-key keymaps-mode-map [M-down] 'move-text-down)
 (define-key keymaps-mode-map "\M-j" 'join-next-line)
