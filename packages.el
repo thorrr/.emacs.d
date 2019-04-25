@@ -35,6 +35,15 @@
 (add-to-list 'package-archives
              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
+;; uncomment to benchmark emacs startup
+;; (use-package benchmark-init
+;;   :ensure t
+;;   :config
+;;   ;; To disable collection of benchmark data after init is done.
+;;   (add-hook 'after-init-hook 'benchmark-init/deactivate))
+;; also test on command line with:
+;; $ time emacs -l ~/.emacs -batch --eval '(message "Hello, world!")'
+
 (when (not package-archive-contents)
   (let ((prc-run? (ignore-errors (package-refresh-contents))))
     (if (and (eq system-type 'windows-nt) (not prc-run?))
