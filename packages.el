@@ -603,8 +603,8 @@
 
 (use-package expand-region)   ;; shortcuts stored in global-keymaps-mode.el
 
-;; cygwin only - helper for ssh-agent
 (use-package keychain-environment
+  ;; cygwin only - helper for ssh-agent
   if (memq system-type '(cygwin windows-nt))
   :config
   (defun shims-first-in-path (orig-fun &rest args)
