@@ -271,9 +271,9 @@
 
 ;; save point location
 (if (fboundp 'save-place-mode)
+  (setq save-place-file (concat emacs-savefile-dir "saved-places"))
   (save-place-mode +1)
-  (setq-default save-place t)
-  (setq save-place-file (concat emacs-savefile-dir "saved-places")))
+  (setq-default save-place t))
 
 ;; Enable versioning with default values
 (setq
