@@ -71,14 +71,6 @@
 (el-get-bundle markdown-mode
   :url "git://jblevins.org/git/markdown-mode.git")
 
-;; TODO - port this to new advice syntax
-(defun undo-tree-basename (filename)
-  "calculate a unique filename for a file's undo tree history"
-  (let* ((hash (substring (secure-hash 'md5 filename) 0 10))
-         (basename (file-name-nondirectory filename))
-         (undo-tree-basename (concat basename "-" hash "-ut")))
-    undo-tree-basename))
-
 (el-get-bundle undo-tree-0.6.6
   :url "https://github.com/emacsmirror/undo-tree.git")
 
@@ -89,6 +81,14 @@
   ;;undo-tree-save-history fn doesn't like being interruped to ask about encodings
   (add-hook 'temp-buffer-setup-hook
             (lambda () (prefer-coding-system 'utf-8)))
+
+  ;; TODO - port this to new advice syntax
+  (defun undo-tree-basename (filename)
+    "calculate a unique filename for a file's undo tree history"
+    (let* ((hash (substring (secure-hash 'md5 filename) 0 10))
+           (basename (file-name-nondirectory filename))
+           (undo-tree-basename (concat basename "-" hash "-ut")))
+      undo-tree-basename))
 
   (defadvice undo-tree-make-history-save-file-name
       (after undo-tree activate)
@@ -112,8 +112,6 @@
   (undo-strong-limit 157286400)
   (undo-tree-enable-undo-in-region nil)
 
-;; (add-hook 'write-file-hooks 'undo-tree-save-history-hook)
-;; (add-hook 'find-file-hook 'undo-tree-load-history-hook)
   :hook ((write-file . undo-tree-save-history)
          (find-file-hook. undo-tree-load-history))
 
@@ -201,48 +199,7 @@
 
 ;; the iflipb customizations are too complicated to thread through the use-package
 ;; constructs so wrap it in a big init function
-(defun __iflibp_init ()
-  ;; don't flip to buffers that are showing
-  (defun buffer-showing? (b)
-    (let ((showing-buffer-names
-           (mapcar (lambda (w) (buffer-name (window-buffer w)))
-                   (window-list (car (visible-frame-list)))))) ;;assuming single frame...
-      ;; remove current buffer - it's eligible to be switched
-      (setq showing-buffer-names
-            (delq (buffer-name (current-buffer)) showing-buffer-names))
-      (memq b showing-buffer-names)))
 
-  ;; This var is smart - if it's a list it filters using every elt
-  (setq iflipb-always-ignore-buffers (list
-    ;; default value
-    (car (get 'iflipb-always-ignore-buffers 'standard-value))
-    ;; also use our filtering function
-    (symbol-function 'buffer-showing?)))
-  ;; set a timer so that pausing also resets the flip
-  (setq my-iflipb-timeout 0.8)
-  (setq my-iflipb-timer-object nil)
-
-  ;; timer methods
-  (defun my-iflipb-timer-cancel ()
-    (cancel-timer my-iflipb-timer-object)
-    (setq my-iflipb-timer-object nil))
-
-  (defun my-iflipb-timer-restart (arg)
-    (if my-iflipb-timer-object
-        ;; kill the running timer
-        (cancel-timer my-iflipb-timer-object))
-    (setq my-iflipb-timer-object
-          (run-with-idle-timer my-iflipb-timeout nil 'my-iflipb-timer-cancel)))
-
-  (defun my-iflipb-timer-expired ()
-    (not my-iflipb-timer-object))
-
-  ;; pretend this is the first flip if timer is expired even if this predicate is nil
-  (advice-add 'iflipb-first-iflipb-buffer-switch-command
-              :after-until 'my-iflipb-timer-expired)
-  ;; reset timer after each flip
-  (advice-add 'iflipb-next-buffer :after 'my-iflipb-timer-restart)
-  (advice-add 'iflipb-previous-buffer :after 'my-iflipb-timer-restart))
 
 (use-package iflipb
   :ensure nil ;; use el-get version
@@ -250,6 +207,49 @@
   ;; turn off iflip coming all the way around (the default)
   (iflipb-wrap-around nil)
   :config
+  (defun __iflibp_init ()
+    ;; don't flip to buffers that are showing
+    (defun buffer-showing? (b)
+      (let ((showing-buffer-names
+             (mapcar (lambda (w) (buffer-name (window-buffer w)))
+                     (window-list (car (visible-frame-list)))))) ;;assuming single frame...
+        ;; remove current buffer - it's eligible to be switched
+        (setq showing-buffer-names
+              (delq (buffer-name (current-buffer)) showing-buffer-names))
+        (memq b showing-buffer-names)))
+    
+    ;; This var is smart - if it's a list it filters using every elt
+    (setq iflipb-always-ignore-buffers (list
+      ;; default value
+      (car (get 'iflipb-always-ignore-buffers 'standard-value))
+      ;; also use our filtering function
+      (symbol-function 'buffer-showing?)))
+    ;; set a timer so that pausing also resets the flip
+    (setq my-iflipb-timeout 0.8)
+    (setq my-iflipb-timer-object nil)
+    
+    ;; timer methods
+    (defun my-iflipb-timer-cancel ()
+      (cancel-timer my-iflipb-timer-object)
+      (setq my-iflipb-timer-object nil))
+    
+    (defun my-iflipb-timer-restart (arg)
+      (if my-iflipb-timer-object
+          ;; kill the running timer
+          (cancel-timer my-iflipb-timer-object))
+      (setq my-iflipb-timer-object
+            (run-with-idle-timer my-iflipb-timeout nil 'my-iflipb-timer-cancel)))
+    
+    (defun my-iflipb-timer-expired ()
+      (not my-iflipb-timer-object))
+    
+    ;; pretend this is the first flip if timer is expired even if this predicate is nil
+    (advice-add 'iflipb-first-iflipb-buffer-switch-command
+                :after-until 'my-iflipb-timer-expired)
+    ;; reset timer after each flip
+    (advice-add 'iflipb-next-buffer :after 'my-iflipb-timer-restart)
+    (advice-add 'iflipb-previous-buffer :after 'my-iflipb-timer-restart))
+  ;; finally, run the init function
   (__iflibp_init))
 
 (use-package ido-vertical-mode
