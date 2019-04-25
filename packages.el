@@ -70,11 +70,6 @@
   :url "https://github.com/emacsmirror/transpose-frame.git")
 (el-get-bundle markdown-mode
   :url "git://jblevins.org/git/markdown-mode.git")
-(el-get-bundle ac-python-async
-  :url "https://github.com/thorrr/ac-python-async.git")
-(el-get-bundle python-yapf
-  :url "https://github.com/galeo/python-yapf.el.git")
-
 
 ;; TODO - port this to new advice syntax
 (defun undo-tree-basename (filename)
