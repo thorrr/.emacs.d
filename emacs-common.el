@@ -21,9 +21,6 @@
   (format "~/.local-emacs/externals-emacs-%d/" emacs-major-version)
   "Download all emacs packages here.")
 
-(defcustom my-packages '()
-  "List of packages for the local machine")
-
 (if load-file-name
     (setq emacs-config-root (file-name-directory load-file-name))
     ;;else hardcode .emacs.d for esup

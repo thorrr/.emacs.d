@@ -44,21 +44,6 @@
 ;; also test on command line with:
 ;; $ time emacs -l ~/.emacs -batch --eval '(message "Hello, world!")'
 
-(when (not package-archive-contents)
-  (let ((prc-run? (ignore-errors (package-refresh-contents))))
-    (if (and (eq system-type 'windows-nt) (not prc-run?))
-        (let ((package-check-signature nil))
-          (package-refresh-contents)))))
-;;install new packages
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; End init packaging
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package definitions
 ;;
@@ -620,6 +605,7 @@
 
 ;; cygwin only - helper for ssh-agent
 (use-package keychain-environment
+  if (memq system-type '(cygwin windows-nt))
   :config
   (defun shims-first-in-path (orig-fun &rest args)
     "move /shims to beginning of path temporarily"

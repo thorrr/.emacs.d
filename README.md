@@ -23,23 +23,12 @@ Put into `.emacs`.  File `.emacs.d/emacs-common.el` drives the rest of the confi
 
 Adding packages
 ---------------
-Programatically add git repositories with a list of 2-lists:
-
-    (setq git-projects `(
-      ("package-name-A" "https://github.com/rms/package-name-A")
-      ("package-name-B" "https://github.com/rms/package-name-B")
-    )
-
-Or if your package is in ELPA, a list of package names:
-
-    (setq my-packages `(
-      "elpa-package-A" "elpa-package-B"
-    )
+Use the use-package macro.  Put it in packages.el
 
 Changing Common Functionality
 -----------------------------
 * `config.el` - non-programming mode customizations
 * `modes/*.el` - major mode customizations
 * `commands.el` - interactive commands
-* `newstuff.el` - experimental things here
-* `packages.el` - grungy package download handling.  You shouldn't have to touch this.
+* `packages.el` - full of use-package declarations.  Put non-mode
+  specific packages here.
