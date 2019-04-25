@@ -617,7 +617,5 @@
   :config (yas-global-mode 1))
 (use-package yasnippet-snippets
   :after yasnippet)
-(use-package php-auto-yasnippets
-  :after yasnippet)
 
 (use-package zenburn-theme)

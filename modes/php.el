@@ -15,3 +15,5 @@
   :custom
   (phpcbf-standard "PSR2"))
 
+(use-package php-auto-yasnippets
+  :after yasnippet)
