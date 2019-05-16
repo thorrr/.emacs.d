@@ -45,7 +45,7 @@
 (unless (require 'el-get nil 'noerror)
   (require 'package)
   (add-to-list 'package-archives
-               '("melpa" . "http://melpa.org/packages/"))
+               '("melpa" . "https://melpa.org/packages/"))
   (package-refresh-contents)
   (package-initialize)
   (package-install 'el-get)
@@ -62,7 +62,7 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
-             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 ;; uncomment to benchmark emacs startup
 (use-package benchmark-init
