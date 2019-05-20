@@ -355,6 +355,14 @@
         (setenv "PATH" old-path))))
   (advice-add 'keychain-refresh-environment :around #'shims-first-in-path))
 
+(use-package keyfreq
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  :custom
+  (keyfreq-file (concat emacs-savefile-dir ".emacs.keyfreq"))
+  (keyfreq-file-lock (concat emacs-savefile-dir ".emacs.keyfreq.lock")))
+
 (use-package linum
   :custom
   (linum-eager nil)  ;;else linum tries to synchronously update after every (next-line)
