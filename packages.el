@@ -70,6 +70,12 @@
   ;;(add-hook 'emacs-lisp-mode-hook 'turn-on-auto-save-buffer)  ;; mode specific auto-save
 )
 
+(el-get-bundle awesome-tab
+  :url "https://github.com/manateelazycat/awesome-tab.git")
+(use-package awesome-tab
+  :ensure nil ;; use el-get versio
+)
+
 (use-package company
   :init
   ;; these must be in :init because they're used in :bind
