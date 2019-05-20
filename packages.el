@@ -438,12 +438,14 @@
   :bind (:map loccur-mode-map
         ("C-g" . (lambda ()
                    (interactive)
-                   (if loccur-mode (loccur-current)) (keyboard-quit)))
+                   (if (fboundp loccur-mode)
+                       (if (loccur-current)) (keyboard-quit))))
          :map isearch-mode-map
         ("C-o" .  loccur-current)
         ("C-g" . (lambda ()
                    (interactive)
-                   (if loccur-mode (loccur-current)) (keyboard-quit)))))
+                   (if (fboundp loccur-mode)
+                       (if loccur-mode (loccur-current)) (keyboard-quit))))))
 
 (use-package magit
   :commands (magit-status)
