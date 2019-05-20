@@ -76,7 +76,21 @@
   :ensure nil ;; use el-get versio
 )
 
+(el-get-bundle blackout
+  :url "https://github.com/raxod502/blackout.git")
+(use-package blackout
+  :ensure nil ;; use-el-get version
+  :config
+  (blackout 'auto-complete-mode)
+  (blackout 'eldoc-mode)
+  (blackout 'flymake-mode)
+  (add-hook 'hs-minor-mode-hook (lambda ()
+            (blackout 'hs-minor-mode)))
+  (add-hook 'ycmd-mode-hook (lambda ()
+            (blackout 'ycmd-mode))))
+
 (use-package company
+  :blackout t
   :init
   ;; these must be in :init because they're used in :bind
   (defun company-visible-and-explicit-action-p ()
@@ -187,6 +201,7 @@
   (advice-add 'company-call-frontends :before #'on-off-fci-before-company))
 
 (use-package flycheck
+  :blackout t
   :commands flycheck-mode
   :init
   (defun flymake-mode-turn-off ()
@@ -235,6 +250,7 @@
           (flymake-cursor-show-errors-at-point-pretty-soon))))))))
 
 (use-package git-gutter-fringe
+  :blackout git-gutter-mode
   :custom
   (git-gutter:handled-backends '(git svn))
   :config
@@ -622,6 +638,7 @@
   (global-yascroll-bar-mode))
 
 (use-package yasnippet
+  :blackout yas-minor-mode
   :defer 3 ;; too many hooks to list in :commands
   :config (yas-global-mode 1))
 (use-package yasnippet-snippets
