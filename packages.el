@@ -102,6 +102,13 @@
          ("C-p" . company-select-previous)
          ("S-TAB" . company-select-previous)
          ("<backtab>" . company-select-previous)))
+(use-package codesearch)
+
+(use-package counsel)
+
+(use-package counsel-codesearch)
+
+(use-package counsel-projectile)
 
 (use-package dired-k
   :init
@@ -278,6 +285,18 @@
   (ido-completion-buffer nil)
   ;; don't want to open stuff automatically
   (ido-confirm-unique-completion 't))
+
+(use-package ivy)
+
+(use-package ivy-hydra)
+
+(use-package ivy-prescient)
+
+(use-package ivy-yasnippet)
+
+(use-package ivy-ycmd)
+
+(use-package counsel )
 
 (el-get-bundle iflipb
   :url "https://github.com/emacsmirror/iflipb.git")
