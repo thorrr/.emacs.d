@@ -553,7 +553,7 @@
   (setq projectile-known-projects-file (concat emacs-savefile-dir "projectile-bookmarks.eld"))
 
   :config
-  (projectile-global-mode)
+  (projectile-mode)
   (use-package ag)
   :bind-keymap
   ("C-c p" . projectile-command-map))
