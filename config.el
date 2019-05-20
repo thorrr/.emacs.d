@@ -483,3 +483,6 @@ to specify a custom port"
       (isearch-yank-string region))))
 
 (add-hook 'isearch-mode-hook #'isearch-with-region)
+
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
