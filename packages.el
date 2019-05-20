@@ -185,8 +185,8 @@
   :init
   (defun flymake-mode-turn-off ()
     (flymake-mode 0))
-  (add-hook 'flycheck-mode-hook 'flymake-mode-turn-off)
-  (add-hook 'eglot--managed-mode-hook 'flymake-mode-turn-off))
+  (add-hook 'flycheck-mode-hook #'flymake-mode-turn-off)
+  (add-hook 'eglot--managed-mode-hook #'flymake-mode-turn-off))
 
 (use-package flymake
   :ensure nil ;; use builtin version
