@@ -496,9 +496,9 @@
 (use-package move-text)
 
 (use-package multiple-cursors
+  :after region-bindings-mode
   :custom
   (mc/list-file (concat emacs-savefile-dir ".mc-lists.el"))
-  :requires region-bindings-mode
   :bind (:map region-bindings-mode-map
         ("a" . 'mc/mark-all-like-this)
         ("p" . 'mc/mark-previous-like-this)
