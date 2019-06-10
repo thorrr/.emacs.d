@@ -639,6 +639,8 @@
   (toggle-scroll-bar -1)
   (global-yascroll-bar-mode))
 
+(use-package yaml-mode)
+
 (use-package yasnippet
   :blackout yas-minor-mode
   :defer 3 ;; too many hooks to list in :commands
