@@ -224,7 +224,10 @@
 
 (el-get-bundle flymake-cursor
   ;; this fork has emacs 26+ compatibility
-  :url "https://github.com/akash-akya/emacs-flymake-cursor.git")
+  :url ;;"https://github.com/akash-akya/emacs-flymake-cursor.git"
+  ;; use this until the pull request is merged
+  "https://github.com/thorrr/emacs-flymake-cursor.git"
+  )
 (use-package flymake-cursor
   :ensure nil ;; use el-get-bundle version
   :after (flymake)
