@@ -12,7 +12,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Add new non-overrideable keymaps here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define-key keymaps-mode-map (kbd "C-c f") 'insert-foo)
 (define-key keymaps-mode-map "\M-g" 'goto-line)
 (define-key keymaps-mode-map (kbd "M-n") 'duplicate-line)
 (define-key keymaps-mode-map (kbd "M-'") 'quote-wrap-forward-word)
