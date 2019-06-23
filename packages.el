@@ -172,7 +172,7 @@
   (defvar i42/fci-mode-suppressed nil)
   (make-variable-buffer-local 'i42/fci-mode-suppressed)
 
-  (defun fci-width-workaround (frame)
+  (defun fci-width-workaround (&optional frame)
     (let ((fci-enabled (symbol-value 'fci-mode))
           (fci-column (if fci-rule-column fci-rule-column fill-column))
           (current-window-list (window-list frame 'no-minibuf)))
@@ -191,6 +191,7 @@
               (setq i42/fci-mode-suppressed t)
               (turn-off-fci-mode)))))))
   (add-hook 'window-size-change-functions 'fci-width-workaround)
+  (add-hook 'window-configuration-change-hook 'fci-width-workaround)
 
   ;; fix for company-mode completion bugs
   (defun on-off-fci-before-company(command)
