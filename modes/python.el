@@ -2,6 +2,10 @@
   :url "https://github.com/thorrr/python-goodies.git")
 (use-package python-goodies
   :ensure nil  ;; use el-get package
+  :config
+  (keymaps-mode-override python-mode
+                       (kbd "M-.") 'xref-find-definitions
+                       (kbd "M-,") 'xref-pop-marker-stack)
 )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python main setup file
@@ -146,11 +150,4 @@
     (if (eq major-mode 'python-mode) (py-yapf-smart)
       (self-insert-command 1))))
 ))
-
-;; override our global keymap's M-. and M-,
-(add-hook 'python-mode-hook (lambda ()
-  (setq-local dumb-jump-go-override (lambda () (call-interactively 'python-goodies/rope-goto-definition)))
-  (setq-local dumb-jump-back-override (lambda () (call-interactively 'python-goodies/rope-go-backward)))
-))
-
 ;; turn off pylint warnings

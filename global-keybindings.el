@@ -8,6 +8,15 @@
   :lighter " keymaps-mode"
   :keymap keymaps-mode-map
 )
+;;;###autoload
+(define-globalized-minor-mode global-keymaps-mode keymaps-mode keymaps-mode)
+
+;; auto-turn-off for some modes
+(add-hook 'minibuffer-setup-hook (lambda () (keymaps-mode -1)))
+(add-hook 'magit-mode-hook (lambda () (keymaps-mode -1)))
+
+;; The keymaps in `emulation-mode-map-alists' take precedence over `minor-mode-map-alist'
+(add-to-list 'emulation-mode-map-alists `((keymaps-mode . ,keymaps-mode-map)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Add new non-overrideable keymaps here
@@ -36,21 +45,9 @@
 (define-key keymaps-mode-map (kbd "M-=") 'er/expand-region) ;; don't need contract because
                                                             ;; the hotkeys are triggered
                                                             ;; on the first press
-
 ;; dumb-jump is awesome
-(defun dumb-jump-go-or-override ()
-  ;; allow overriding dumb-jump with your mode's own jump function
-  (interactive)
-  (if (boundp 'dumb-jump-go-override)
-      (funcall dumb-jump-go-override) (dumb-jump-go)))
-
-(defun dumb-jump-back-or-override ()
-  (interactive)
-  (if (boundp 'dumb-jump-back-override)
-      (funcall dumb-jump-back-override) (dumb-jump-back)))
-
-(define-key keymaps-mode-map (kbd "M-.") 'dumb-jump-go-or-override)
-(define-key keymaps-mode-map (kbd "M-,") 'dumb-jump-back-or-override)
+(define-key keymaps-mode-map (kbd "M-.") 'dumb-jump-go)
+(define-key keymaps-mode-map (kbd "M-,") 'dumb-jump-back)
 (define-key keymaps-mode-map (kbd "C-M-.") 'dumb-jump-quick-look)
 
 ;; ace jump stuff
@@ -91,19 +88,41 @@
 ;; End add keymaps
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;;;###autoload
-(define-globalized-minor-mode global-keymaps-mode keymaps-mode keymaps-mode)
-
-;; ;; The keymaps in `emulation-mode-map-alists' take precedence over
-;; ;; `minor-mode-map-alist'
-(add-to-list 'emulation-mode-map-alists `((keymaps-mode . ,keymaps-mode-map)))
-
-
-(defun turn-off-keymaps-mode ()
-  "Turn off keymaps-mode."
-  (keymaps-mode -1))
-(add-hook 'minibuffer-setup-hook #'turn-off-keymaps-mode)
-(add-hook 'magit-setup-buffer-hook #'turn-off-keymaps-mode)
+;; Override specific keybindings.  We must define a macro because e.g. define-minor-mode
+;; doesn't accept a symbol as an argument
+(defmacro keymaps-mode-override (major-mode &rest body)
+  (let* ((mode-name (concat "keymaps-mode-" (symbol-name major-mode)))
+         (map-name (concat "keymaps-mode-" (symbol-name major-mode) "-map"))
+         (mode-symbol (intern mode-name))
+         (mode-map (intern map-name))
+         (major-mode-hook (intern (concat (symbol-name major-mode) "-hook")))
+         (keys '()))
+    ;; first, build define-key list
+    (while body
+      (add-to-list 'keys `(define-key ,mode-map ,(car body) ,(cadr body)))
+      (setq body (cddr body)))
+    ;; here's the macro return value
+    `(progn
+       (defvar ,mode-map (make-sparse-keymap))
+       (set-keymap-parent ,mode-map keymaps-mode-map)
+       (define-minor-mode ,mode-symbol
+         :init-value nil
+         :lighter " keymaps-mode"
+         :keymap ,mode-map)
+       (provide ',mode-symbol)
+       ;; add the override keymap to the front of the emulation-mode-map list; the new mode
+       ;; has precedence
+       (add-to-list 'emulation-mode-map-alists
+                    (list (cons ',mode-symbol ,mode-map)))
+       ;; turn on new mode by default
+       (add-to-list ',major-mode-hook (lambda () (,mode-symbol 1)))
+       ;; insert define-key entries
+       ,@keys
+       ;; toggle new keymaps-mode when the base mode is toggled
+       (add-hook 'keymaps-mode-off-hook (lambda () (,mode-symbol -1)))
+       (add-hook 'keymaps-mode-on-hook (lambda () (,mode-symbol 1)))
+       ;; done
+       t
+       )))
 
 (provide 'keymaps-mode)
