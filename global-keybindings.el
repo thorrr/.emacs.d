@@ -91,7 +91,7 @@
 ;; Override specific keybindings.  We must define a macro because e.g. define-minor-mode
 ;; doesn't accept a symbol as an argument
 (defmacro keymaps-mode-override (major-mode &rest body)
-  (let* ((mode-name (concat "keymaps-mode-" (symbol-name major-mode)))
+  (let* ((mode-name (concat "-keymaps-mode-" (symbol-name major-mode)))
          (map-name (concat "keymaps-mode-" (symbol-name major-mode) "-map"))
          (mode-symbol (intern mode-name))
          (mode-map (intern map-name))
