@@ -3,12 +3,9 @@
 ))
 
 ;; override our global keymap's M-. and M-,
-(add-hook 'emacs-lisp-mode-hook (lambda ()
-  (setq-local dumb-jump-go-override
-              (lambda () (call-interactively 'elisp-find-definition)))
-  (setq-local dumb-jump-back-override
-              (lambda () (xref-pop-marker-stack)))
-))
+(keymaps-mode-override emacs-lisp-mode
+                       (kbd "M-.") 'elisp-find-definition
+                       (kbd "M-,") 'xref-pop-marker-stack)
 
 (use-package paredit
   :init
