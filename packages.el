@@ -73,7 +73,7 @@
 (el-get-bundle awesome-tab
   :url "https://github.com/manateelazycat/awesome-tab.git")
 (use-package awesome-tab
-  :ensure nil ;; use el-get versio
+  :ensure nil ;; use el-get version
 )
 
 (el-get-bundle blackout
@@ -116,12 +116,13 @@
                        company-preview-frontend))
 
   :bind (:map company-active-map
-         ([tab] . company-smart-complete)
-         ("TAB" . company-smart-complete)
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous)
-         ("S-TAB" . company-select-previous)
-         ("<backtab>" . company-select-previous)))
+              ([tab] . company-smart-complete)
+              ("TAB" . company-smart-complete)
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
+              ("S-TAB" . company-select-previous)
+              ("<backtab>" . company-select-previous)))
+
 (use-package codesearch)
 
 (use-package counsel)
@@ -135,6 +136,8 @@
   (add-hook 'dired-initial-position-hook 'dired-k))
 
 (use-package dumb-jump)
+
+(use-package elsa)
 
 (use-package expand-region)
 
@@ -210,14 +213,16 @@
   (add-hook 'flycheck-mode-hook #'flymake-mode-turn-off)
   (add-hook 'eglot--managed-mode-hook #'flymake-mode-turn-off))
 
+(use-package flycheck-elsa)
+
 (use-package flymake
   :ensure nil ;; use builtin version
   :init
   (defun flycheck-mode-turn-off ()
     (flycheck-mode 0))
   :custom
-  (flymake-allowed-file-name-masks nil)  ;;otherwise flymake runs for everything
-  (flymake-no-changes-timeout 5);; Only run flymake if I've not been typing for 5 seconds
+  (flymake-allowed-file-name-masks nil) ;;otherwise flymake runs for everything
+  (flymake-no-changes-timeout 5) ;; Only run flymake if I've not been typing for 5 seconds
   ;; don't run flycheck at the same time
   (advice-add 'flymake-mode :after #'flycheck-mode-turn-off)
   :hook
