@@ -4,7 +4,7 @@
   :ensure nil  ;; use el-get package
   :config
   (keymaps-mode-override python-mode
-                       (kbd "M-.") 'xref-find-definitions
+                       (kbd "M-.") 'rope-goto-definition
                        (kbd "M-,") 'xref-pop-marker-stack)
 )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
