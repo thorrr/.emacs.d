@@ -70,7 +70,7 @@
 (define-key keymaps-mode-map [C-kp-add] 'sane-hs-toggle-hiding)
 (define-key keymaps-mode-map (kbd "M-d") 'subword-forward-delete)
 (define-key keymaps-mode-map (kbd "M-DEL") 'subword-backward-delete)
-
+(define-key keymaps-mode-map (kbd "C-x g") 'magit-status)
 ;; add a more convenient "brace" character than RAlt+( on Linux attempt to properly rebind
 ;; C-( and C-) to make braces but keep brace overrides.  This is not turn-offable via our
 ;; keymaps-mode.  This should bind "deeper" than the following method which just maps C-(
