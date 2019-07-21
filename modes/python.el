@@ -20,6 +20,12 @@
 (setq auto-detect-virtualenv 't)
 (setq auto-python-just-source-file 't)
 
+;; turn on autocomplete, turn company off
+(add-hook 'python-mode-hook (lambda ()
+  (company-mode -1)
+  (auto-complete-mode 't)
+))
+
 (add-to-list 'python-indent-trigger-commands 'smart-auto-complete)
 
 ;; doesn't seem to work, completion code triggers indentation errors
