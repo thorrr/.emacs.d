@@ -243,10 +243,20 @@
       (setq bol (point))
       (re-search-forward "[^ ]" nil 't)
       (setq first-non-whitespace (point)))
-    (if (and (>= current-point bol) (<= current-point first-non-whitespace))
-        (funcall indent-line-function)
-      (cond ((bound-and-true-p auto-complete-mode) (auto-complete))
-            ((bound-and-true-p company-mode) (company-indent-or-complete-common))))))
+    (cond
+     ;; First, check if we're in preceeding whitespace and indent if we are.
+     ((or (= current-point bol)
+          (and (>= current-point bol) (<= current-point first-non-whitespace)))
+      (funcall indent-line-function))
+      ;; Else run autocomplete if we're
+     ((or
+       ;; on a space looking back at letter(s) or number(s)
+       (and (looking-at-p " ") (looking-back "[a-z0-9A-Z]+" 3))
+       ;; or EOL
+       (looking-at "$"))
+      (cond 
+       ((bound-and-true-p auto-complete-mode) (auto-complete))
+       ((bound-and-true-p company-mode) (company-indent-or-complete-common)))))))
 
 (defun sane-hs-toggle-hiding ()
   (interactive)

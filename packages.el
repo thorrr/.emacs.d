@@ -655,7 +655,10 @@
 (use-package yasnippet
   :blackout yas-minor-mode
   :defer 3 ;; too many hooks to list in :commands
-  :config (yas-global-mode 1))
+  :config
+  (yas-global-mode 1)
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil))
 (use-package yasnippet-snippets
   :after yasnippet)
 
