@@ -490,7 +490,7 @@
   (add-hook 'git-commit-mode-hook 'un-cygwin-buffer-file-name))
 
 (el-get-bundle markdown-mode
-  :url "git://jblevins.org/git/markdown-mode.git")
+  :url "https://github.com/jrblevin/markdown-mode.git")
 
 (use-package minimap
   :custom
