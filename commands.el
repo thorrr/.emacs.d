@@ -31,8 +31,10 @@
 ;; cute join-next-line keystroke
 (defun join-next-line ()
   (interactive)
-  (save-excursion (end-of-line)(next-line)(join-line))
-  )
+  (save-excursion
+    (end-of-line)(next-line)
+    ;; equivalent to (join-line)
+    (paredit-delete-indentation)))
 
 ;;resize
 (defun arrange-frame (w h x y)
@@ -292,3 +294,17 @@
       (narrow-to-region start end))
       (switch-to-buffer buf)))
 
+(defun paredit-delete-indentation (&optional arg)
+  "Handle joining lines that end in a comment."
+  (interactive "*P")
+  (let (comment)
+    (save-excursion
+      (move-beginning-of-line (if arg 1 0))
+      (when (skip-syntax-forward "^<" (point-at-eol))
+        (setq comment (delete-and-extract-region (point) (point-at-eol)))))
+    (delete-indentation arg)
+    (when comment
+      (save-excursion
+        (move-end-of-line 1)
+        (insert " ")
+        (insert comment)))))
