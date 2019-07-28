@@ -259,7 +259,9 @@
        (looking-at "$"))
       (cond 
        ((bound-and-true-p auto-complete-mode) (auto-complete))
-       ((bound-and-true-p company-mode) (company-indent-or-complete-common)))))))
+       ((bound-and-true-p company-mode) (company-indent-or-complete-common))))
+     ;; otherwise try to indent 
+     ('t (funcall indent-line-function)))))
 
 (defun sane-hs-toggle-hiding ()
   (interactive)
