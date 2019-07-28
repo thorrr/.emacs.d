@@ -248,7 +248,7 @@
      ((or (= current-point bol)
           (and (>= current-point bol) (<= current-point first-non-whitespace)))
       (funcall indent-line-function))
-      ;; Else run autocomplete if we're
+      ;; Else run autocomplete if we're...
      ((or
        ;; on a space looking back at letter(s) or number(s)
        (and (looking-at-p " ") (looking-back "[a-z0-9A-Z]+" 3))
