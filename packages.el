@@ -23,7 +23,9 @@
             (eq last-command 'ac-expand)
             (eq last-command 'ac-expand-previous)
             (eq last-command 'ac-expand-common)
-            (eq last-command 'ac-complete))
+            (eq last-command 'ac-complete)
+            (eq last-command 'smart-auto-complete)
+            (eq last-command 'self-insert-command))
         ;; disable all "RET" functions
         (cl-letf (((symbol-function 'newline) (lambda (&optional arg interactive) (interactive "*P\np")))
                   ((symbol-function 'newline-and-indent) (lambda () (interactive "*"))))
