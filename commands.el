@@ -252,8 +252,9 @@
       (funcall indent-line-function))
       ;; Else run autocomplete if we're...
      ((or
-       ;; on a space looking back at letter(s) or number(s)
-       (and (looking-at-p " ") (looking-back "[a-z0-9A-Z]+" 3))
+       ;; on a non-ascii (space, paren, etc) looking back at letter(s) or number(s)
+       (and (looking-at-p "[^a-z0-9A-Z]")
+            (looking-back "[a-z0-9A-Z]+" 3))
        ;; or EOL
        (looking-at "$"))
       (cond 
