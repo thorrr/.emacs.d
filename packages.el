@@ -45,9 +45,10 @@
   (ac-quick-help-delay 0.2) ;; pop up help stuff a little faster than default
   (ac-dwim t)
   (ac-auto-show-menu 't) ;; if we want a delay, change this to 0.5, for example
-  (ac-config-default)
-  (add-to-list 'ac-sources 'ac-source-yasnippet)
 
+  :hook
+  (prog-mode . (lambda () (ac-config-default))) 
+  (yas-minor-mode . (lambda () (add-to-list 'ac-sources 'ac-source-yasnippet)))
 
   :bind (:map ac-completing-map
               ("\e" . ac-stop)
