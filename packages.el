@@ -56,6 +56,7 @@
               ([return] . ac-select-current)
               ("C-n" . ac-next)
               ("C-p" . ac-previous)
+              ([backtab] . ac-previous)
               :map ac-menu-map
               ("RET" . ac-select-current)
               ([return] . ac-select-current)))
