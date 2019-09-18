@@ -47,6 +47,10 @@
       ;;;;
       "}"))))
 
+(use-package isortify
+  :hook ((python-mode . isortify-mode)))
+
+
 (defun _thin-region-beginning ()
   "If a region borders a newline don't include that line in the region"
   (save-excursion
