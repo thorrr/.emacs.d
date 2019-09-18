@@ -48,8 +48,17 @@
       "}"))))
 
 (use-package isortify
-  :hook ((python-mode . isortify-mode)))
+  :hook ((python-mode . isortify-mode))
+  :diminish isortify-mode
+  )
 
+(use-package blacken
+  :hook (python-mode . blacken-mode)
+  :custom
+  (blacken-line-length python-column-width)
+  (blacken-allow-py36 't)
+  :diminish blacken-mode
+)
 
 (defun _thin-region-beginning ()
   "If a region borders a newline don't include that line in the region"
