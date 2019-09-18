@@ -135,6 +135,10 @@
 
 (use-package counsel-projectile)
 
+(use-package delight)
+
+(use-package diminish)
+
 (use-package dired-k
   :init
   (add-hook 'dired-initial-position-hook 'dired-k))
