@@ -639,7 +639,7 @@
   (undo-tree-enable-undo-in-region nil)
 
   :hook ((write-file . undo-tree-save-history)
-         (find-file-hook. undo-tree-load-history))
+         (find-file-hook . undo-tree-load-history))
 
   :bind ("C-M-/" . undo-tree-visualize))
 
