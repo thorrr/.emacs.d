@@ -19,6 +19,7 @@
 (setq python-use-pylint 't)
 (setq auto-detect-virtualenv 't)
 (setq auto-python-just-source-file 't)
+(delight 'ropemacs-mode nil 'emacs)
 
 ;; turn on autocomplete, turn company off
 (add-hook 'python-mode-hook (lambda ()
