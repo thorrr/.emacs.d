@@ -225,6 +225,7 @@
 
 (use-package flymake
   :ensure nil ;; use builtin version
+  :delight
   :init
   (defun flycheck-mode-turn-off ()
     (flycheck-mode 0))
