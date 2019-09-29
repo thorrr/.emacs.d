@@ -377,6 +377,8 @@
 
 ;; electric-indent-mode is automatic in emacs 24.4+.
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
+;; try electric-pair-mode globally
+(electric-pair-mode 1)
 
 ;; TODO - use advice syntax
 (defun emacs-session-filename (session-id)
