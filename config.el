@@ -409,7 +409,7 @@ directories."
 (add-hook 'inferior-python-mode-hook (lambda () (glasses-mode)))
 (add-hook 'ess-mode-hook (lambda () (glasses-mode)))
 (add-hook 'inferior-ess-mode-hook (lambda () (glasses-mode)))
-
+(delight 'glasses-mode nil)
 ;;Comint tweak
 (setq-default comint-input-ring-size 5000)
 
