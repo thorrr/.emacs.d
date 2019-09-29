@@ -107,7 +107,7 @@
        (set-keymap-parent ,mode-map keymaps-mode-map)
        (define-minor-mode ,mode-symbol
          :init-value nil
-         :lighter " keymaps-mode"
+         :lighter ""
          :keymap ,mode-map)
        (provide ',mode-symbol)
        ;; add the override keymap to the front of the emulation-mode-map list; the new mode
