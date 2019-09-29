@@ -583,6 +583,7 @@
   (region-bindings-mode-enable))
 
 (use-package smartparens
+  :delight
   :init
   (add-hook 'js-mode-hook #'smartparens-mode)
   (add-hook 'python-mode-hook #'smartparens-mode)
