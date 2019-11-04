@@ -46,9 +46,10 @@
   (ac-dwim t)
   (ac-auto-show-menu 't) ;; if we want a delay, change this to 0.5, for example
 
-  :hook
-  (prog-mode . (lambda () (ac-config-default))) 
-  (yas-minor-mode . (lambda () (add-to-list 'ac-sources 'ac-source-yasnippet)))
+  :hook ((prog-mode . (lambda () (ac-config-default))) 
+         (yas-minor-mode . (lambda () (add-to-list 'ac-sources 'ac-source-yasnippet)))
+         ;; turn off company mode when auto-complete-mode is activated
+         (auto-complete-mode . (lambda () (if (and (fboundp 'company-mode) company-mode) (company-mode -1))))) 
 
   :bind (:map ac-completing-map
               ("\e" . ac-stop)
@@ -125,7 +126,14 @@
               ("C-n" . company-select-next)
               ("C-p" . company-select-previous)
               ("S-TAB" . company-select-previous)
-              ("<backtab>" . company-select-previous)))
+              ("<backtab>" . company-select-previous))
+
+  :hook (company-mode
+         . (lambda ()
+             ;; turn off auto-complete-mode when company mode is activated
+             (if (and (fboundp 'auto-complete-mode) auto-complete-mode)
+                 (auto-complete-mode -1))))) 
+
 
 (use-package codesearch)
 

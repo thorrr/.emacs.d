@@ -7,9 +7,8 @@
             (lambda ()
               (setq tab-width 4)
               (setq fill-column 100)
-              (company-mode-on)
-              (flycheck-mode 1)
-              (auto-complete-mode -1)))
+              (company-mode 't)
+              (flycheck-mode 1)))
   (setq go-packages-function 'go-packages-go-list)
   ;; don't use dumb-jump
   (keymaps-mode-override go-mode
@@ -39,4 +38,3 @@
   (shell-command "go test . -coverprofile=cover.out")
   (go-coverage "cover.out")
   (rotate:even-horizontal))
-
