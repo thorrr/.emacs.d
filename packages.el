@@ -49,7 +49,7 @@
   :hook ((prog-mode . (lambda () (ac-config-default))) 
          (yas-minor-mode . (lambda () (add-to-list 'ac-sources 'ac-source-yasnippet)))
          ;; turn off company mode when auto-complete-mode is activated
-         (auto-complete-mode . (lambda () (if (and (fboundp 'company-mode) company-mode) (company-mode -1))))) 
+         (auto-complete-mode . (lambda () (if (and (fboundp 'auto-complete-mode) company-mode) (company-mode -1)))))  
 
   :bind (:map ac-completing-map
               ("\e" . ac-stop)
@@ -131,7 +131,7 @@
   :hook (company-mode
          . (lambda ()
              ;; turn off auto-complete-mode when company mode is activated
-             (if (and (fboundp 'auto-complete-mode) auto-complete-mode)
+             (if (bound-and-true-p auto-complete-mode)
                  (auto-complete-mode -1))))) 
 
 
