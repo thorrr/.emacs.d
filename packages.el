@@ -86,7 +86,7 @@
 (use-package blackout
   :ensure nil ;; use-el-get version
   :config
-  (blackout 'auto-complete-mode)
+  ;;(blackout 'auto-complete-mode)
   (blackout 'eldoc-mode)
   (blackout 'flymake-mode)
   (add-hook 'hs-minor-mode-hook (lambda ()
@@ -95,7 +95,7 @@
             (blackout 'ycmd-mode))))
 
 (use-package company
-  :blackout t
+  ;;:blackout t
   :init
   ;; these must be in :init because they're used in :bind
   (defun company-visible-and-explicit-action-p ()
