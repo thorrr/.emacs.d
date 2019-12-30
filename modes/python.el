@@ -53,6 +53,13 @@
   :diminish isortify-mode
   )
 
+;; defvar holds the original value of python-shell-interpreter so we
+;; need to update it with the current value.  Must do this as advice
+;; since python-shell-interpreter may not be set by the time hooks run.
+(defun isortify-refresh-pythonic-interpreter ()
+  (setq pythonic-interpreter python-shell-interpreter))
+(advice-add 'isortify-buffer :before #'isortify-refresh-pythonic-interpreter)
+
 (use-package blacken
   :hook (python-mode . blacken-mode)
   :custom
