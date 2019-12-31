@@ -434,6 +434,11 @@
   :custom
   (linum-eager nil)  ;;else linum tries to synchronously update after every (next-line)
 
+  :hook ((text-mode . linum-mode)
+         (prog-mode . (lambda ()
+                        (if (not (string-equal (buffer-name) "*scratch*")) 
+                            (linum-mode 1))))) 
+  
   :config
   ;;run linum-update-current when we're idle to cover gaps caused bylinum-eager='nil
   (run-with-idle-timer 2 't 'linum-update-current)
