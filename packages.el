@@ -617,8 +617,9 @@
   :ensure nil ;; use el-get version
   )
 
-(el-get-bundle undo-tree-0.6.6
-  :url "https://github.com/emacsmirror/undo-tree.git")
+(el-get-bundle undo-tree
+  ;; Merges cubitt, elpa, and a few custom patches
+  :url "https://github.com/emacsorphanage/undo-tree.git")
 (use-package undo-tree
   :ensure nil ;; use el-get version
   :config
