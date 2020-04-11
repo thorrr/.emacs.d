@@ -401,7 +401,7 @@
 
 (el-get-bundle single-dired
   ;; reuse a single buffer for dired
-  :url "http://www.emacswiki.org/emacs/download/joseph-single-dired.el")
+  :url "https://github.com/emacsmirror/joseph-single-dired.git")
 (use-package joseph-single-dired
   :ensure nil ;; use el-get version
   :init
@@ -540,7 +540,7 @@
         ("m" . 'mc/mark-more-like-this-extended)))
 
 (el-get-bundle ntcmd
-  :url "http://www.emacswiki.org/emacs/download/ntcmd.el")
+  :url "https://github.com/emacsmirror/ntcmd.git")
 (use-package ntcmd
   :ensure nil ;; use el-get version
   :init

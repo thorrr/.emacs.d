@@ -60,6 +60,8 @@
 
 ;; workaround for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(if (string-equal system-type "windows-nt")
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.2"))
 
 (require 'package)
 (add-to-list 'package-archives
