@@ -125,4 +125,6 @@
        t
        )))
 
+(keymaps-mode-override term-mode (kbd "TAB") 'term-send-raw)
+
 (provide 'keymaps-mode)
