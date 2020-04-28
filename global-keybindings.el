@@ -71,6 +71,8 @@
 (define-key keymaps-mode-map (kbd "M-d") 'subword-forward-delete)
 (define-key keymaps-mode-map (kbd "M-DEL") 'subword-backward-delete)
 (define-key keymaps-mode-map (kbd "C-x g") 'magit-status)
+(define-key keymaps-mode-map (kbd "C->") 'dot-mode-override)
+
 ;; add a more convenient "brace" character than RAlt+( on Linux attempt to properly rebind
 ;; C-( and C-) to make braces but keep brace overrides.  This is not turn-offable via our
 ;; keymaps-mode.  This should bind "deeper" than the following method which just maps C-(
@@ -125,6 +127,8 @@
        t
        )))
 
-(keymaps-mode-override term-mode (kbd "TAB") 'term-send-raw)
+(add-hook 'term-mode-hook 
+          (lambda () 
+            (keymaps-mode-override term-mode (kbd "TAB") 'term-send-raw)))
 
 (provide 'keymaps-mode)
