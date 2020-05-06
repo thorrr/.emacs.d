@@ -60,13 +60,15 @@
   (setq pythonic-interpreter python-shell-interpreter))
 (advice-add 'isortify-buffer :before #'isortify-refresh-pythonic-interpreter)
 
-(use-package blacken
-  :hook (python-mode . blacken-mode)
-  :custom
-  (blacken-line-length python-column-width)
-  (blacken-allow-py36 't)
-  :diminish blacken-mode
-)
+(if (not (version< emacs-version "25.2"))
+    (use-package blacken
+      :ensure nil
+      :hook (python-mode . blacken-mode)
+      :custom
+      (blacken-line-length python-column-width)
+      (blacken-allow-py36 't)
+      :diminish blacken-mode
+      ))
 
 (defun _thin-region-beginning ()
   "If a region borders a newline don't include that line in the region"
