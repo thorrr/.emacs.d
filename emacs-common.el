@@ -61,7 +61,7 @@
 ;; workaround for https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (if (or
-     (version<= emacs-version "25.1")
+     (version< emacs-version "25.2")
      (string-equal system-type "windows-nt"))
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.2"))
 
