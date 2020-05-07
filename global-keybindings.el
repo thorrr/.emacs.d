@@ -61,6 +61,8 @@
 (define-key keymaps-mode-map (kbd "<f2>") 'toggle-line-numbers)
 (define-key keymaps-mode-map (kbd "M-S-<down>") 'mc/mark-next-like-this)
 (define-key keymaps-mode-map (kbd "M-S-<up>") 'mc/mark-previous-like-this)
+(define-key keymaps-mode-map (kbd "C-S-<down>") 'mc/mark-next-like-this)
+(define-key keymaps-mode-map (kbd "C-S-<up>") 'mc/mark-previous-like-this)
 (define-key keymaps-mode-map (kbd "M-S-<next>") 'mc/mark-all-like-this)
 (define-key keymaps-mode-map (kbd "M-S-<prior>") 'mc/mark-all-like-this)
 (define-key keymaps-mode-map (kbd "M-?") 'auto-complete)
