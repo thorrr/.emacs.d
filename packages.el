@@ -399,13 +399,13 @@
   ;; finally, run the init function
   (__iflibp_init))
 
-(el-get-bundle single-dired
+(el-get-bundle dired-single
   ;; reuse a single buffer for dired
-  :url "https://github.com/emacsmirror/joseph-single-dired.git")
-(use-package joseph-single-dired
+  :url "https://github.com/crocket/dired-single.git")
+(use-package dired-single
   :ensure nil ;; use el-get version
   :init
-  (eval-after-load 'dired '(progn (require 'joseph-single-dired))))
+  (eval-after-load 'dired '(progn (require 'dired-single))))
 
 (use-package keychain-environment
   ;; cygwin only - helper for ssh-agent
