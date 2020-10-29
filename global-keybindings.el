@@ -110,6 +110,10 @@
        (defvar ,mode-map (make-sparse-keymap))
        (set-keymap-parent ,mode-map keymaps-mode-map)
        (define-minor-mode ,mode-symbol
+         "DO NOT CALL DIRECTLY.  Use M-x keymaps-mode instead.
+
+This command toggles the major-mode specific keymaps.  If disabled,
+other minor-mode keymaps will remain active in the buffer." 
          :init-value nil
          :lighter ""
          :keymap ,mode-map)
