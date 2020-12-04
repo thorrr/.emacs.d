@@ -340,7 +340,8 @@
 
 (use-package ivy-prescient)
 
-(use-package ivy-yasnippet)
+(use-package ivy-yasnippet
+  :after yasnippet)
 
 (use-package ivy-ycmd)
 
@@ -679,6 +680,7 @@
 (use-package yaml-mode)
 
 (use-package yasnippet
+  :after auto-complete  ;; require 'ac-sources to exist
   :blackout yas-minor-mode
   :defer 3 ;; too many hooks to list in :commands
   :config
